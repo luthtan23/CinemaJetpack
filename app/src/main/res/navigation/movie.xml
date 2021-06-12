@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie"
+    app:startDestination="@id/movieFragment">
+
+    <fragment
+        android:id="@+id/movieFragment"
+        android:name="com.luthtan.cinemajetpack.ui.movie.MovieFragment"
+        android:label="Movie"
+        tools:layout="@layout/movie_fragment_layout">
+        <action
+            android:id="@+id/action_movieFragment_to_detailCinemaFragment"
+            app:destination="@id/detailCinemaFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailCinemaFragment"
+        android:name="com.luthtan.cinemajetpack.ui.detail.DetailCinemaFragment"
+        android:label="Detail Movie"
+        tools:layout="@layout/detail_cinema_fragment_layout">
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="typeCinema"
+            app:argType="string"
+            android:defaultValue='' />
+        <action
+            android:id="@+id/action_detailCinemaFragment_to_bottomSheetVideosFragment"
+            app:destination="@id/bottomSheetVideosFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/bottomSheetVideosFragment"
+        android:name="com.luthtan.cinemajetpack.ui.detail.BottomSheetVideosFragment"
+        android:label="Videos"
+        tools:layout="@layout/bottom_sheet_videos_layout">
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="title" />
+        <argument
+            android:name="typeCinema"
+            app:argType="string"
+            android:defaultValue='"movie"' />
+    </dialog>
+</navigation>

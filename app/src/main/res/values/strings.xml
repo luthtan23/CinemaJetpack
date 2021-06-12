@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">CinemaJetpack</string>
+    <string name="tvshow">Tv Show</string>
+    <string name="home">Home</string>
+    <string name="movie">Movie</string>
+    <string name="favorite">Favorite</string>
+    <string name="user">User</string>
+    <string name="genre">genre</string>
+    <string name="duration">duration</string>
+    <string name="percentage">100%</string>
+    <string name="user_score">User\nScore</string>
+    <string name="overview">Overview</string>
+    <string name="trailer">trailer</string>
+    <string name="director">Director</string>
+    <string name="staring">Staring</string>
+    <string name="title">title</string>
+    <string name="date">date</string>
+    <string name="u2022">•</string>
+    <string name="network_error">Network Error</string>
+    <string name="internal_server_error">Internal Server Error</string>
+    <string name="no_network_error">No internet connection.</string>
+    <string name="recommendation">Recommendation</string>
+    <string name="videos">Videos</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="login">Login</string>
+    <string name="sign_in">Sign In</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="field_error_edit_text">Fill the Field!</string>
+    <string name="try_again">Try Again</string>
+    <string name="ok">OK</string>
+    <string name="confirm_alert_logout">Are you sure to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_alert_failed_login">Login Failed!</string>
+    <string name="message_alert_failed_login">Invalid username and/or password: You did not provide a valid login.</string>
+    <string name="setting">Setting</string>
+    <string name="dark_mode_on">Dark Mode is On</string>
+    <string name="dark_mode_off">Dark Mode is Off</string>
+    <string name="cinema_jetpack">Cinema Jetpack</string>
+    <string name="logout">Logout</string>
+    <string name="no_internet_access">No Internet Access</string>
+    <string name="please_try_again">Please try again</string>
+    <string name="warning_feature">Feature under development</string>
+
+</resources>

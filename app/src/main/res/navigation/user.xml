@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user"
+    app:startDestination="@id/userFragment">
+
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.luthtan.cinemajetpack.ui.user.UserFragment"
+        android:label="User"
+        tools:layout="@layout/user_fragment_layout">
+        <action
+            android:id="@+id/action_userFragment_to_settingFragment"
+            app:destination="@id/settingFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit"/>
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.luthtan.cinemajetpack.ui.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/setting_fragment_layout">
+        <argument
+            android:name="identifyFragment"
+            app:argType="string"
+            android:defaultValue="login" />
+    </fragment>
+</navigation>
