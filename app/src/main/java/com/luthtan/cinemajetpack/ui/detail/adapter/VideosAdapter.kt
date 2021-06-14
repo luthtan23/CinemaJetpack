@@ -20,7 +20,8 @@ class VideosAdapter : RecyclerView.Adapter<VideosAdapter.VideosViewHolder>() {
         notifyDataSetChanged()
     }
 
-    inner class VideosViewHolder(private val binding: ItemCinemaVideosBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class VideosViewHolder(private val binding: ItemCinemaVideosBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(videos: TrailerItems) {
             with(binding) {
                 btnDetailContentTrailer.text = videos.name
@@ -33,7 +34,8 @@ class VideosAdapter : RecyclerView.Adapter<VideosAdapter.VideosViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideosViewHolder {
-        val itemCinemaVideosBinding = ItemCinemaVideosBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemCinemaVideosBinding =
+            ItemCinemaVideosBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return VideosViewHolder(itemCinemaVideosBinding)
     }
 

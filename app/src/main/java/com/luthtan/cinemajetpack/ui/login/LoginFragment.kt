@@ -60,10 +60,15 @@ class LoginFragment : Fragment(), View.OnClickListener {
         loginViewModel.validateResponse.observe(viewLifecycleOwner, { validateResponse ->
             progressDialog.dismiss()
             if (validateResponse == null) {
-                Utils.showAlertDialog(requireContext(), getString(R.string.title_alert_failed_login), getString(R.string.message_alert_failed_login))
+                Utils.showAlertDialog(
+                    requireContext(),
+                    getString(R.string.title_alert_failed_login),
+                    getString(R.string.message_alert_failed_login)
+                )
                 return@observe
             }
-            view.findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToBottomNavFragment())
+            view.findNavController()
+                .navigate(LoginFragmentDirections.actionLoginFragmentToBottomNavFragment())
         })
 
         loginViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
@@ -106,7 +111,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
+        when (v.id) {
             R.id.btn_login_login -> {
                 loginViewModel.getTokenLogin()
                 if (tokenResponse.requestToken == null) {
@@ -120,7 +125,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setSettingLoginPage() {
-        view?.findNavController()?.navigate(LoginFragmentDirections.actionLoginFragmentToSettingFragment(Constant.LOGIN_SETTING))
+        view?.findNavController()
+            ?.navigate(LoginFragmentDirections.actionLoginFragmentToSettingFragment(Constant.LOGIN_SETTING))
     }
 
 

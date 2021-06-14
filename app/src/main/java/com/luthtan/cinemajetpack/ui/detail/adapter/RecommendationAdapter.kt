@@ -10,7 +10,8 @@ import com.luthtan.cinemajetpack.databinding.ItemCinemaRecommendationBinding
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationItems
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 
-class RecommendationAdapter : RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
+class RecommendationAdapter :
+    RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
 
     private val listRecommendation = ArrayList<RecommendationItems>()
     private var typeCinema = ""
@@ -22,7 +23,8 @@ class RecommendationAdapter : RecyclerView.Adapter<RecommendationAdapter.Recomme
         notifyDataSetChanged()
     }
 
-    inner class RecommendationViewHolder(private val binding: ItemCinemaRecommendationBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RecommendationViewHolder(private val binding: ItemCinemaRecommendationBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(recommendationItems: RecommendationItems) {
             with(binding) {
                 Glide.with(itemView.context)
@@ -38,7 +40,11 @@ class RecommendationAdapter : RecyclerView.Adapter<RecommendationAdapter.Recomme
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationViewHolder {
-        val itemCinemaRecommendationBinding = ItemCinemaRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemCinemaRecommendationBinding = ItemCinemaRecommendationBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return RecommendationViewHolder(itemCinemaRecommendationBinding)
     }
 

@@ -52,7 +52,12 @@ class BottomNavFragment : Fragment() {
     }
 
     private fun setupBottomNavigationBar() {
-        val navGraphIds = listOf(R.navigation.movie, R.navigation.tvshow, R.navigation.favorite, R.navigation.user)
+        val navGraphIds = listOf(
+            R.navigation.movie,
+            R.navigation.tvshow,
+            R.navigation.favorite,
+            R.navigation.user
+        )
 
         binding.bottomNavView.selectedItemId = bottomNavSelectedItemId
 

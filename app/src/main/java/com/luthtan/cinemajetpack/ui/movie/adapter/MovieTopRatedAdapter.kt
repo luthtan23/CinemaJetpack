@@ -24,17 +24,19 @@ class MovieTopRatedAdapter : RecyclerView.Adapter<MovieTopRatedAdapter.MovieView
         notifyDataSetChanged()
     }
 
-    inner class MovieViewHolder(private val binding: ItemCinemaListLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MovieViewHolder(private val binding: ItemCinemaListLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: MovieResultsItem) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(ApiConstant.IMAGE_PATH.plus(movie.posterPath))
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_baseline_loading)
-                            .error(R.drawable.ic_baseline_error))
+                            .error(R.drawable.ic_baseline_error)
+                    )
                     .into(imgPoster)
 
-                imgPoster.setOnClickListener{
+                imgPoster.setOnClickListener {
                     itemView.findNavController().navigate(
                         MovieFragmentDirections.actionMovieFragmentToDetailCinemaFragment(
                             movie.id,
@@ -48,7 +50,8 @@ class MovieTopRatedAdapter : RecyclerView.Adapter<MovieTopRatedAdapter.MovieView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val itemMovieListLayoutBinding = ItemCinemaListLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemMovieListLayoutBinding =
+            ItemCinemaListLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MovieViewHolder(itemMovieListLayoutBinding)
     }
 

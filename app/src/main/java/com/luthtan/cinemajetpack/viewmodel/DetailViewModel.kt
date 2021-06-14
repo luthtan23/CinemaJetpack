@@ -13,28 +13,28 @@ import org.koin.core.KoinComponent
 class DetailViewModel(private val detailRepository: DetailRepository) : ViewModel(), KoinComponent {
 
     private val _detailResponse = MutableLiveData<DetailResponse>()
-    val detailResponse : LiveData<DetailResponse> get() = _detailResponse
+    val detailResponse: LiveData<DetailResponse> get() = _detailResponse
 
     private val _creditResponse = MutableLiveData<CreditResponse>()
-    val creditResponse : LiveData<CreditResponse> get() = _creditResponse
+    val creditResponse: LiveData<CreditResponse> get() = _creditResponse
 
     private val _recommendationResponse = MutableLiveData<RecommendationResponse>()
-    val recommendationResponse : LiveData<RecommendationResponse> get() = _recommendationResponse
+    val recommendationResponse: LiveData<RecommendationResponse> get() = _recommendationResponse
 
     private val _trailerResponse = MutableLiveData<TrailerResponse>()
-    val trailerResponse : LiveData<TrailerResponse> get() = _trailerResponse
+    val trailerResponse: LiveData<TrailerResponse> get() = _trailerResponse
 
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse
 
     fun getDetailMovie(id: Int) {
-        detailRepository.getDetailMovie(_detailResponse, _errorResponse,id)
+        detailRepository.getDetailMovie(_detailResponse, _errorResponse, id)
         detailRepository.getDetailCreditsMovie(_creditResponse, _errorResponse, id)
         detailRepository.getDetailRecommendationMovie(_recommendationResponse, _errorResponse, id)
     }
 
     fun getDetailTvShow(id: Int) {
-        detailRepository.getDetailTvShow(_detailResponse, _errorResponse,id)
+        detailRepository.getDetailTvShow(_detailResponse, _errorResponse, id)
         detailRepository.getDetailCreditsTvShow(_creditResponse, _errorResponse, id)
         detailRepository.getDetailRecommendationTvShow(_recommendationResponse, _errorResponse, id)
     }

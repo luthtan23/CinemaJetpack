@@ -99,7 +99,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                 if (!statusNetwork) {
                     setInitNetworkErrorLayout(true)
                 }
-            }  else setInitNetworkErrorLayout(false)
+            } else setInitNetworkErrorLayout(false)
         })
 
         detailViewModel.creditResponse.observe(viewLifecycleOwner, { creditsResponse ->
@@ -109,17 +109,19 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        detailViewModel.recommendationResponse.observe(viewLifecycleOwner, { recommendationResponse ->
-            if (recommendationResponse != null) {
-                progressDialog.dismiss()
-                setDetailRecommendation(recommendationResponse.results!!)
-            }
-        })
+        detailViewModel.recommendationResponse.observe(
+            viewLifecycleOwner,
+            { recommendationResponse ->
+                if (recommendationResponse != null) {
+                    progressDialog.dismiss()
+                    setDetailRecommendation(recommendationResponse.results!!)
+                }
+            })
 
     }
 
     private fun setInitNetworkErrorLayout(status: Boolean) {
-        when(status) {
+        when (status) {
             true -> {
                 binding.constraintDetailError.constraintNetworkError.visibility = View.VISIBLE
                 binding.constraintDetail.visibility = View.GONE
@@ -134,7 +136,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private fun setDetailAttr(detailResponse: DetailResponse) {
         progressDialog.dismiss()
-        val userScore = detailResponse.voteAverage*10
+        val userScore = detailResponse.voteAverage * 10
         with(binding) {
             progressBarDetailContentUserScore.progress = userScore.toInt()
             tvDetailContentUserScore.text = userScore.toString()
@@ -146,7 +148,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                     .load(ApiConstant.IMAGE_PATH.plus(detailResponse.posterPath))
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_baseline_loading)
-                            .error(R.drawable.ic_baseline_error))
+                            .error(R.drawable.ic_baseline_error)
+                    )
                     .into(detailContentImage)
             }
         }
@@ -207,9 +210,15 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
+        when (v.id) {
             R.id.btn_detail_content_trailer ->
-                view?.findNavController()?.navigate(DetailCinemaFragmentDirections.actionDetailCinemaFragmentToBottomSheetVideosFragment(extraId, title, extraType))
+                view?.findNavController()?.navigate(
+                    DetailCinemaFragmentDirections.actionDetailCinemaFragmentToBottomSheetVideosFragment(
+                        extraId,
+                        title,
+                        extraType
+                    )
+                )
             R.id.btn_network_error_try_again -> setInit()
         }
     }

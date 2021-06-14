@@ -20,11 +20,11 @@ object Utils {
         return gson.fromJson<HashMap<String, String>>(json, HashMap::class.java)
     }
 
-    fun insertStringGenre(genres: List<GenresItem>) : StringBuilder{
+    fun insertStringGenre(genres: List<GenresItem>): StringBuilder {
         val genre = StringBuilder()
         for (i in genres.indices) {
             genre.append(genres[i].name)
-            if (i != genres.size-1) {
+            if (i != genres.size - 1) {
                 genre.append(", ")
             }
         }
@@ -32,8 +32,10 @@ object Utils {
     }
 
     fun snackBarErrorConnection(view: View, context: Context) {
-        return Snackbar.make(view, context.getString(R.string.no_network_error),
-            Snackbar.LENGTH_INDEFINITE)
+        return Snackbar.make(
+            view, context.getString(R.string.no_network_error),
+            Snackbar.LENGTH_INDEFINITE
+        )
             .setBackgroundTint(context.resources.getColor(R.color.red))
             .setAction("DISMISS") {}
             .setActionTextColor(context.resources.getColor(R.color.blue_dark))
@@ -55,7 +57,7 @@ object Utils {
 
         alertDialog.setTitle(title)
             .setMessage(message)
-            .setPositiveButton(context.getString(R.string.try_again)) { dialog, which -> dialog.dismiss()}
+            .setPositiveButton(context.getString(R.string.try_again)) { dialog, which -> dialog.dismiss() }
 
         val alert = alertDialog.create()
         alert.show()

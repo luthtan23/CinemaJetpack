@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit
 
 val appModule = module {
     single<Gson> {
-        val builder = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        val builder =
+            GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         builder.setLenient().create()
     }
 

@@ -19,7 +19,8 @@ class StaringAdapter : RecyclerView.Adapter<StaringAdapter.StaringViewHolder>() 
         this.listStaring.addAll(staring)
     }
 
-    inner class StaringViewHolder(private val binding: ItemCinemaStaringLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class StaringViewHolder(private val binding: ItemCinemaStaringLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(staring: CastItem) {
             with(binding) {
                 tvItemCinemaStaring.text = staring.name
@@ -36,7 +37,11 @@ class StaringAdapter : RecyclerView.Adapter<StaringAdapter.StaringViewHolder>() 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StaringViewHolder {
-        val itemCinemaStaringLayoutBinding = ItemCinemaStaringLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemCinemaStaringLayoutBinding = ItemCinemaStaringLayoutBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return StaringViewHolder(itemCinemaStaringLayoutBinding)
     }
 

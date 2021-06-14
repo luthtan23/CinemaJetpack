@@ -10,16 +10,16 @@ import org.koin.core.KoinComponent
 class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel(), KoinComponent {
 
     private val _moviePopularResponse = MutableLiveData<MovieResponse>()
-    val moviePopularResponse : LiveData<MovieResponse> get() = _moviePopularResponse
+    val moviePopularResponse: LiveData<MovieResponse> get() = _moviePopularResponse
 
     private val _movieTopRatedResponse = MutableLiveData<MovieResponse>()
-    val movieTopRatedResponse : LiveData<MovieResponse> get() = _movieTopRatedResponse
+    val movieTopRatedResponse: LiveData<MovieResponse> get() = _movieTopRatedResponse
 
     private val _movieNowPlayingResponse = MutableLiveData<MovieResponse>()
-    val movieNowPlayingResponse : LiveData<MovieResponse> get() = _movieNowPlayingResponse
+    val movieNowPlayingResponse: LiveData<MovieResponse> get() = _movieNowPlayingResponse
 
     private val _movieUpcomingResponse = MutableLiveData<MovieResponse>()
-    val movieUpcomingResponse : LiveData<MovieResponse> get() = _movieUpcomingResponse
+    val movieUpcomingResponse: LiveData<MovieResponse> get() = _movieUpcomingResponse
 
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse

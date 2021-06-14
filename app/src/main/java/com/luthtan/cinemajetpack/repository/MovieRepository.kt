@@ -8,7 +8,7 @@ import com.luthtan.cinemajetpack.model.remote.DataFetchCall
 import org.koin.core.KoinComponent
 import retrofit2.Response
 
-class MovieRepository (private val apiService: ApiService) : KoinComponent {
+class MovieRepository(private val apiService: ApiService) : KoinComponent {
 
     fun getPopularMovie(
         movieResponse: MutableLiveData<MovieResponse>,
@@ -66,7 +66,6 @@ class MovieRepository (private val apiService: ApiService) : KoinComponent {
             }
         }.execute()
     }
-
 
 
 }

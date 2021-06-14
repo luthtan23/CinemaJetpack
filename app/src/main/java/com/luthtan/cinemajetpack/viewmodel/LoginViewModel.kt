@@ -9,13 +9,13 @@ import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.repository.LoginRepository
 import org.koin.core.KoinComponent
 
-class LoginViewModel (private val loginRepository: LoginRepository) : ViewModel(), KoinComponent {
+class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel(), KoinComponent {
 
     private val _tokenResponse = MutableLiveData<TokenResponse>()
-    val tokenResponse : LiveData<TokenResponse> get() = _tokenResponse
+    val tokenResponse: LiveData<TokenResponse> get() = _tokenResponse
 
     private val _validateResponse = MutableLiveData<ValidateResponse>()
-    val validateResponse : LiveData<ValidateResponse> get() = _validateResponse
+    val validateResponse: LiveData<ValidateResponse> get() = _validateResponse
 
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse

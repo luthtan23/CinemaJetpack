@@ -7,19 +7,19 @@ import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResponse
 import com.luthtan.cinemajetpack.repository.TvShowRepository
 import org.koin.core.KoinComponent
 
-class TvShowViewModel (private val tvShowRepository: TvShowRepository) : ViewModel(), KoinComponent {
+class TvShowViewModel(private val tvShowRepository: TvShowRepository) : ViewModel(), KoinComponent {
 
     private val _tvShowPopularResponse = MutableLiveData<TvShowResponse>()
-    val tvShowPopularResponse : LiveData<TvShowResponse> get() = _tvShowPopularResponse
+    val tvShowPopularResponse: LiveData<TvShowResponse> get() = _tvShowPopularResponse
 
     private val _tvShowTopRatedResponse = MutableLiveData<TvShowResponse>()
-    val tvShowTopRatedResponse : LiveData<TvShowResponse> get() = _tvShowTopRatedResponse
+    val tvShowTopRatedResponse: LiveData<TvShowResponse> get() = _tvShowTopRatedResponse
 
     private val _tvShowNowPlayingResponse = MutableLiveData<TvShowResponse>()
-    val tvShowNowPlayingResponse : LiveData<TvShowResponse> get() = _tvShowNowPlayingResponse
+    val tvShowNowPlayingResponse: LiveData<TvShowResponse> get() = _tvShowNowPlayingResponse
 
     private val _tvShowUpcomingResponse = MutableLiveData<TvShowResponse>()
-    val tvShowUpcomingResponse : LiveData<TvShowResponse> get() = _tvShowUpcomingResponse
+    val tvShowUpcomingResponse: LiveData<TvShowResponse> get() = _tvShowUpcomingResponse
 
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse

@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class CreditResponse(
 
-	@field:SerializedName("cast")
-	val cast: List<CastItem>,
+    @field:SerializedName("cast")
+    val cast: List<CastItem>,
 
-	@field:SerializedName("id")
-	val id: Int,
+    @field:SerializedName("id")
+    val id: Int,
 
-)
+    )
 

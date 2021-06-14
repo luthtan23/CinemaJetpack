@@ -62,8 +62,9 @@ class UserFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
-            R.id.item_user_setting -> requireView().findNavController().navigate(UserFragmentDirections.actionUserFragmentToSettingFragment(Constant.USER_SETTING))
+        when (v.id) {
+            R.id.item_user_setting -> requireView().findNavController()
+                .navigate(UserFragmentDirections.actionUserFragmentToSettingFragment(Constant.USER_SETTING))
             R.id.item_user_logout -> showAlertLogout()
         }
     }

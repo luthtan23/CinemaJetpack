@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 abstract class DataFetchCall<ResultType>(
-        private val responseLiveData: MutableLiveData<ResultType>,
-        private val responseErrorData: MutableLiveData<String>
+    private val responseLiveData: MutableLiveData<ResultType>,
+    private val responseErrorData: MutableLiveData<String>
 ) {
 
     abstract suspend fun createCallAsync(): Response<ResultType>
@@ -25,7 +25,7 @@ abstract class DataFetchCall<ResultType>(
                 val request = createCallAsync()
                 if (request.isSuccessful) {
                     if (request.body() != null)
-                    responseLiveData.postValue(request.body())
+                        responseLiveData.postValue(request.body())
                     responseErrorData.postValue(null)
                 } else if (request.code() == 401) {
                     responseLiveData.postValue(null)

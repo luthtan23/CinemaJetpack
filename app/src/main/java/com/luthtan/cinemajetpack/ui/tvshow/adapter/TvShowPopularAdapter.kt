@@ -24,17 +24,19 @@ class TvShowPopularAdapter : RecyclerView.Adapter<TvShowPopularAdapter.TvShowVie
         notifyDataSetChanged()
     }
 
-    inner class TvShowViewHolder(private val binding: ItemCinemaListLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TvShowViewHolder(private val binding: ItemCinemaListLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShow: TvShowResultsItem) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(ApiConstant.IMAGE_PATH.plus(tvShow.posterPath))
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_baseline_loading)
-                            .error(R.drawable.ic_baseline_error))
+                            .error(R.drawable.ic_baseline_error)
+                    )
                     .into(imgPoster)
 
-                imgPoster.setOnClickListener{
+                imgPoster.setOnClickListener {
                     itemView.findNavController().navigate(
                         TvShowFragmentDirections.actionTvShowFragmentToDetailCinemaFragment2(
                             tvShow.id,
@@ -48,7 +50,8 @@ class TvShowPopularAdapter : RecyclerView.Adapter<TvShowPopularAdapter.TvShowVie
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
-        val itemTvShowListLayoutBinding = ItemCinemaListLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemTvShowListLayoutBinding =
+            ItemCinemaListLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TvShowViewHolder(itemTvShowListLayoutBinding)
     }
 

@@ -64,7 +64,7 @@ class SettingFragment : Fragment() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setStatusTheme(status: String) {
-        when(status) {
+        when (status) {
             Constant.DARK_THEME -> {
                 preferences.setIsDarkMode(Constant.DARK_THEME)
                 with(binding) {
@@ -94,7 +94,7 @@ class SettingFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             android.R.id.home -> view?.findNavController()?.popBackStack()
         }
         return super.onOptionsItemSelected(item)

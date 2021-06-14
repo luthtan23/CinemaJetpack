@@ -104,7 +104,7 @@ class TvShowFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInitNetworkErrorLayout(status: Boolean) {
-        when(status) {
+        when (status) {
             true -> {
                 binding.constraintTvShowError.constraintNetworkError.visibility = View.VISIBLE
                 binding.constraintTvShow.visibility = View.GONE
@@ -165,7 +165,7 @@ class TvShowFragment : Fragment(), View.OnClickListener {
 
     private val registerViewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            with(handler){
+            with(handler) {
                 removeCallbacks(slideRunnable)
                 postDelayed(slideRunnable, 7000)
             }
@@ -179,7 +179,7 @@ class TvShowFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
+        when (v.id) {
             R.id.btn_network_error_try_again -> setInit()
         }
     }

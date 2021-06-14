@@ -100,12 +100,12 @@ class MovieFragment : Fragment(), View.OnClickListener {
                 if (!statusNetwork) {
                     setInitNetworkErrorLayout(true)
                 }
-            }  else setInitNetworkErrorLayout(false)
+            } else setInitNetworkErrorLayout(false)
         })
     }
 
     private fun setInitNetworkErrorLayout(status: Boolean) {
-        when(status) {
+        when (status) {
             true -> {
                 binding.constraintMovieError.constraintNetworkError.visibility = View.VISIBLE
                 binding.constraintMovie.visibility = View.GONE
@@ -167,7 +167,7 @@ class MovieFragment : Fragment(), View.OnClickListener {
 
     private val registerViewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            with(handler){
+            with(handler) {
                 removeCallbacks(slideRunnable)
                 postDelayed(slideRunnable, 7000)
             }
@@ -181,7 +181,7 @@ class MovieFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        when(v.id) {
+        when (v.id) {
             R.id.btn_network_error_try_again -> setInit()
         }
     }

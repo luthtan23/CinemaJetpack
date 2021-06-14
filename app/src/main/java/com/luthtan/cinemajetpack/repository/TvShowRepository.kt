@@ -8,7 +8,7 @@ import com.luthtan.cinemajetpack.model.remote.DataFetchCall
 import org.koin.core.KoinComponent
 import retrofit2.Response
 
-class TvShowRepository (private val apiService: ApiService) : KoinComponent {
+class TvShowRepository(private val apiService: ApiService) : KoinComponent {
 
     fun getPopularTvShow(
         tvShowResponse: MutableLiveData<TvShowResponse>,
@@ -66,5 +66,5 @@ class TvShowRepository (private val apiService: ApiService) : KoinComponent {
             }
         }.execute()
     }
-    
+
 }

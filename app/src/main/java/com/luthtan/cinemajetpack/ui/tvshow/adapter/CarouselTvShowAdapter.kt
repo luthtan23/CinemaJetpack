@@ -13,7 +13,8 @@ import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResultsItem
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 import com.luthtan.cinemajetpack.ui.tvshow.TvShowFragmentDirections
 
-class CarouselTvShowAdapter(private val viewPager2: ViewPager2) : RecyclerView.Adapter<CarouselTvShowAdapter.CarouselViewHolder>() {
+class CarouselTvShowAdapter(private val viewPager2: ViewPager2) :
+    RecyclerView.Adapter<CarouselTvShowAdapter.CarouselViewHolder>() {
 
     private val listCarousel = ArrayList<TvShowResultsItem>()
     private var typeCinema = ""
@@ -27,17 +28,19 @@ class CarouselTvShowAdapter(private val viewPager2: ViewPager2) : RecyclerView.A
         notifyDataSetChanged()
     }
 
-    inner class CarouselViewHolder(private val binding: ItemCarouselLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CarouselViewHolder(private val binding: ItemCarouselLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(TvShowResultsItem: TvShowResultsItem) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(ApiConstant.IMAGE_PATH.plus(TvShowResultsItem.backdropPath))
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_baseline_loading_carousel)
-                            .error(R.drawable.ic_baseline_error))
+                            .error(R.drawable.ic_baseline_error)
+                    )
                     .into(imgCarouselItem)
 
-                imgCarouselItem.setOnClickListener{
+                imgCarouselItem.setOnClickListener {
                     itemView.findNavController().navigate(
                         TvShowFragmentDirections.actionTvShowFragmentToDetailCinemaFragment2(
                             TvShowResultsItem.id,
@@ -51,7 +54,8 @@ class CarouselTvShowAdapter(private val viewPager2: ViewPager2) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
-        val itemCarouselLayoutBinding = ItemCarouselLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemCarouselLayoutBinding =
+            ItemCarouselLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CarouselViewHolder(itemCarouselLayoutBinding)
     }
 

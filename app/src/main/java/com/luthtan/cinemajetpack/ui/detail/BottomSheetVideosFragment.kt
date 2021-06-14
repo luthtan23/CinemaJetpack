@@ -53,7 +53,8 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
             if (trailerResponse != null) {
                 progressDialog.dismiss()
                 setDetailTrailer(trailerResponse.results)
-                binding.tvBottomSheetVideoTitle.text = title.plus(" ").plus(getString(R.string.videos))
+                binding.tvBottomSheetVideoTitle.text =
+                    title.plus(" ").plus(getString(R.string.videos))
             }
         })
     }

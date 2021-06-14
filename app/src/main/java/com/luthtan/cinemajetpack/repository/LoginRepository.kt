@@ -10,7 +10,7 @@ import com.luthtan.cinemajetpack.model.remote.DataFetchCall
 import org.koin.core.KoinComponent
 import retrofit2.Response
 
-class LoginRepository (private val apiService: ApiService) : KoinComponent {
+class LoginRepository(private val apiService: ApiService) : KoinComponent {
 
     fun getTokenLogin(
         tokenResponse: MutableLiveData<TokenResponse>,

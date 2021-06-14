@@ -11,7 +11,7 @@ import com.luthtan.cinemajetpack.model.remote.DataFetchCall
 import org.koin.core.KoinComponent
 import retrofit2.Response
 
-class DetailRepository (private val apiService: ApiService) : KoinComponent {
+class DetailRepository(private val apiService: ApiService) : KoinComponent {
 
     fun getDetailMovie(
         detailResponse: MutableLiveData<DetailResponse>,

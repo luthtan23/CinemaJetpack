@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.repository.MovieRepository
+import com.luthtan.cinemajetpack.ui.MainActivity
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -23,6 +24,7 @@ class MovieViewModelTest {
     private val _errorResponse = MutableLiveData<String>()
 
     private lateinit var movieViewModel: MovieViewModel
+    private lateinit var mainActivity: MainActivity
 
     @Mock
     private lateinit var movieRepository: MovieRepository
@@ -33,6 +35,7 @@ class MovieViewModelTest {
     @Before
     fun setUp() {
         movieViewModel = MovieViewModel(movieRepository)
+        mainActivity = MainActivity()
     }
 
     @Test

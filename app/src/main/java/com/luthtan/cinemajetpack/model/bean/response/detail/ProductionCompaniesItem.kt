@@ -16,4 +16,4 @@ data class ProductionCompaniesItem(
     @field:SerializedName("origin_country")
     val originCountry: String,
 
-)
+    )
