@@ -10,12 +10,8 @@ import androidx.navigation.ui.NavigationUI
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.BottomNavFragmentLayoutBinding
 import com.luthtan.cinemajetpack.listener.BottomNavVisibilityListener
-import com.luthtan.cinemajetpack.viewmodel.MovieViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BottomNavFragment : Fragment() {
-
-    private val movieViewModel: MovieViewModel by viewModel()
 
     private val bottomNavSelectedItemIdKey = "BOTTOM_NAV_SELECTED_ITEM_ID_KEY"
     private var bottomNavSelectedItemId = R.id.home
@@ -40,8 +36,6 @@ class BottomNavFragment : Fragment() {
             bottomNavSelectedItemId =
                 savedInstanceState.getInt(bottomNavSelectedItemIdKey, bottomNavSelectedItemId)
         }
-
-        movieViewModel.getMovieResponse()
 
         setupBottomNavigationBar()
     }

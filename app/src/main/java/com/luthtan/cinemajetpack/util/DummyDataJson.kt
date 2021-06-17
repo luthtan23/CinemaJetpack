@@ -31,7 +31,8 @@ object DummyDataJson {
         try {
             val jsonString = loadDataMoviePopularJson(activity)
             if (jsonString != null) {
-                movieResponse = Gson().fromJson(jsonString, MovieResponse::class.java)
+                val obj = Gson().toJson(jsonString)
+                movieResponse = Gson().fromJson(obj, MovieResponse::class.java)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -39,4 +40,5 @@ object DummyDataJson {
         }
         return movieResponse
     }
+
 }

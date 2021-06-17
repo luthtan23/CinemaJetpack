@@ -21,6 +21,8 @@ import com.luthtan.cinemajetpack.ui.movie.adapter.MovieUpcomingAdapter
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.MovieViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -63,7 +65,9 @@ class MovieFragment : Fragment(), View.OnClickListener {
 
     private fun setInit() {
         if (!statusNetwork) {
-            movieViewModel.getMovieResponse()
+            GlobalScope.launch {
+                movieViewModel.getMovieResponse()
+            }
         }
         getData()
     }

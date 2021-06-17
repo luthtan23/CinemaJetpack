@@ -5,29 +5,37 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.repository.MovieRepository
+import com.luthtan.cinemajetpack.repository.movie.MovieRepositoryListener
 import com.luthtan.cinemajetpack.ui.MainActivity
+import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class MovieViewModelTest {
+class MovieViewModelTest : MovieRepositoryListener {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val _moviePopularResponse = MutableLiveData<MovieResponse>()
+    private var _moviePopularResponseDummy = MutableLiveData<MovieResponse>()
     private val _errorResponse = MutableLiveData<String>()
+    private var _errorResponseDummy = MutableLiveData<String>()
 
     private lateinit var movieViewModel: MovieViewModel
-    private lateinit var mainActivity: MainActivity
 
     @Mock
     private lateinit var movieRepository: MovieRepository
+    private lateinit var mainActivity: MainActivity
 
     @Mock
     private lateinit var observer: Observer<MovieResponse>
@@ -40,9 +48,28 @@ class MovieViewModelTest {
 
     @Test
     fun getMoviePopularResponse() {
-        val movieResponse = movieViewModel.getMovieResponse()
-        assertNotNull(movieResponse)
-        movieViewModel.moviePopularResponse.observeForever(observer)
+
+        GlobalScope.launch {
+            val dummyData = getPopularMovie(_moviePopularResponseDummy, _errorResponseDummy)
+
+            val movieResponse = movieViewModel.moviePopularResponse.value
+            assertNotNull(movieResponse)
+            `when`(
+                movieRepository.getPopularMovie(
+                    _moviePopularResponse,
+                    _errorResponse
+                )
+            ).thenReturn(dummyData)
+            val movieResponseViewModel = movieViewModel.moviePopularResponse.value
+            verify(movieRepository).getNowPlayingMovie(_moviePopularResponse, _errorResponse)
+            assertNotNull(movieResponseViewModel)
+            assertEquals(20, movieResponseViewModel?.results?.size)
+
+            movieViewModel.moviePopularResponse.observeForever(observer)
+            verify(observer).onChanged(dummyData.value)
+        }
+
+
     }
 
     @Test
@@ -64,4 +91,33 @@ class MovieViewModelTest {
     @Test
     fun getMovieResponse() {
     }
+
+    override suspend fun getPopularMovie(
+        movieResponse: MutableLiveData<MovieResponse>,
+        errorResponse: MutableLiveData<String>
+    ): MutableLiveData<MovieResponse> {
+        return movieResponse
+    }
+
+    override suspend fun getTopRatedMovie(
+        movieResponse: MutableLiveData<MovieResponse>,
+        errorResponse: MutableLiveData<String>
+    ): MutableLiveData<MovieResponse> {
+        return movieResponse
+    }
+
+    override suspend fun getUpcomingMovie(
+        movieResponse: MutableLiveData<MovieResponse>,
+        errorResponse: MutableLiveData<String>
+    ): MutableLiveData<MovieResponse> {
+        return movieResponse
+    }
+
+    override suspend fun getNowPlayingMovie(
+        movieResponse: MutableLiveData<MovieResponse>,
+        errorResponse: MutableLiveData<String>
+    ): MutableLiveData<MovieResponse> {
+        return movieResponse
+    }
+
 }

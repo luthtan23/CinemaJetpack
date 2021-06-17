@@ -5,66 +5,58 @@ import com.luthtan.cinemajetpack.BuildConfig
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.model.remote.ApiService
 import com.luthtan.cinemajetpack.model.remote.DataFetchCall
+import com.luthtan.cinemajetpack.repository.movie.MovieRepositoryListener
 import org.koin.core.KoinComponent
 import retrofit2.Response
 
-class MovieRepository(private val apiService: ApiService) : KoinComponent {
+class MovieRepository(private val apiService: ApiService) : KoinComponent, MovieRepositoryListener {
 
-    fun getPopularMovie(
+    override suspend fun getPopularMovie(
         movieResponse: MutableLiveData<MovieResponse>,
         errorResponse: MutableLiveData<String>
-    ) {
+    ): MutableLiveData<MovieResponse> {
         object : DataFetchCall<MovieResponse>(movieResponse, errorResponse) {
             override suspend fun createCallAsync(): Response<MovieResponse> {
                 return apiService.getMoviePopular(BuildConfig.TOKEN)
             }
         }.execute()
+        return movieResponse
     }
 
-
-    fun getTopRatedMovie(
+    override suspend fun getTopRatedMovie(
         movieResponse: MutableLiveData<MovieResponse>,
         errorResponse: MutableLiveData<String>
-    ) {
+    ): MutableLiveData<MovieResponse> {
         object : DataFetchCall<MovieResponse>(movieResponse, errorResponse) {
             override suspend fun createCallAsync(): Response<MovieResponse> {
                 return apiService.getMovieTopRated(BuildConfig.TOKEN)
             }
         }.execute()
+        return movieResponse
     }
 
-    fun getUpcomingMovie(
+    override suspend fun getUpcomingMovie(
         movieResponse: MutableLiveData<MovieResponse>,
         errorResponse: MutableLiveData<String>
-    ) {
+    ): MutableLiveData<MovieResponse> {
         object : DataFetchCall<MovieResponse>(movieResponse, errorResponse) {
             override suspend fun createCallAsync(): Response<MovieResponse> {
                 return apiService.getMovieUpComing(BuildConfig.TOKEN)
             }
         }.execute()
+        return movieResponse
     }
 
-    fun getNowPlayingMovie(
+    override suspend fun getNowPlayingMovie(
         movieResponse: MutableLiveData<MovieResponse>,
         errorResponse: MutableLiveData<String>
-    ) {
+    ): MutableLiveData<MovieResponse> {
         object : DataFetchCall<MovieResponse>(movieResponse, errorResponse) {
             override suspend fun createCallAsync(): Response<MovieResponse> {
                 return apiService.getMovieNowPlaying(BuildConfig.TOKEN)
             }
         }.execute()
-    }
-
-    fun getSimilarMovie(
-        movieResponse: MutableLiveData<MovieResponse>,
-        errorResponse: MutableLiveData<String>,
-        id: Int
-    ) {
-        object : DataFetchCall<MovieResponse>(movieResponse, errorResponse) {
-            override suspend fun createCallAsync(): Response<MovieResponse> {
-                return apiService.getMovieSimilar(BuildConfig.TOKEN, id)
-            }
-        }.execute()
+        return movieResponse
     }
 
 

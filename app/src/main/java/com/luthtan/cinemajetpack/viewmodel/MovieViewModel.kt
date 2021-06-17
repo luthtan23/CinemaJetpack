@@ -24,7 +24,7 @@ class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel()
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse
 
-    fun getMovieResponse() {
+    suspend fun getMovieResponse() {
         movieRepository.getPopularMovie(_moviePopularResponse, _errorResponse)
         movieRepository.getNowPlayingMovie(_movieNowPlayingResponse, _errorResponse)
         movieRepository.getTopRatedMovie(_movieTopRatedResponse, _errorResponse)

@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/guideline_login"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <ImageButton
             android:id="@+id/ib_login_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

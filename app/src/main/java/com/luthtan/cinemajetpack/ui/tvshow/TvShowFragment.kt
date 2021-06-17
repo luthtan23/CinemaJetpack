@@ -21,6 +21,8 @@ import com.luthtan.cinemajetpack.ui.tvshow.adapter.TvShowUpcomingAdapter
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.TvShowViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -64,7 +66,9 @@ class TvShowFragment : Fragment(), View.OnClickListener {
 
     private fun setInit() {
         if (!statusNetwork) {
-            tvShowViewModel.getTvShowResponse()
+            GlobalScope.launch {
+                tvShowViewModel.getTvShowResponse()
+            }
         }
         getData()
     }

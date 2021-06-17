@@ -11,5 +11,4 @@ val repoModule = module {
     single { LoginRepository(get()) }
     single { PreferencesRepository(get()) }
 
-
 }

@@ -1,16 +1,19 @@
 package com.luthtan.cinemajetpack.ui.splash
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.luthtan.cinemajetpack.databinding.SplashScreenFragmentLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
 import com.luthtan.cinemajetpack.repository.PreferencesRepository
+import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.viewmodel.LoginViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,6 +43,17 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (preferences.getIsDarkMode() == Constant.DEFAULT_STRING) {
+            when (context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                Configuration.UI_MODE_NIGHT_YES -> preferences.setIsDarkMode(Constant.DARK_THEME)
+                Configuration.UI_MODE_NIGHT_NO -> preferences.setIsDarkMode(Constant.LIGHT_THEME)
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {}
+            }
+        } else {
+            if (preferences.getIsDarkMode() == Constant.DARK_THEME) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         val validateRequest = ValidateRequest(
             preferences.getPasswordRequest(),

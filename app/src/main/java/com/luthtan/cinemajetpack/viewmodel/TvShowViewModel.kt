@@ -24,7 +24,7 @@ class TvShowViewModel(private val tvShowRepository: TvShowRepository) : ViewMode
     private val _errorResponse = MutableLiveData<String>()
     val errorResponse: LiveData<String> get() = _errorResponse
 
-    fun getTvShowResponse() {
+    suspend fun getTvShowResponse() {
         tvShowRepository.getPopularTvShow(_tvShowPopularResponse, _errorResponse)
         tvShowRepository.getNowPlayingTvShow(_tvShowNowPlayingResponse, _errorResponse)
         tvShowRepository.getTopRatedTvShow(_tvShowTopRatedResponse, _errorResponse)
