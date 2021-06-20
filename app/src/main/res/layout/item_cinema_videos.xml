@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_detail_content_trailer"
+        android:id="@+id/btn_item_detail_content_trailer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

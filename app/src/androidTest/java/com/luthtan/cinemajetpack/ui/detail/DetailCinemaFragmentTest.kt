@@ -1,4 +1,4 @@
-package com.luthtan.cinemajetpack.ui.login
+package com.luthtan.cinemajetpack.ui.detail
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
@@ -6,8 +6,7 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -21,8 +20,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4ClassRunner::class)
-class LoginFragmentTest {
+class DetailCinemaFragmentTest {
 
     @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
@@ -31,9 +31,10 @@ class LoginFragmentTest {
     fun setUp() {
         ActivityScenario.launch(MainActivity::class.java)
         IdlingRegistry.getInstance().register(EspressIdlingResources.idlingResource)
-        launchFragmentInContainer<LoginFragment>(factory = object : FragmentFactory() {
+
+        launchFragmentInContainer<DetailCinemaFragment>(factory = object : FragmentFactory() {
             override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-                return LoginFragment()
+                return DetailCinemaFragment()
             }
         }, themeResId = R.style.ThemeCinemaJetpack)
     }
@@ -44,25 +45,27 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun login() {
+    fun loadDetail() {
 
-        onView(withId(R.id.iv_login_logo))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.ib_login_setting))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.tv_login_title))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_title)).check(matches(ViewMatchers.isDisplayed()))
 
-        onView(withId(R.id.outlinedTextField))
-            .perform(closeSoftKeyboard())
-        onView(withId(R.id.outlinedTextField_password))
-            .perform(closeSoftKeyboard())
+        onView(withId(R.id.tv_detail_content_tagline)).check(matches(ViewMatchers.isDisplayed()))
 
-        onView(withId(R.id.btn_login_login))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_released_date)).check(matches(ViewMatchers.isDisplayed()))
 
-        onView(withId(R.id.et_username)).perform(typeText("mangbrad23"), closeSoftKeyboard())
-        onView(withId(R.id.et_password)).perform(typeText("admin001"), closeSoftKeyboard())
-        onView(withId(R.id.btn_login_login)).perform(click())
+        onView(withId(R.id.tv_detail_content_duration)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.tv_detail_content_genre)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.detail_content_image)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.progress_bar_detail_content_user_score)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.tv_detail_content_overview)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.rv_detail_content_staring)).check(matches(ViewMatchers.isDisplayed()))
+
+        onView(withId(R.id.rv_detail_content_recommendation)).check(matches(ViewMatchers.isDisplayed()))
+
     }
 }

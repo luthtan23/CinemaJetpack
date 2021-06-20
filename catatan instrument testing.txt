@@ -1,0 +1,46 @@
+menampilkan splashscreen
+1. menampilkan logo aplikasi
+
+menampilkan login page
+1. memastikan logo app tampil sesuai dengan yang diharapkan
+2. memastikan textfield username dapat di isi dengan text
+3. memastikan textfield password dapat di isi dengan text
+4. memastikan button signin berfungsi
+5. memastikan name app tampil
+6. memastikan button signin tampil
+7. memastikan textfield username dan password tampil
+
+menampilkan data movie popular
+1. memastikan rv_movie_popular
+2. scroll rv_movie_popular ke posisi data terakhir
+
+menampilkan data tv show popular
+1. memastikan rv_tvshow_popular
+2. scroll rv_tvshow_popular ke posisi data terakhir
+
+menampilkan data detail movie popular & tv show
+1. memastikan poster image tampil sesuai dengan yang diharapkan
+2. memastikan TextView untuk title tampil sesuai dengan yang diharapkan
+3. memastikan TextView untuk overview tampil sesuai dengan yang diharapkan
+4. memastikan TextView untuk tagline tampil sesuai dengan yang diharapkan
+5. memastikan TextView untuk date tampil sesuai dengan yang diharapkan
+6. memastikan TextView untuk genre tampil sesuai dengan yang diharapkan
+7. memastikan progressbar untuk user score tampil sesuai dengan yang diharapkan
+8. memastikan rv_detail_content_staring
+9. memastikan rv_detail_content_recommendation
+
+Memuat Movie Popular:
+1. Memastikan data movie popular tidak null.
+2. Memastikan jumlah data movie popular sesuai dengan yang diharapkan.
+3. Memastikan data di repository ter verify
+4. memastikan LiveData pada movie popular berjalan secara observer dengan baik
+
+Memuat Tv Show Popular:
+1. Memastikan data tv show popular tidak null.
+2. Memastikan jumlah data tv show popular sesuai dengan yang diharapkan.
+3. Memastikan data di repository ter verify
+4. memastikan LiveData pada tv show popular berjalan secara observer dengan baik
+
+
+Note:
+untuk memulai testing pada DetailCinemaFragment mohon untuk memastikan method onAttach dan onDetach di comment terlebih dahulu

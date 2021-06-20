@@ -21,7 +21,6 @@ abstract class DataFetchCall<ResultType>(
         EspressIdlingResources.increment()
         GlobalScope.launch {
             try {
-                EspressIdlingResources.decrement()
                 val request = createCallAsync()
                 if (request.isSuccessful) {
                     if (request.body() != null)
@@ -32,6 +31,7 @@ abstract class DataFetchCall<ResultType>(
                 } else {
                     responseErrorData.postValue(request.message())
                 }
+                EspressIdlingResources.decrement()
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 responseErrorData.postValue(exception.toString())

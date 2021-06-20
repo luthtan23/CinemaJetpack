@@ -24,8 +24,8 @@ class VideosAdapter : RecyclerView.Adapter<VideosAdapter.VideosViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(videos: TrailerItems) {
             with(binding) {
-                btnDetailContentTrailer.text = videos.name
-                btnDetailContentTrailer.setOnClickListener {
+                btnItemDetailContentTrailer.text = videos.name
+                btnItemDetailContentTrailer.setOnClickListener {
                     Utils.trailerCinema(activity, videos.key)
                 }
             }

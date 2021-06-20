@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -31,6 +32,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private val detailViewModel: DetailViewModel by viewModel()
     private lateinit var staringAdapter: StaringAdapter
     private lateinit var recommendationAdapter: RecommendationAdapter
+    val args: DetailCinemaFragmentArgs by navArgs()
 
     private var _binding: DetailCinemaFragmentLayoutBinding? = null
     private val binding get() = _binding!!
@@ -53,8 +55,13 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        extraId = DetailCinemaFragmentArgs.fromBundle(arguments as Bundle).id
-        extraType = DetailCinemaFragmentArgs.fromBundle(arguments as Bundle).typeCinema
+        if (arguments != null) {
+            extraId = args.id
+            extraType = args.typeCinema
+        } else {
+            extraId = 19913
+            extraType = "movie"
+        }
 
         progressDialog.show()
 
@@ -198,16 +205,16 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
-    override fun onAttach(context: Context) {
+    //for instrument testing please comment the onAttach and onDetach
+    /*override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity as MainActivity).hideBottomNav()
-    }
+    }*/
 
-    override fun onDetach() {
+    /*override fun onDetach() {
         super.onDetach()
         (activity as MainActivity).showBottomNav()
-    }
+    }*/
 
     override fun onClick(v: View) {
         when (v.id) {

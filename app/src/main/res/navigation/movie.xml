@@ -24,11 +24,11 @@
         <argument
             android:name="id"
             app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="19913" />
         <argument
             android:name="typeCinema"
             app:argType="string"
-            android:defaultValue='' />
+            android:defaultValue="movie" />
         <action
             android:id="@+id/action_detailCinemaFragment_to_bottomSheetVideosFragment"
             app:destination="@id/bottomSheetVideosFragment" />

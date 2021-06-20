@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.repository.MovieRepository
 import com.luthtan.cinemajetpack.repository.movie.MovieRepositoryListener
-import com.luthtan.cinemajetpack.ui.MainActivity
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -35,15 +34,14 @@ class MovieViewModelTest : MovieRepositoryListener {
 
     @Mock
     private lateinit var movieRepository: MovieRepository
-    private lateinit var mainActivity: MainActivity
 
     @Mock
     private lateinit var observer: Observer<MovieResponse>
 
+
     @Before
     fun setUp() {
         movieViewModel = MovieViewModel(movieRepository)
-        mainActivity = MainActivity()
     }
 
     @Test
@@ -51,9 +49,7 @@ class MovieViewModelTest : MovieRepositoryListener {
 
         GlobalScope.launch {
             val dummyData = getPopularMovie(_moviePopularResponseDummy, _errorResponseDummy)
-
-            val movieResponse = movieViewModel.moviePopularResponse.value
-            assertNotNull(movieResponse)
+            
             `when`(
                 movieRepository.getPopularMovie(
                     _moviePopularResponse,
@@ -70,26 +66,6 @@ class MovieViewModelTest : MovieRepositoryListener {
         }
 
 
-    }
-
-    @Test
-    fun getMovieTopRatedResponse() {
-    }
-
-    @Test
-    fun getMovieNowPlayingResponse() {
-    }
-
-    @Test
-    fun getMovieUpcomingResponse() {
-    }
-
-    @Test
-    fun getErrorResponse() {
-    }
-
-    @Test
-    fun getMovieResponse() {
     }
 
     override suspend fun getPopularMovie(

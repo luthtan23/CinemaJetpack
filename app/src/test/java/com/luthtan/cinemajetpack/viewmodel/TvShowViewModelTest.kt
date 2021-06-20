@@ -49,8 +49,6 @@ class TvShowViewModelTest : TvShowRepositoryListener {
         GlobalScope.launch {
             val dummyData = getPopularTvShow(_tvShowPopularResponseDummy, _errorResponseDummy)
 
-            val tvShowResponse = tvShowViewModel.tvShowPopularResponse.value
-            assertNotNull(tvShowResponse)
             `when`(
                 tvShowRepository.getPopularTvShow(
                     _tvShowPopularResponse,
@@ -65,26 +63,6 @@ class TvShowViewModelTest : TvShowRepositoryListener {
             tvShowViewModel.tvShowPopularResponse.observeForever(observer)
             verify(observer).onChanged(dummyData.value)
         }
-    }
-
-    @Test
-    fun getTvShowTopRatedResponse() {
-    }
-
-    @Test
-    fun getTvShowNowPlayingResponse() {
-    }
-
-    @Test
-    fun getTvShowUpcomingResponse() {
-    }
-
-    @Test
-    fun getErrorResponse() {
-    }
-
-    @Test
-    fun getTvShowResponse() {
     }
 
     override suspend fun getPopularTvShow(

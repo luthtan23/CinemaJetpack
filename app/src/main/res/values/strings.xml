@@ -43,5 +43,6 @@
     <string name="no_internet_access">No Internet Access</string>
     <string name="please_try_again">Please try again</string>
     <string name="warning_feature">Feature under development</string>
+    <string name="tagline">tagline</string>
 
 </resources>
