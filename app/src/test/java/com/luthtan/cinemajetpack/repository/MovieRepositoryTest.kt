@@ -2,6 +2,8 @@ package com.luthtan.cinemajetpack.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
+import com.luthtan.cinemajetpack.repository.movie.MovieRepository
+import com.luthtan.cinemajetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,32 +20,25 @@ class MovieRepositoryTest {
 
     private val fakeRepository = FakeRepository()
 
-    private val _moviePopularResponse = MutableLiveData<MovieResponse>()
-    private var _moviePopularResponseDummy = MutableLiveData<MovieResponse>()
-    private val _errorResponse = MutableLiveData<String>()
-    private var _errorResponseDummy = MutableLiveData<String>()
+    private val _moviePopularResponse = MutableLiveData<Resource<MovieResponse>>()
+    private var _moviePopularResponseDummy = MutableLiveData<Resource<MovieResponse>>()
 
     @Test
     fun getPopularMovie() {
         GlobalScope.launch {
             val moviePopular =
-                fakeRepository.getPopularMovie(_moviePopularResponseDummy, _errorResponseDummy)
-            `when`(
-                movieRepository.getPopularMovie(
-                    _moviePopularResponse,
-                    _errorResponse
-                )
-            ).thenReturn(moviePopular)
-            verify(movieRepository).getPopularMovie(_moviePopularResponse, _errorResponse)
+                fakeRepository.getPopularMovie(_moviePopularResponseDummy).value?.data
+            `when`(movieRepository.getPopularMovie(_moviePopularResponse).value?.data).thenReturn(
+                moviePopular
+            )
+            verify(movieRepository).getPopularMovie(_moviePopularResponse).value?.data
             assertNotNull(moviePopular)
             assertEquals(
-                moviePopular.value?.results?.size,
+                moviePopular?.results?.size,
                 movieRepository.getPopularMovie(
-                    _moviePopularResponse,
-                    _errorResponse
-                ).value?.results?.size
+                    _moviePopularResponse
+                ).value?.data?.results?.size
             )
         }
-
     }
 }

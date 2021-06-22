@@ -1,11 +1,14 @@
 package com.luthtan.cinemajetpack.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
-import com.luthtan.cinemajetpack.repository.MovieRepository
-import com.luthtan.cinemajetpack.repository.movie.MovieRepositoryListener
+import com.luthtan.cinemajetpack.repository.movie.MovieRepository
+import com.luthtan.cinemajetpack.repository.movie.MovieRepositorySource
+import com.luthtan.cinemajetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.timeout
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,15 +23,13 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class MovieViewModelTest : MovieRepositoryListener {
+class MovieViewModelTest : MovieRepositorySource {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val _moviePopularResponse = MutableLiveData<MovieResponse>()
-    private var _moviePopularResponseDummy = MutableLiveData<MovieResponse>()
-    private val _errorResponse = MutableLiveData<String>()
-    private var _errorResponseDummy = MutableLiveData<String>()
+    private val _moviePopularResponse = MutableLiveData<Resource<MovieResponse>>()
+    private var _moviePopularResponseDummy = MutableLiveData<Resource<MovieResponse>>()
 
     private lateinit var movieViewModel: MovieViewModel
 
@@ -36,7 +37,7 @@ class MovieViewModelTest : MovieRepositoryListener {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<MovieResponse>
+    private lateinit var observer: Observer<Resource<MovieResponse>>
 
 
     @Before
@@ -46,53 +47,37 @@ class MovieViewModelTest : MovieRepositoryListener {
 
     @Test
     fun getMoviePopularResponse() {
-
         GlobalScope.launch {
-            val dummyData = getPopularMovie(_moviePopularResponseDummy, _errorResponseDummy)
-            
-            `when`(
-                movieRepository.getPopularMovie(
-                    _moviePopularResponse,
-                    _errorResponse
-                )
-            ).thenReturn(dummyData)
-            val movieResponseViewModel = movieViewModel.moviePopularResponse.value
-            verify(movieRepository).getNowPlayingMovie(_moviePopularResponse, _errorResponse)
+            val dummyData = getPopularMovie(_moviePopularResponseDummy).value
+            `when`(movieRepository.getPopularMovie(_moviePopularResponse).value).thenReturn(
+                dummyData
+            )
+            val movieResponseViewModel = movieViewModel.moviePopularResponse.value?.data
+            verify(
+                movieRepository,
+                timeout(2000)
+            ).getNowPlayingMovie(_moviePopularResponse).value?.data
             assertNotNull(movieResponseViewModel)
             assertEquals(20, movieResponseViewModel?.results?.size)
 
             movieViewModel.moviePopularResponse.observeForever(observer)
-            verify(observer).onChanged(dummyData.value)
+            verify(observer).onChanged(dummyData)
         }
-
-
     }
 
-    override suspend fun getPopularMovie(
-        movieResponse: MutableLiveData<MovieResponse>,
-        errorResponse: MutableLiveData<String>
-    ): MutableLiveData<MovieResponse> {
+    override fun getPopularMovie(movieResponse: MutableLiveData<Resource<MovieResponse>>): LiveData<Resource<MovieResponse>> {
         return movieResponse
     }
 
-    override suspend fun getTopRatedMovie(
-        movieResponse: MutableLiveData<MovieResponse>,
-        errorResponse: MutableLiveData<String>
-    ): MutableLiveData<MovieResponse> {
+    override fun getTopRatedMovie(movieResponse: MutableLiveData<Resource<MovieResponse>>): LiveData<Resource<MovieResponse>> {
         return movieResponse
     }
 
-    override suspend fun getUpcomingMovie(
-        movieResponse: MutableLiveData<MovieResponse>,
-        errorResponse: MutableLiveData<String>
-    ): MutableLiveData<MovieResponse> {
+    override fun getUpcomingMovie(movieResponse: MutableLiveData<Resource<MovieResponse>>): LiveData<Resource<MovieResponse>> {
         return movieResponse
     }
 
-    override suspend fun getNowPlayingMovie(
-        movieResponse: MutableLiveData<MovieResponse>,
-        errorResponse: MutableLiveData<String>
-    ): MutableLiveData<MovieResponse> {
+    override fun getNowPlayingMovie(movieResponse: MutableLiveData<Resource<MovieResponse>>): LiveData<Resource<MovieResponse>> {
         return movieResponse
     }
 

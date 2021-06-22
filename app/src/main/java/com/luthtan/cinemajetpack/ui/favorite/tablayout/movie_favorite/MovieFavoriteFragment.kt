@@ -20,4 +20,5 @@ class MovieFavoriteFragment : Fragment() {
         _binding = FavoriteMovieLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 }

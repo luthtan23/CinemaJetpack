@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -19,10 +20,9 @@ import com.luthtan.cinemajetpack.ui.tvshow.adapter.TvShowPopularAdapter
 import com.luthtan.cinemajetpack.ui.tvshow.adapter.TvShowTopRatedAdapter
 import com.luthtan.cinemajetpack.ui.tvshow.adapter.TvShowUpcomingAdapter
 import com.luthtan.cinemajetpack.util.Constant
-import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.TvShowViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -66,45 +66,141 @@ class TvShowFragment : Fragment(), View.OnClickListener {
 
     private fun setInit() {
         if (!statusNetwork) {
-            GlobalScope.launch {
-                tvShowViewModel.getTvShowResponse()
-            }
+            tvShowViewModel.getTvShowResponse()
         }
         getData()
+        setAdapter()
     }
 
     private fun getData() {
-        tvShowViewModel.tvShowPopularResponse.observe(viewLifecycleOwner, { tvshowResponse ->
-            if (tvshowResponse != null) {
-                setPopularTvShow(tvshowResponse)
-                statusNetwork = true
-            }
-        })
+        tvShowViewModel.tvShowPopularResponse.observe(viewLifecycleOwner, tvShowPopularResponse)
+        tvShowViewModel.tvShowNowPlayingResponse.observe(
+            viewLifecycleOwner,
+            tvShowNowPlayingResponse
+        )
+        tvShowViewModel.tvShowTopRatedResponse.observe(viewLifecycleOwner, tvShowTopRatedResponse)
+        tvShowViewModel.tvShowUpcomingResponse.observe(viewLifecycleOwner, tvShowUpcomingResponse)
+    }
 
-        tvShowViewModel.tvShowNowPlayingResponse.observe(viewLifecycleOwner, { tvshowResponse ->
-            if (tvshowResponse != null) {
-                setViewPager(tvshowResponse)
+    private fun setAdapter() {
+        val compositePagerTransformer = CompositePageTransformer()
+        with(compositePagerTransformer) {
+            addTransformer(MarginPageTransformer(40))
+            addTransformer { page, position ->
+                val r = 1 - abs(position)
+                page.scaleY = 0.05f + r + 00.15f
             }
-        })
+        }
+        with(binding.rvTvshowPopular) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = tvShowPopularAdapter
+        }
+        with(binding.carouselLayoutTvshow.viewpagerMovie) {
+            adapter = carouselTvShowAdapter
+            setPageTransformer(compositePagerTransformer)
+            registerOnPageChangeCallback(registerViewPagerCallback)
+            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+        }
+        with(binding.rvTvshowUpcoming) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = tvShowUpcomingAdapter
+        }
+        with(binding.rvTvshowTopRated) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = tvShowTopRatedAdapter
+        }
+        setInitNetworkErrorLayout(statusNetwork)
+    }
 
-        tvShowViewModel.tvShowTopRatedResponse.observe(viewLifecycleOwner, { tvshowResponse ->
-            if (tvshowResponse != null) {
-                setTopRatedTvShow(tvshowResponse)
+    private val tvShowPopularResponse: Observer<Resource<TvShowResponse>> by lazy {
+        Observer<Resource<TvShowResponse>> { tvShowResponse ->
+            if (tvShowResponse != null) {
+                when (tvShowResponse.status) {
+                    Status.SUCCESS -> {
+                        tvShowPopularAdapter.setTvShow(
+                            tvShowResponse.data!!.results!!,
+                            Constant.TYPE_TV_SHOW
+                        )
+                        tvShowPopularAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
+                }
             }
-        })
+        }
+    }
 
-        tvShowViewModel.tvShowUpcomingResponse.observe(viewLifecycleOwner, { tvshowResponse ->
-            if (tvshowResponse != null) {
-                setUpcomingTvShow(tvshowResponse)
+    private val tvShowNowPlayingResponse: Observer<Resource<TvShowResponse>> by lazy {
+        Observer<Resource<TvShowResponse>> { tvShowResponse ->
+            if (tvShowResponse != null) {
+                when (tvShowResponse.status) {
+                    Status.SUCCESS -> {
+                        carouselTvShowAdapter.setCarousel(
+                            tvShowResponse.data!!.results!!,
+                            Constant.TYPE_TV_SHOW
+                        )
+                        carouselTvShowAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
+                }
             }
-        })
+        }
+    }
 
-        tvShowViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse != null) {
-                Utils.snackBarErrorConnection(requireView(), requireContext())
-                if (!statusNetwork) setInitNetworkErrorLayout(true)
-            } else setInitNetworkErrorLayout(false)
-        })
+    private val tvShowUpcomingResponse: Observer<Resource<TvShowResponse>> by lazy {
+        Observer<Resource<TvShowResponse>> { tvShowResponse ->
+            if (tvShowResponse != null) {
+                when (tvShowResponse.status) {
+                    Status.SUCCESS -> {
+                        tvShowUpcomingAdapter.setTvShow(
+                            tvShowResponse.data!!.results!!,
+                            Constant.TYPE_TV_SHOW
+                        )
+                        tvShowUpcomingAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private val tvShowTopRatedResponse: Observer<Resource<TvShowResponse>> by lazy {
+        Observer<Resource<TvShowResponse>> { tvShowResponse ->
+            if (tvShowResponse != null) {
+                when (tvShowResponse.status) {
+                    Status.SUCCESS -> {
+                        tvShowTopRatedAdapter.setTvShow(
+                            tvShowResponse.data!!.results!!,
+                            Constant.TYPE_TV_SHOW
+                        )
+                        tvShowTopRatedAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
     }
 
     private fun setInitNetworkErrorLayout(status: Boolean) {
@@ -119,52 +215,6 @@ class TvShowFragment : Fragment(), View.OnClickListener {
             }
         }
 
-    }
-
-    private fun setViewPager(tvshowResponse: TvShowResponse) {
-        carouselTvShowAdapter.setCarousel(tvshowResponse.results!!, Constant.TYPE_TV_SHOW)
-        val compositePagerTransformer = CompositePageTransformer()
-        with(compositePagerTransformer) {
-            addTransformer(MarginPageTransformer(40))
-            addTransformer { page, position ->
-                val r = 1 - abs(position)
-                page.scaleY = 0.05f + r + 00.15f
-            }
-        }
-
-        with(binding.carouselLayoutTvshow.viewpagerMovie) {
-            adapter = carouselTvShowAdapter
-            setPageTransformer(compositePagerTransformer)
-            registerOnPageChangeCallback(registerViewPagerCallback)
-            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        }
-    }
-
-    private fun setUpcomingTvShow(tvshowResponse: TvShowResponse) {
-        tvShowUpcomingAdapter.setTvShow(tvshowResponse.results!!, Constant.TYPE_TV_SHOW)
-        with(binding.rvTvshowUpcoming) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = tvShowUpcomingAdapter
-        }
-    }
-
-    private fun setPopularTvShow(tvshowResponse: TvShowResponse) {
-        tvShowPopularAdapter.setTvShow(tvshowResponse.results!!, Constant.TYPE_TV_SHOW)
-        with(binding.rvTvshowPopular) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = tvShowPopularAdapter
-        }
-    }
-
-    private fun setTopRatedTvShow(tvshowResponse: TvShowResponse) {
-        tvShowTopRatedAdapter.setTvShow(tvshowResponse.results!!, Constant.TYPE_TV_SHOW)
-        with(binding.rvTvshowTopRated) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = tvShowTopRatedAdapter
-        }
     }
 
     private val registerViewPagerCallback = object : ViewPager2.OnPageChangeCallback() {

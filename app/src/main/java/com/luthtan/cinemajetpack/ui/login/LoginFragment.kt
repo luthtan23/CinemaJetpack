@@ -6,16 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.LoginFragmentLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
+import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.repository.PreferencesRepository
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.LoginViewModel
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,37 +54,53 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
         tokenResponse = TokenResponse()
 
-        loginViewModel.tokenResponse.observe(viewLifecycleOwner, { tokenResponse ->
-            if (tokenResponse != null) {
-                progressDialog.dismiss()
-                this.tokenResponse = tokenResponse
-            }
-        })
+        loginViewModel.tokenResponse.observe(viewLifecycleOwner, tokenResponseResult)
 
-        loginViewModel.validateResponse.observe(viewLifecycleOwner, { validateResponse ->
-            progressDialog.dismiss()
-            if (validateResponse == null) {
-                Utils.showAlertDialog(
-                    requireContext(),
-                    getString(R.string.title_alert_failed_login),
-                    getString(R.string.message_alert_failed_login)
-                )
-                return@observe
-            }
-            view.findNavController()
-                .navigate(LoginFragmentDirections.actionLoginFragmentToBottomNavFragment())
-        })
+        loginViewModel.validateResponse.observe(viewLifecycleOwner, validateResponse)
 
-        loginViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse != null) {
-                progressDialog.dismiss()
-                Utils.snackBarErrorConnection(view, requireContext())
-            }
-        })
 
         Glide.with(requireContext())
             .load(R.drawable.logo_sub_2)
             .into(binding.ivLoginLogo)
+    }
+
+    private val tokenResponseResult: Observer<Resource<TokenResponse>> by lazy {
+        Observer<Resource<TokenResponse>> { tokenResponse ->
+            progressDialog.dismiss()
+            if (tokenResponse != null) {
+                progressDialog.dismiss()
+                when (tokenResponse.status) {
+                    Status.SUCCESS -> this.tokenResponse = tokenResponse.data!!
+                    Status.ERROR -> Utils.snackBarErrorConnection(requireView(), requireContext())
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private val validateResponse: Observer<Resource<ValidateResponse>> by lazy {
+        Observer<Resource<ValidateResponse>> { validateResponse ->
+            if (validateResponse != null) {
+                progressDialog.dismiss()
+                when (validateResponse.status) {
+                    Status.SUCCESS -> {
+                        view?.findNavController()
+                            ?.navigate(LoginFragmentDirections.actionLoginFragmentToBottomNavFragment())
+                    }
+                    Status.ERROR -> {
+                        Utils.showAlertDialog(
+                            requireContext(),
+                            getString(R.string.title_alert_failed_login),
+                            getString(R.string.message_alert_failed_login)
+                        )
+                        return@Observer
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
     }
 
     private val progressDialog: ProgressDialog by lazy {

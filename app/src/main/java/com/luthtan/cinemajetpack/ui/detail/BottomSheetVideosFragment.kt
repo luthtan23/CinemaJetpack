@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.BottomSheetVideosLayoutBinding
-import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerItems
+import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerResponse
 import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.VideosAdapter
 import com.luthtan.cinemajetpack.util.Constant
+import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BottomSheetVideosFragment : BottomSheetDialogFragment() {
@@ -24,6 +28,8 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private lateinit var videosAdapter: VideosAdapter
+
+    private var title = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,8 +44,8 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val extraId = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).id
-        val title = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).title
         val extraType = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).typeCinema
+        title = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).title
 
         videosAdapter = VideosAdapter()
 
@@ -49,24 +55,41 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
             detailViewModel.getDetailVideoTvShow(extraId)
         }
 
-        detailViewModel.trailerResponse.observe(viewLifecycleOwner, { trailerResponse ->
-            if (trailerResponse != null) {
-                progressDialog.dismiss()
-                setDetailTrailer(trailerResponse.results)
-                binding.tvBottomSheetVideoTitle.text =
-                    title.plus(" ").plus(getString(R.string.videos))
-            }
-        })
-    }
+        detailViewModel.trailerResponse.observe(viewLifecycleOwner, trailerResponse)
 
-    private fun setDetailTrailer(videos: List<TrailerItems>) {
-        videosAdapter.setVideos(requireActivity() as MainActivity, videos)
         with(binding.rvDetailContentVideo) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = videosAdapter
         }
+    }
 
+    private val trailerResponse: Observer<Resource<TrailerResponse>> by lazy {
+        Observer<Resource<TrailerResponse>> { trailerResponse ->
+            progressDialog.dismiss()
+            if (trailerResponse != null) {
+                when (trailerResponse.status) {
+                    Status.SUCCESS -> {
+                        videosAdapter.setVideos(
+                            requireActivity() as MainActivity,
+                            trailerResponse.data?.results!!
+                        )
+                        binding.tvBottomSheetVideoTitle.text =
+                            title.plus(" ").plus(getString(R.string.videos))
+                    }
+                    Status.ERROR -> {
+                        Utils.showAlertDialog(
+                            requireContext(),
+                            getString(R.string.title_alert_failed_login),
+                            getString(R.string.message_alert_failed_login)
+                        )
+                        return@Observer
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
     }
 
     private val progressDialog: ProgressDialog by lazy {

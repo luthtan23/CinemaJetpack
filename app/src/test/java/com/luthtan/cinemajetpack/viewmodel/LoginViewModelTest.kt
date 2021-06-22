@@ -4,7 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
 import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
-import com.luthtan.cinemajetpack.repository.LoginRepository
+import com.luthtan.cinemajetpack.repository.login.LoginRepository
+import com.luthtan.cinemajetpack.vo.Resource
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -25,10 +26,10 @@ class LoginViewModelTest {
     private lateinit var loginRepository: LoginRepository
 
     @Mock
-    private lateinit var observer: Observer<ValidateResponse>
+    private lateinit var observer: Observer<Resource<ValidateResponse>>
 
     @Mock
-    private lateinit var tokenObserver: Observer<TokenResponse>
+    private lateinit var tokenObserver: Observer<Resource<TokenResponse>>
 
     @Before
     fun setUp() {

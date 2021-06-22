@@ -5,7 +5,8 @@ import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
-import com.luthtan.cinemajetpack.repository.DetailRepository
+import com.luthtan.cinemajetpack.repository.detail.DetailRepository
+import com.luthtan.cinemajetpack.vo.Resource
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -26,13 +27,13 @@ class DetailViewModelTest {
     private lateinit var detailRepository: DetailRepository
 
     @Mock
-    private lateinit var observer: Observer<DetailResponse>
+    private lateinit var observer: Observer<Resource<DetailResponse>>
 
     @Mock
-    private lateinit var creditObserver: Observer<CreditResponse>
+    private lateinit var creditObserver: Observer<Resource<CreditResponse>>
 
     @Mock
-    private lateinit var recommendationObserver: Observer<RecommendationResponse>
+    private lateinit var recommendationObserver: Observer<Resource<RecommendationResponse>>
 
     @Before
     fun setUp() {

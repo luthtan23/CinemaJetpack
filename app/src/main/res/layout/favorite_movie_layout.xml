@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_favorite_movie_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/warning_feature"
-        android:gravity="center"/>
+        tools:listitem="@layout/item_favorite_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

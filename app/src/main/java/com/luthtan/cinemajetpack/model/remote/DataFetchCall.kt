@@ -2,19 +2,27 @@ package com.luthtan.cinemajetpack.model.remote
 
 import androidx.lifecycle.MutableLiveData
 import com.luthtan.cinemajetpack.util.EspressIdlingResources
+import com.luthtan.cinemajetpack.vo.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
 abstract class DataFetchCall<ResultType>(
-    private val responseLiveData: MutableLiveData<ResultType>,
-    private val responseErrorData: MutableLiveData<String>
+    private val responseLiveData: MutableLiveData<Resource<ResultType>>,
 ) {
 
     abstract suspend fun createCallAsync(): Response<ResultType>
+    open fun saveResult(result: ResultType) {}
+    open fun shouldFetchFromDB(): Boolean = false
+    open fun loadFromDB(): ResultType? = null
 
     fun execute() {
-        callNetworkData()
+        responseLiveData.postValue(Resource.loading())
+        if (shouldFetchFromDB()) {
+            callLoadFromDB()
+        } else {
+            callNetworkData()
+        }
     }
 
     private fun callNetworkData() {
@@ -24,17 +32,29 @@ abstract class DataFetchCall<ResultType>(
                 val request = createCallAsync()
                 if (request.isSuccessful) {
                     if (request.body() != null)
-                        responseLiveData.postValue(request.body())
-                    responseErrorData.postValue(null)
-                } else if (request.code() == 401) {
-                    responseLiveData.postValue(null)
+                        responseLiveData.postValue(Resource.success(request.body()!!))
                 } else {
-                    responseErrorData.postValue(request.message())
+                    responseLiveData.postValue(Resource.error(request.message(), request.body()!!))
                 }
                 EspressIdlingResources.decrement()
-            } catch (exception: Exception) {
+            } catch (exception: java.lang.Exception) {
                 exception.printStackTrace()
-                responseErrorData.postValue(exception.toString())
+                responseLiveData.postValue(Resource.error(exception.toString(), null))
+            }
+        }
+    }
+
+    private fun callLoadFromDB() {
+        GlobalScope.launch {
+            try {
+                val response = loadFromDB()
+                if (response != null) {
+                    saveResult(response)
+                    responseLiveData.postValue(Resource.success(response))
+                } else
+                    responseLiveData.postValue(Resource.error("Not Found", null))
+            } catch (exception: Exception) {
+                responseLiveData.postValue(Resource.error(exception.toString(), null))
             }
         }
     }

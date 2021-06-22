@@ -2,6 +2,8 @@ package com.luthtan.cinemajetpack.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResponse
+import com.luthtan.cinemajetpack.repository.tvshow.TvShowRepository
+import com.luthtan.cinemajetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,31 +20,23 @@ class TvShowRepositoryTest {
 
     private val fakeRepository = FakeRepositoryTvShow()
 
-    private val _tvShowPopularResponse = MutableLiveData<TvShowResponse>()
-    private var _tvShowPopularResponseDummy = MutableLiveData<TvShowResponse>()
-    private val _errorResponse = MutableLiveData<String>()
-    private var _errorResponseDummy = MutableLiveData<String>()
-
+    private val _tvShowPopularResponse = MutableLiveData<Resource<TvShowResponse>>()
+    private var _tvShowPopularResponseDummy = MutableLiveData<Resource<TvShowResponse>>()
 
     @Test
     fun getPopularTvShow() {
         GlobalScope.launch {
             val tvShowPopular =
-                fakeRepository.getPopularTvShow(_tvShowPopularResponseDummy, _errorResponseDummy)
-            Mockito.`when`(
-                tvShowRepository.getPopularTvShow(
-                    _tvShowPopularResponse,
-                    _errorResponse
-                )
-            ).thenReturn(tvShowPopular)
-            verify(tvShowRepository).getPopularTvShow(_tvShowPopularResponse, _errorResponse)
+                fakeRepository.getPopularTvShow(_tvShowPopularResponseDummy).value?.data
+            Mockito.`when`(tvShowRepository.getPopularTvShow(_tvShowPopularResponse).value?.data)
+                .thenReturn(tvShowPopular)
+            verify(tvShowRepository).getPopularTvShow(_tvShowPopularResponse).value?.data
             assertNotNull(tvShowPopular)
             assertEquals(
-                tvShowPopular.value?.results?.size,
+                tvShowPopular?.results?.size,
                 tvShowRepository.getPopularTvShow(
-                    _tvShowPopularResponse,
-                    _errorResponse
-                ).value?.results?.size
+                    _tvShowPopularResponse
+                ).value?.data?.results?.size
             )
         }
     }

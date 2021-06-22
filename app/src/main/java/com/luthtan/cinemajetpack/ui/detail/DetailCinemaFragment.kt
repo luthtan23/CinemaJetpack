@@ -1,13 +1,13 @@
 package com.luthtan.cinemajetpack.ui.detail
 
 import android.app.ProgressDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,16 +15,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.DetailCinemaFragmentLayoutBinding
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
+import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationItems
+import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
-import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
 import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailCinemaFragment : Fragment(), View.OnClickListener {
@@ -56,7 +57,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         if (arguments != null) {
-            extraId = args.id
+            extraId = args.id //ganti jadi detailResponse
             extraType = args.typeCinema
         } else {
             extraId = 19913
@@ -82,54 +83,99 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
 
         getData()
+        setAdapter()
     }
 
     private fun getData() {
         backPressedFragment()
+        detailViewModel.detailResponse.observe(viewLifecycleOwner, detailResponse)
+        detailViewModel.creditResponse.observe(viewLifecycleOwner, creditResponse)
+        detailViewModel.recommendationResponse.observe(viewLifecycleOwner, recommendationResponse)
+    }
 
+    private fun setAdapter() {
+        setInitNetworkErrorLayout(statusNetwork)
+        with(binding.rvDetailContentStaring) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = staringAdapter
+        }
+        with(binding.rvDetailContentRecommendation) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = recommendationAdapter
+        }
+    }
 
-        detailViewModel.detailResponse.observe(viewLifecycleOwner, { detailResponse ->
+    private val detailResponse: Observer<Resource<DetailResponse>> by lazy {
+        Observer<Resource<DetailResponse>> { detailResponse ->
             if (detailResponse != null) {
-                setDetailAttr(detailResponse)
-                if (extraType == Constant.TYPE_MOVIE) {
-                    setDetailAttrMovie(detailResponse)
-                } else {
-                    setDetailAttrTvShow(detailResponse)
+                when (detailResponse.status) {
+                    Status.SUCCESS -> {
+                        setDetailAttr(detailResponse.data!!)
+                        if (extraType == Constant.TYPE_MOVIE) {
+                            setDetailAttrMovie(detailResponse.data)
+                        } else {
+                            setDetailAttrTvShow(detailResponse.data)
+                        }
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
                 }
             }
-        })
+        }
+    }
 
-        detailViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse != null) {
-                progressDialog.dismiss()
-                Utils.snackBarErrorConnection(requireView(), requireContext())
-                if (!statusNetwork) {
-                    setInitNetworkErrorLayout(true)
+    private val creditResponse: Observer<Resource<CreditResponse>> by lazy {
+        Observer<Resource<CreditResponse>> { creditResponse ->
+            if (creditResponse != null) {
+                when (creditResponse.status) {
+                    Status.SUCCESS -> {
+                        staringAdapter.setStaring(creditResponse.data!!.cast)
+                        staringAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
                 }
-            } else setInitNetworkErrorLayout(false)
-        })
-
-        detailViewModel.creditResponse.observe(viewLifecycleOwner, { creditsResponse ->
-            if (creditsResponse != null) {
-                progressDialog.dismiss()
-                setDetailCredits(creditsResponse.cast)
             }
-        })
+        }
+    }
 
-        detailViewModel.recommendationResponse.observe(
-            viewLifecycleOwner,
-            { recommendationResponse ->
-                if (recommendationResponse != null) {
-                    progressDialog.dismiss()
-                    setDetailRecommendation(recommendationResponse.results!!)
+    private val recommendationResponse: Observer<Resource<RecommendationResponse>> by lazy {
+        Observer<Resource<RecommendationResponse>> { recommendationResponse ->
+            if (recommendationResponse != null) {
+                when (recommendationResponse.status) {
+                    Status.SUCCESS -> {
+                        recommendationAdapter.setRecommendation(
+                            recommendationResponse.data!!.results!!,
+                            Constant.TYPE_MOVIE
+                        )
+                        staringAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
                 }
-            })
-
+            }
+        }
     }
 
     private fun setInitNetworkErrorLayout(status: Boolean) {
         when (status) {
             true -> {
+                progressDialog.dismiss()
+                Utils.snackBarErrorConnection(requireView(), requireContext())
                 binding.constraintDetailError.constraintNetworkError.visibility = View.VISIBLE
                 binding.constraintDetail.visibility = View.GONE
             }
@@ -181,23 +227,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setDetailCredits(cast: List<CastItem>) {
-        staringAdapter.setStaring(cast)
-        with(binding.rvDetailContentStaring) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = staringAdapter
-        }
-    }
-
-    private fun setDetailRecommendation(results: List<RecommendationItems>) {
-        recommendationAdapter.setRecommendation(results, Constant.TYPE_MOVIE)
-        with(binding.rvDetailContentRecommendation) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = recommendationAdapter
-        }
-    }
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(context).apply {

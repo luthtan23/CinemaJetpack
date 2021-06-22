@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="6dp"
+    app:cardMaxElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_item_favorite"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_baseline_loading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:maxLines="3"
+            android:text="@string/title"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_favorite"
+            app:layout_constraintTop_toTopOf="@+id/iv_item_favorite" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_tagline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:text="@string/tagline"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@id/tv_item_favorite_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_favorite_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_favorite_title" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_released_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/date"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_favorite_tagline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_favorite_tagline" />
+
+        <TextView
+            android:id="@+id/bullets_1_item_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/u2022"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_item_favorite_released_date"
+            app:layout_constraintStart_toEndOf="@+id/tv_item_favorite_released_date"
+            app:layout_constraintTop_toTopOf="@+id/tv_item_favorite_released_date" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/duration"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_item_favorite_released_date"
+            app:layout_constraintStart_toEndOf="@+id/bullets_1_item_favorite"
+            app:layout_constraintTop_toTopOf="@+id/tv_item_favorite_released_date" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_item_favorite_user_score"
+            style="@style/CircularDeterminateProgressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_item_favorite"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_favorite" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_user_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar_item_favorite_user_score"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar_item_favorite_user_score"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar_item_favorite_user_score"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar_item_favorite_user_score" />
+
+        <TextView
+            android:id="@+id/tv_item_favorite_genre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/genre"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_favorite_released_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_favorite_released_date" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/user_score"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar_item_favorite_user_score"
+            app:layout_constraintStart_toEndOf="@+id/progress_bar_item_favorite_user_score"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar_item_favorite_user_score" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ib_item_favorite_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_share_24"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_item_favorite"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

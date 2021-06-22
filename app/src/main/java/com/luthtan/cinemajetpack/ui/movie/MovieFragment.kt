@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -21,8 +22,8 @@ import com.luthtan.cinemajetpack.ui.movie.adapter.MovieUpcomingAdapter
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.MovieViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
@@ -65,92 +66,20 @@ class MovieFragment : Fragment(), View.OnClickListener {
 
     private fun setInit() {
         if (!statusNetwork) {
-            GlobalScope.launch {
-                movieViewModel.getMovieResponse()
-            }
+            movieViewModel.getMovieResponse()
         }
         getData()
+        setAdapter()
     }
 
     private fun getData() {
-        movieViewModel.moviePopularResponse.observe(viewLifecycleOwner, { movieResponse ->
-            if (movieResponse != null) {
-                setPopularMovie(movieResponse)
-                statusNetwork = true
-            }
-        })
-
-        movieViewModel.movieNowPlayingResponse.observe(viewLifecycleOwner, { movieResponse ->
-            if (movieResponse != null) {
-                setViewPager(movieResponse)
-            }
-        })
-
-        movieViewModel.movieTopRatedResponse.observe(viewLifecycleOwner, { movieResponse ->
-            if (movieResponse != null) {
-                setTopRatedMovie(movieResponse)
-            }
-        })
-
-        movieViewModel.movieUpcomingResponse.observe(viewLifecycleOwner, { movieResponse ->
-            if (movieResponse != null) {
-                setUpcomingMovie(movieResponse)
-            }
-        })
-
-        movieViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse != null) {
-                Utils.snackBarErrorConnection(requireView(), requireContext())
-                if (!statusNetwork) {
-                    setInitNetworkErrorLayout(true)
-                }
-            } else setInitNetworkErrorLayout(false)
-        })
+        movieViewModel.moviePopularResponse.observe(viewLifecycleOwner, moviePopularResponse)
+        movieViewModel.movieNowPlayingResponse.observe(viewLifecycleOwner, movieNowPlayingResponse)
+        movieViewModel.movieTopRatedResponse.observe(viewLifecycleOwner, movieTopRatedResponse)
+        movieViewModel.movieUpcomingResponse.observe(viewLifecycleOwner, movieUpcomingResponse)
     }
 
-    private fun setInitNetworkErrorLayout(status: Boolean) {
-        when (status) {
-            true -> {
-                binding.constraintMovieError.constraintNetworkError.visibility = View.VISIBLE
-                binding.constraintMovie.visibility = View.GONE
-            }
-            false -> {
-                binding.constraintMovieError.constraintNetworkError.visibility = View.GONE
-                binding.constraintMovie.visibility = View.VISIBLE
-            }
-        }
-
-    }
-
-    private fun setUpcomingMovie(movieResponse: MovieResponse) {
-        movieUpcomingAdapter.setMovie(movieResponse.results, Constant.TYPE_MOVIE)
-        with(binding.rvMovieUpcoming) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = movieUpcomingAdapter
-        }
-    }
-
-    private fun setPopularMovie(response: MovieResponse) {
-        moviePopularAdapter.setMovie(response.results, Constant.TYPE_MOVIE)
-        with(binding.rvMoviePopular) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = moviePopularAdapter
-        }
-    }
-
-    private fun setTopRatedMovie(response: MovieResponse) {
-        movieTopRatedAdapter.setMovie(response.results, Constant.TYPE_MOVIE)
-        with(binding.rvMovieTopRated) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
-            adapter = movieTopRatedAdapter
-        }
-    }
-
-    private fun setViewPager(movieResponse: MovieResponse) {
-        carouselMovieAdapter.setCarousel(movieResponse.results, Constant.TYPE_MOVIE)
+    private fun setAdapter() {
         val compositePagerTransformer = CompositePageTransformer()
         with(compositePagerTransformer) {
             addTransformer(MarginPageTransformer(40))
@@ -159,12 +88,123 @@ class MovieFragment : Fragment(), View.OnClickListener {
                 page.scaleY = 0.05f + r + 00.15f
             }
         }
-
+        with(binding.rvMoviePopular) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = moviePopularAdapter
+        }
+        with(binding.rvMovieUpcoming) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = movieUpcomingAdapter
+        }
+        with(binding.rvMovieTopRated) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = movieTopRatedAdapter
+        }
         with(binding.carouselLayoutMovie.viewpagerMovie) {
             adapter = carouselMovieAdapter
             setPageTransformer(compositePagerTransformer)
             registerOnPageChangeCallback(registerViewPagerCallback)
             getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+        }
+        setInitNetworkErrorLayout(statusNetwork)
+    }
+
+    private val moviePopularResponse: Observer<Resource<MovieResponse>> by lazy {
+        Observer<Resource<MovieResponse>> { movieResponse ->
+            if (movieResponse != null) {
+                when (movieResponse.status) {
+                    Status.SUCCESS -> {
+                        moviePopularAdapter.setMovie(
+                            movieResponse.data!!.results,
+                            Constant.TYPE_MOVIE
+                        )
+                        moviePopularAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private val movieNowPlayingResponse: Observer<Resource<MovieResponse>> by lazy {
+        Observer<Resource<MovieResponse>> { movieResponse ->
+            if (movieResponse != null) {
+                when (movieResponse.status) {
+                    Status.SUCCESS -> {
+                        carouselMovieAdapter.setCarousel(
+                            movieResponse.data!!.results,
+                            Constant.TYPE_MOVIE
+                        )
+                        carouselMovieAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> statusNetwork = true
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private val movieTopRatedResponse: Observer<Resource<MovieResponse>> by lazy {
+        Observer<Resource<MovieResponse>> { movieResponse ->
+            if (movieResponse != null) {
+                when (movieResponse.status) {
+                    Status.SUCCESS -> {
+                        movieTopRatedAdapter.setMovie(
+                            movieResponse.data!!.results,
+                            Constant.TYPE_MOVIE
+                        )
+                        movieTopRatedAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> statusNetwork = true
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private val movieUpcomingResponse: Observer<Resource<MovieResponse>> by lazy {
+        Observer<Resource<MovieResponse>> { movieResponse ->
+            if (movieResponse != null) {
+                when (movieResponse.status) {
+                    Status.SUCCESS -> {
+                        movieUpcomingAdapter.setMovie(
+                            movieResponse.data!!.results,
+                            Constant.TYPE_MOVIE
+                        )
+                        movieUpcomingAdapter.notifyDataSetChanged()
+                        statusNetwork = false
+                    }
+                    Status.ERROR -> statusNetwork = true
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setInitNetworkErrorLayout(status: Boolean) {
+        when (status) {
+            true -> {
+                Utils.snackBarErrorConnection(requireView(), requireContext())
+                binding.constraintMovieError.constraintNetworkError.visibility = View.VISIBLE
+                binding.constraintMovie.visibility = View.GONE
+            }
+            false -> {
+                binding.constraintMovieError.constraintNetworkError.visibility = View.GONE
+                binding.constraintMovie.visibility = View.VISIBLE
+            }
         }
 
     }

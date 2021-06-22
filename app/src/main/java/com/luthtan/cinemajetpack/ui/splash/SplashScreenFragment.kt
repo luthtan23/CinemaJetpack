@@ -9,12 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.luthtan.cinemajetpack.databinding.SplashScreenFragmentLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
+import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.repository.PreferencesRepository
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.viewmodel.LoginViewModel
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,10 +52,13 @@ class SplashScreenFragment : Fragment() {
             when (context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
                 Configuration.UI_MODE_NIGHT_YES -> preferences.setIsDarkMode(Constant.DARK_THEME)
                 Configuration.UI_MODE_NIGHT_NO -> preferences.setIsDarkMode(Constant.LIGHT_THEME)
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> {}
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                }
             }
         } else {
-            if (preferences.getIsDarkMode() == Constant.DARK_THEME) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            if (preferences.getIsDarkMode() == Constant.DARK_THEME) AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_YES
+            )
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
@@ -63,19 +70,23 @@ class SplashScreenFragment : Fragment() {
 
         loginViewModel.getValidateLogin(validateRequest)
 
-        loginViewModel.validateResponse.observe(viewLifecycleOwner, { validateResponse ->
-            if (validateResponse == null) {
-                splashLogin()
-                return@observe
-            }
-            splashEnd()
-        })
+        loginViewModel.validateResponse.observe(viewLifecycleOwner, validateResponse)
+    }
 
-        loginViewModel.errorResponse.observe(viewLifecycleOwner, { errorResponse ->
-            if (errorResponse != null) {
-                splashLogin()
+    private val validateResponse: Observer<Resource<ValidateResponse>> by lazy {
+        Observer<Resource<ValidateResponse>> { validateResponse ->
+            if (validateResponse != null) {
+                when (validateResponse.status) {
+                    Status.SUCCESS -> splashEnd()
+                    Status.ERROR -> {
+                        splashLogin()
+                        return@Observer
+                    }
+                    Status.LOADING -> {
+                    }
+                }
             }
-        })
+        }
     }
 
     private fun splashEnd() {
