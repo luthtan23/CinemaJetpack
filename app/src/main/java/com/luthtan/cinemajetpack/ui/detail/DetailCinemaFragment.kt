@@ -1,5 +1,6 @@
 package com.luthtan.cinemajetpack.ui.detail
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +37,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private val movieFavoriteViewModel: MovieFavoriteViewModel by viewModel()
     private lateinit var staringAdapter: StaringAdapter
     private lateinit var recommendationAdapter: RecommendationAdapter
-    val args: DetailCinemaFragmentArgs by navArgs()
+    private val args: DetailCinemaFragmentArgs by navArgs()
 
     private var _binding: DetailCinemaFragmentLayoutBinding? = null
     private val binding get() = _binding!!
@@ -46,6 +47,10 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private var title = "title"
 
     private var statusNetwork: Boolean = false
+    private var isFavorite: Boolean = false
+    private var isCinema: Boolean = false
+
+    private lateinit var detailResponseData: DetailResponse
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +72,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
             extraType = "movie"
         }
 
+        isCinema = extraType == Constant.TYPE_MOVIE
+
         progressDialog.show()
 
         staringAdapter = StaringAdapter()
@@ -79,14 +86,26 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInit() {
-        if (extraType == Constant.TYPE_MOVIE) {
-            detailViewModel.getDetailMovie(extraId)
+        if (isCinema) {
+            movieFavoriteViewModel.retrieveMovieFavorite(extraId).observe(viewLifecycleOwner, { movieEntityId ->
+                if (movieEntityId != null) {
+                    isFavorite = true
+                    getDataLocal()
+                    setAdapter()
+                } else {
+                    detailViewModel.getDetailMovie(extraId)
+                    isFavorite = false
+                    getData()
+                    setAdapter()
+                }
+            })
         } else {
             detailViewModel.getDetailTvShow(extraId)
         }
+    }
 
-        getData()
-        setAdapter()
+    private fun getDataLocal() {
+
     }
 
     private fun getData() {
@@ -116,12 +135,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                 when (detailResponse.status) {
                     Status.SUCCESS -> {
                         setDetailAttr(detailResponse.data!!)
-                        if (extraType == Constant.TYPE_MOVIE) {
-                            setDetailAttrMovie(detailResponse.data)
-                            movieFavoriteViewModel.setMovieFavorite(detailResponse.data)
-                        } else {
-                            setDetailAttrTvShow(detailResponse.data)
-                        }
+                        if (isCinema) setDetailAttrMovie(detailResponse.data)
+                        else setDetailAttrTvShow(detailResponse.data)
                         statusNetwork = false
                     }
                     Status.ERROR -> statusNetwork = true
@@ -251,7 +266,22 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                     )
                 )
             R.id.btn_network_error_try_again -> setInit()
+            R.id.ib_detail_content_favorite -> setFavoriteStatus(isCinema, isFavorite)
         }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setFavoriteStatus(isCinema: Boolean, isStatus: Boolean) {
+        if (isCinema) {
+            if (isStatus) movieFavoriteViewModel.setMovieFavorite(detailResponseData)
+            else movieFavoriteViewModel.deleteMovieFavorite(extraId)
+        } else {
+            if (isStatus) movieFavoriteViewModel.setMovieFavorite(detailResponseData)
+            else movieFavoriteViewModel.deleteMovieFavorite(extraId)
+        }
+        if (isStatus) binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite))
+        else binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite_border))
+        isFavorite = !isFavorite
     }
 
     private fun backPressedFragment() {

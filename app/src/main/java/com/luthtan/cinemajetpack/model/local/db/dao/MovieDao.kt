@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
+import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 
 @Dao
 interface MovieDao {
@@ -13,13 +14,17 @@ interface MovieDao {
     @Query("SELECT * from movie_db")
     fun getAllMovieFavorite(): LiveData<List<MovieEntity>>
 
-    @Query("SELECT * FROM movie_db where isMovieFavorite = 1")
-    fun getMovieFavorite(): LiveData<List<MovieEntity>>
-
     @Query("SELECT * FROM movie_db WHERE id = :id")
     fun retrieveMovieFavorite(id: Int): LiveData<MovieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movieEntity: MovieEntity)
+
+    @Query("DELETE FROM movie_db WHERE id = :id")
+    fun deleteMovieFavorite(id: Int): LiveData<MovieEntity>
+
+    @Query("SELECT * from movie_db")
+    fun getMovieFavoriteCastItem(): LiveData<List<CastItem>>
+
 
 }

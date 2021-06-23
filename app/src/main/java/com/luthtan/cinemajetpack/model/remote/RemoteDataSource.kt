@@ -22,29 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class RemoteDataSource(private val apiService: ApiService,
-                       private val movieDao: MovieDao
-)
-{
-
-    fun addMovieFavorite(detailResponse: DetailResponse) {
-        EspressIdlingResources.increment()
-        GlobalScope.launch {
-            try {
-                val gson = Gson().toJson(detailResponse)
-                val movieEntity = Gson().fromJson(gson, MovieEntity::class.java)
-                movieEntity.isMovieFavorite = !movieEntity.isMovieFavorite
-                movieDao.insertMovie(movieEntity)
-                EspressIdlingResources.decrement()
-            } catch (exception: java.lang.Exception) {
-                exception.printStackTrace()
-            }
-        }
-    }
-
-    fun getMovieFavorite() : LiveData<List<MovieEntity>> = movieDao.getAllMovieFavorite()
-
-    fun retrieveMovieFavorite(id: Int): LiveData<MovieEntity> = movieDao.retrieveMovieFavorite(id)
+class RemoteDataSource(private val apiService: ApiService) {
 
     fun getPopularMovie(movieResponse: MutableLiveData<Resource<MovieResponse>>): LiveData<Resource<MovieResponse>> {
         object : DataFetchCall<MovieResponse>(movieResponse) {

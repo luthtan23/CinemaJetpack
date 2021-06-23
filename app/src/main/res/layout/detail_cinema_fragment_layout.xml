@@ -134,13 +134,13 @@
                 app:layout_constraintTop_toTopOf="@+id/progress_bar_detail_content_user_score" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ib_detail_content_share"
+                android:id="@+id/ib_detail_content_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_share_24"
+                android:src="@drawable/ic_baseline_favorite_border"
                 app:layout_constraintBottom_toBottomOf="@+id/detail_content_image"
                 app:layout_constraintEnd_toEndOf="parent" />
 
