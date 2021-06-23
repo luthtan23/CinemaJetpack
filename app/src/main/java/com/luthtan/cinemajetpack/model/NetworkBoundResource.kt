@@ -12,7 +12,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
     private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
-        result.value = Resource.loading(null)
+        result.value = Resource.loading()
 
         @Suppress("LeakingThis")
         val dbSource = loadFromDB()
@@ -44,7 +44,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
         val apiResponse = createCall()
 
         result.addSource(dbSource) { newData ->
-            result.value = Resource.loading(newData)
+            result.value = Resource.loading()
         }
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)

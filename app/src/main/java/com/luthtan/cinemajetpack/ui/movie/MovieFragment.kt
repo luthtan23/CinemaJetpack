@@ -2,6 +2,7 @@ package com.luthtan.cinemajetpack.ui.movie
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
