@@ -10,5 +10,5 @@ data class CreditResponse(
     @field:SerializedName("id")
     val id: Int,
 
-    )
+)
 

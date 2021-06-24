@@ -4,21 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.luthtan.cinemajetpack.databinding.ItemFavoriteLayoutBinding
-import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 
 class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavoriteViewHolder>() {
 
-    private val movieItemDB = ArrayList<MovieEntity>()
+    private val movieItemDB = ArrayList<DetailEntity>()
 
-    fun setMovieItemDB(movieEntity: List<MovieEntity>) {
+    fun setMovieItemDB(DetailEntity: List<DetailEntity>) {
         this.movieItemDB.clear()
-        this.movieItemDB.addAll(movieEntity)
+        this.movieItemDB.addAll(DetailEntity)
         notifyDataSetChanged()
     }
 
     inner class MovieFavoriteViewHolder(private val binding: ItemFavoriteLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(movieEntity: MovieEntity) {
+        fun bind(DetailEntity: DetailEntity) {
             with(binding) {
 
             }

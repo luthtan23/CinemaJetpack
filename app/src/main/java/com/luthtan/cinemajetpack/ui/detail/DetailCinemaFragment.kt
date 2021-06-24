@@ -2,7 +2,6 @@ package com.luthtan.cinemajetpack.ui.detail
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
-import com.luthtan.cinemajetpack.viewmodel.MovieFavoriteViewModel
 import com.luthtan.cinemajetpack.vo.Resource
 import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,7 +31,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private val detailViewModel: DetailViewModel by viewModel()
-    private val movieFavoriteViewModel: MovieFavoriteViewModel by viewModel()
     private lateinit var staringAdapter: StaringAdapter
     private lateinit var recommendationAdapter: RecommendationAdapter
     val args: DetailCinemaFragmentArgs by navArgs()
@@ -118,7 +115,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                         setDetailAttr(detailResponse.data!!)
                         if (extraType == Constant.TYPE_MOVIE) {
                             setDetailAttrMovie(detailResponse.data)
-                            movieFavoriteViewModel.setMovieFavorite(detailResponse.data)
                         } else {
                             setDetailAttrTvShow(detailResponse.data)
                         }

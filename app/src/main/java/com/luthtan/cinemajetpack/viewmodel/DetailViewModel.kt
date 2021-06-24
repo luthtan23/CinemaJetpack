@@ -3,6 +3,7 @@ package com.luthtan.cinemajetpack.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
@@ -43,5 +44,9 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
 
     fun getDetailVideoTvShow(id: Int) {
         detailRepository.getDetailVideosTvShow(_trailerResponse, id)
+    }
+
+    fun setDetailEntity(detailResponse: DetailResponse){
+        detailRepository.setDetailEntity(detailResponse)
     }
 }

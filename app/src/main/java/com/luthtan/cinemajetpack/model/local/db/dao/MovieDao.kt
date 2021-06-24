@@ -1,25 +1,19 @@
 package com.luthtan.cinemajetpack.model.local.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
+import androidx.room.*
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 
 @Dao
 interface MovieDao {
 
     @Query("SELECT * from movie_db")
-    fun getAllMovieFavorite(): LiveData<List<MovieEntity>>
-
-    @Query("SELECT * FROM movie_db where isMovieFavorite = 1")
-    fun getMovieFavorite(): LiveData<List<MovieEntity>>
+    fun getAllMovieFavorite(): List<DetailEntity>
 
     @Query("SELECT * FROM movie_db WHERE id = :id")
-    fun retrieveMovieFavorite(id: Int): LiveData<MovieEntity>
+    fun retrieveMovieFavorite(id: Int): DetailEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movieEntity: MovieEntity)
+    fun insertMovie(DetailEntity: DetailEntity)
 
 }

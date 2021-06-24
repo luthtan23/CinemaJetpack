@@ -2,6 +2,7 @@ package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
@@ -49,4 +50,6 @@ interface DetailRepositorySource {
         trailerResponse: MutableLiveData<Resource<TrailerResponse>>,
         id: Int
     ): LiveData<Resource<TrailerResponse>>
+
+    fun setDetailEntity(detailResponse: DetailResponse)
 }

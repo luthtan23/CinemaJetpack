@@ -10,6 +10,5 @@ val viewModelModule = module {
     viewModel { DetailViewModel(get()) }
     viewModel { TvShowViewModel(get()) }
     viewModel { LoginViewModel(get()) }
-    viewModel { MovieFavoriteViewModel(get()) }
 
 }
