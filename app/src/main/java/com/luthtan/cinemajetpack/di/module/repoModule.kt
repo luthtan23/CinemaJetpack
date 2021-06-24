@@ -11,7 +11,7 @@ import org.koin.dsl.module
 val repoModule = module {
 
     single { MovieRepository(get()) }
-    single { DetailRepository(get()) }
+    single { DetailRepository(get(), get()) }
     single { TvShowRepository(get()) }
     single { LoginRepository(get()) }
     single { PreferencesRepository(get()) }

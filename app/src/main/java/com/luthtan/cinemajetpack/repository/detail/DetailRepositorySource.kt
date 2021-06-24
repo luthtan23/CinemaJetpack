@@ -2,6 +2,7 @@ package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
@@ -49,4 +50,12 @@ interface DetailRepositorySource {
         trailerResponse: MutableLiveData<Resource<TrailerResponse>>,
         id: Int
     ): LiveData<Resource<TrailerResponse>>
+
+    fun setMovieFavorite(detailResponse: DetailResponse)
+
+    fun getMovieFavorite(): LiveData<List<MovieEntity>>
+
+    fun retrieveMovieFavorite(id: Int): MutableLiveData<Resource<DetailResponse>>
+
+    fun deleteMovieFavorite(id: Int)
 }

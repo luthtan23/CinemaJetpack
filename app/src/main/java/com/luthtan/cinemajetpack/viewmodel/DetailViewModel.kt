@@ -3,6 +3,7 @@ package com.luthtan.cinemajetpack.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
@@ -13,7 +14,7 @@ import org.koin.core.KoinComponent
 
 class DetailViewModel(private val detailRepository: DetailRepository) : ViewModel(), KoinComponent {
 
-    private val _detailResponse = MutableLiveData<Resource<DetailResponse>>()
+    private var _detailResponse = MutableLiveData<Resource<DetailResponse>>()
     val detailResponse: LiveData<Resource<DetailResponse>> get() = _detailResponse
 
     private val _creditResponse = MutableLiveData<Resource<CreditResponse>>()
@@ -44,4 +45,14 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
     fun getDetailVideoTvShow(id: Int) {
         detailRepository.getDetailVideosTvShow(_trailerResponse, id)
     }
+
+    fun setMovieFavorite(detailResponse: DetailResponse) = detailRepository.setMovieFavorite(detailResponse)
+
+    fun getMovieFavorite(): LiveData<List<MovieEntity>> = detailRepository.getMovieFavorite()
+
+    fun retrieveMovieFavorite(id: Int){
+        _detailResponse = detailRepository.retrieveMovieFavorite(id)
+    }
+
+    fun deleteMovieFavorite(id: Int) = detailRepository.deleteMovieFavorite(id)
 }

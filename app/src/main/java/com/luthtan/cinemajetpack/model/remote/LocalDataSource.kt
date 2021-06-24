@@ -1,16 +1,21 @@
 package com.luthtan.cinemajetpack.model.remote
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.local.db.dao.MovieDao
+import com.luthtan.cinemajetpack.util.AppExecutors
 import com.luthtan.cinemajetpack.util.EspressIdlingResources
+import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.vo.Status
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class LocalDataSource(private val movieDao: MovieDao) {
+class LocalDataSource(private val movieDao: MovieDao, private val mExecutors: AppExecutors) {
 
     fun addMovieFavorite(detailResponse: DetailResponse) {
         EspressIdlingResources.increment()
@@ -29,10 +34,28 @@ class LocalDataSource(private val movieDao: MovieDao) {
 
     fun getMovieFavorite() : LiveData<List<MovieEntity>> = movieDao.getAllMovieFavorite()
 
-    fun retrieveMovieFavorite(id: Int): LiveData<MovieEntity> = movieDao.retrieveMovieFavorite(id)
+    fun retrieveMovieFavorite(id: Int): MutableLiveData<Resource<DetailResponse>> {
+        val detailResponse = MutableLiveData<Resource<DetailResponse>>()
+        GlobalScope.launch {
+            try {
+                val json = Gson().toJson(movieDao.retrieveMovieFavorite(id))
+                val gson = Gson().fromJson(json, DetailResponse::class.java)
+                detailResponse.postValue(Resource.success(gson))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                detailResponse.postValue(Resource.error("Error DB", null))
+            }
+        }
+        return detailResponse
+    }
 
-    fun deleteMovieFavorite(id: Int) { movieDao.deleteMovieFavorite(id) }
+    fun deleteMovieFavorite(id: Int) {
+        EspressIdlingResources.increment()
+        GlobalScope.launch {
+            movieDao.deleteMovieFavorite(id)
+            EspressIdlingResources.decrement()
+        }
+    }
 
-    fun getMovieFavoriteCastItem(): LiveData<List<CastItem>> = movieDao.getMovieFavoriteCastItem()
 
 }
