@@ -2,6 +2,7 @@ package com.luthtan.cinemajetpack.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
@@ -27,7 +28,7 @@ class DetailViewModelTest {
     private lateinit var detailRepository: DetailRepository
 
     @Mock
-    private lateinit var observer: Observer<Resource<DetailResponse>>
+    private lateinit var observer: Observer<Resource<DetailEntity>>
 
     @Mock
     private lateinit var creditObserver: Observer<Resource<CreditResponse>>
@@ -42,9 +43,9 @@ class DetailViewModelTest {
 
     @Test
     fun getDetailResponse() {
-        val detailResponse = detailViewModel.getDetailMovie(19913)
+        /*val detailResponse = detailViewModel.getDetailMovie(19913)
         assertNotNull(detailResponse)
-        detailViewModel.detailResponse.observeForever(observer)
+        detailViewModel.getDetailMovieFavorite(19913).observeForever(observer)*/
     }
 
     @Test

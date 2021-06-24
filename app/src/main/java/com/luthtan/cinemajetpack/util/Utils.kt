@@ -8,6 +8,8 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.R
+import com.luthtan.cinemajetpack.model.bean.local.GenresItemEntity
+import com.luthtan.cinemajetpack.model.bean.local.GenresTypeConverter
 import com.luthtan.cinemajetpack.model.bean.response.detail.GenresItem
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 import com.luthtan.cinemajetpack.ui.MainActivity
@@ -20,7 +22,7 @@ object Utils {
         return gson.fromJson<HashMap<String, String>>(json, HashMap::class.java)
     }
 
-    fun insertStringGenre(genres: List<GenresItem>): StringBuilder {
+    fun insertStringGenre(genres: List<GenresItemEntity>): StringBuilder {
         val genre = StringBuilder()
         for (i in genres.indices) {
             genre.append(genres[i].name)

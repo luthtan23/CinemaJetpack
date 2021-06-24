@@ -2,17 +2,13 @@ package com.luthtan.cinemajetpack.model.bean.local
 
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
-import com.luthtan.cinemajetpack.model.bean.response.detail.GenresItem
-import com.luthtan.cinemajetpack.model.bean.response.detail.ProductionCompaniesItem
-import com.luthtan.cinemajetpack.model.bean.response.detail.ProductionCountriesItem
-import com.luthtan.cinemajetpack.model.bean.response.detail.SpokenLanguagesItem
 
 @Entity(tableName = "movie_db")
-data class MovieEntity(
+data class DetailEntity(
     @field:SerializedName("id")
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int,
+    @ColumnInfo(name = "detailId")
+    val detailId: Int,
 
     @field:SerializedName("imdb_id")
     @ColumnInfo(name = "imdb_id")
@@ -69,6 +65,10 @@ data class MovieEntity(
     @field:SerializedName("backdrop_path")
     @ColumnInfo(name = "backdrop_path")
     var backdropPath: String,
+
+    @field:SerializedName("genres")
+    @ColumnInfo(name = "genres")
+    val genres: List<GenresItemEntity>,
 
     @field:SerializedName("release_date")
     @ColumnInfo(name = "release_date")
