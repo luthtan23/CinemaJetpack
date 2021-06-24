@@ -3,25 +3,24 @@ package com.luthtan.cinemajetpack.ui.detail
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.Gson
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.DetailCinemaFragmentLayoutBinding
+import com.luthtan.cinemajetpack.model.bean.local.CastItemEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
+import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
@@ -52,7 +51,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private var isFavorite: Boolean = false
     private var isCinema: Boolean = false
 
-    private lateinit var detailResponseData: DetailResponse
+    private lateinit var detailEntity: DetailEntity
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,17 +90,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private fun setInit() {
         if (isCinema) {
             detailViewModel.getDetailMovie(extraId)
-            detailViewModel.retrieveMovieFavorite(extraId)
-            /*detailViewModel.detailResponse.observe(viewLifecycleOwner, {dbSource ->
-                if (dbSource.data != null) {
-                    Toast.makeText(context, "DB OK", Toast.LENGTH_SHORT).show()
-                    setFavoriteButtonStatus(true)
-                    Log.e("TESTDB", dbSource.data.toString())
-                } else {
-                    Toast.makeText(context, "DB FAILED", Toast.LENGTH_SHORT).show()
-                    setFavoriteButtonStatus(false)
-                }
-            })*/
 
         } else {
             detailViewModel.getDetailTvShow(extraId)
@@ -115,8 +103,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private fun getData() {
         backPressedFragment()
-        detailViewModel.detailResponse.observe(viewLifecycleOwner, detailResponse)
-        detailViewModel.creditResponse.observe(viewLifecycleOwner, creditResponse)
+        detailViewModel.getDetailMovieFavorite(extraId).observe(viewLifecycleOwner, detailResponse)
+        detailViewModel.getMovieFavoriteCastList(extraId).observe(viewLifecycleOwner, creditResponse)
         detailViewModel.recommendationResponse.observe(viewLifecycleOwner, recommendationResponse)
     }
 
@@ -134,15 +122,19 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private val detailResponse: Observer<Resource<DetailResponse>> by lazy {
-        Observer<Resource<DetailResponse>> { detailResponse ->
+    private val detailResponse: Observer<Resource<DetailEntity>> by lazy {
+        Observer<Resource<DetailEntity>> { detailResponse ->
             if (detailResponse.data != null) {
                 when (detailResponse.status) {
                     Status.SUCCESS -> {
-                        detailResponseData = detailResponse.data
+                        detailEntity = detailResponse.data
                         setDetailAttr(detailResponse.data)
-                        if (isCinema) setDetailAttrMovie(detailResponse.data)
-                        else setDetailAttrTvShow(detailResponse.data)
+                        if (isCinema) {
+                            setDetailAttrMovie(detailResponse.data)
+                            setFavoriteButtonStatus(detailResponse.data.isMovieFavorite)
+                        } else {
+                            setDetailAttrTvShow(detailResponse.data)
+                        }
                         statusNetwork = false
                     }
                     Status.ERROR -> statusNetwork = true
@@ -152,12 +144,12 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private val creditResponse: Observer<Resource<CreditResponse>> by lazy {
-        Observer<Resource<CreditResponse>> { creditResponse ->
+    private val creditResponse: Observer<Resource<List<CastItemEntity>>> by lazy {
+        Observer<Resource<List<CastItemEntity>>> { creditResponse ->
             if (creditResponse != null) {
                 when (creditResponse.status) {
                     Status.SUCCESS -> {
-                        staringAdapter.setStaring(creditResponse.data!!.cast)
+                        staringAdapter.setStaring(creditResponse.data!!)
                         staringAdapter.notifyDataSetChanged()
                         statusNetwork = false
                     }
@@ -203,7 +195,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun setDetailAttr(detailResponse: DetailResponse) {
+    private fun setDetailAttr(detailResponse: DetailEntity) {
         progressDialog.dismiss()
         val userScore = detailResponse.voteAverage * 10
         with(binding) {
@@ -224,7 +216,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setDetailAttrMovie(detailResponse: DetailResponse) {
+    private fun setDetailAttrMovie(detailResponse: DetailEntity) {
         title = detailResponse.title
         with(binding) {
             tvDetailContentTitle.text = detailResponse.originalTitle
@@ -233,11 +225,11 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setDetailAttrTvShow(detailResponse: DetailResponse) {
-        title = detailResponse.name
+    private fun setDetailAttrTvShow(detailResponse: DetailEntity) {
+//        title = detailResponse.name
         with(binding) {
-            tvDetailContentTitle.text = detailResponse.name
-            tvDetailContentReleasedDate.text = detailResponse.firstAirDate
+//            tvDetailContentTitle.text = detailResponse.name
+//            tvDetailContentReleasedDate.text = detailResponse.firstAirDate
             tvDetailContentDuration.visibility = View.GONE
             bullets1DetailContent.visibility = View.GONE
         }
@@ -277,21 +269,19 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setFavoriteStatus(isCinema: Boolean) {
-        /*try {
+        try {
             if (isCinema) {
-                if (isFavorite) detailViewModel.setMovieFavorite(detailResponseData)
-                else detailViewModel.deleteMovieFavorite(extraId)
+                isFavorite = !isFavorite
+                detailViewModel.updateMovieFavorite(detailEntity, isFavorite)
+                detailViewModel.insertMovie(detailEntity)
+                setFavoriteButtonStatus(isFavorite)
             } else {
-                if (isFavorite) detailViewModel.setMovieFavorite(detailResponseData)
-                else detailViewModel.deleteMovieFavorite(extraId)
+
             }
         } catch (e: Exception) {
             e.printStackTrace()
-        }*/
-        Toast.makeText(context, "SUKSES SAVE DB", Toast.LENGTH_SHORT).show()
-        detailViewModel.setMovieFavorite(detailResponseData)
-        isFavorite = !isFavorite
-        setFavoriteButtonStatus(isFavorite)
+        }
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

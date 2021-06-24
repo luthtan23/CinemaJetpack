@@ -36,7 +36,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
 
     protected abstract fun shouldFetch(data: ResultType?): Boolean
 
-    protected abstract fun createCall(): LiveData<Resource<RequestType>>
+    protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
 
     protected abstract fun saveCallResult(data: RequestType)
 
@@ -51,25 +51,24 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
             when (response.status) {
-                Status.SUCCESS ->
+                StatusResponse.SUCCESS ->
                     mExecutors.diskIO().execute {
-                        saveCallResult(response.data!!)
+                        saveCallResult(response.body!!)
                         mExecutors.mainThread().execute {
                             result.addSource(loadFromDB()) { newData ->
                                 result.value = Resource.success(newData)
                             }
                         }
                     }
-                Status.ERROR -> mExecutors.mainThread().execute {
-                    if (response.data != null) {
-                        result.addSource(loadFromDB()) { newData ->
-                            result.value = Resource.success(newData)
-                        }
-                    } else {
-                        onFetchFailed()
-                        result.addSource(dbSource) { newData ->
-                            result.value = Resource.error(response.message, newData)
-                        }
+                StatusResponse.EMPTY -> mExecutors.mainThread().execute {
+                    result.addSource(loadFromDB()) { newData ->
+                        result.value = Resource.success(newData)
+                    }
+                }
+                StatusResponse.ERROR -> {
+                    onFetchFailed()
+                    result.addSource(dbSource) { newData ->
+                        result.value = Resource.error(response.message, newData)
                     }
                 }
             }

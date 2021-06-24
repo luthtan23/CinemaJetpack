@@ -3,9 +3,7 @@ package com.luthtan.cinemajetpack.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
-import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResultsItem
 import com.luthtan.cinemajetpack.repository.movie.MovieRepository
 import com.luthtan.cinemajetpack.vo.Resource
 import org.koin.core.KoinComponent

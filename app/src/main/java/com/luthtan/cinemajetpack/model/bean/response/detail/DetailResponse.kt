@@ -28,9 +28,6 @@ data class DetailResponse(
     @field:SerializedName("popularity")
     val popularity: Double,
 
-    @field:SerializedName("production_countries")
-    val productionCountries: List<ProductionCountriesItem>,
-
     @field:SerializedName("id")
     val id: Int,
 
@@ -51,12 +48,6 @@ data class DetailResponse(
 
     @field:SerializedName("poster_path")
     val posterPath: String,
-
-    @field:SerializedName("spoken_languages")
-    val spokenLanguages: List<SpokenLanguagesItem>,
-
-    @field:SerializedName("production_companies")
-    val productionCompanies: List<ProductionCompaniesItem>,
 
     @field:SerializedName("release_date")
     val releaseDate: String,

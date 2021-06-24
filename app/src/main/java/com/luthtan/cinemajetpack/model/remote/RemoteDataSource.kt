@@ -2,20 +2,13 @@ package com.luthtan.cinemajetpack.model.remote
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import com.luthtan.cinemajetpack.BuildConfig
-import com.luthtan.cinemajetpack.model.bean.local.MovieEntity
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
-import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerResponse
+import com.luthtan.cinemajetpack.model.bean.response.detail.*
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
 import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
-import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResultsItem
 import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResponse
-import com.luthtan.cinemajetpack.model.local.db.dao.MovieDao
 import com.luthtan.cinemajetpack.util.EspressIdlingResources
 import com.luthtan.cinemajetpack.vo.Resource
 import kotlinx.coroutines.GlobalScope
@@ -96,28 +89,46 @@ class RemoteDataSource(private val apiService: ApiService) {
         return tvShowResponse
     }
 
-    fun getDetailMovie(
-        detailResponse: MutableLiveData<Resource<DetailResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<DetailResponse>> {
-        object : DataFetchCall<DetailResponse>(detailResponse) {
-            override suspend fun createCallAsync(): Response<DetailResponse> {
-                return apiService.getMovieDetail(BuildConfig.TOKEN, id)
+    fun getDetailMovie(id: Int): MutableLiveData<ApiResponse<DetailResponse>> {
+        EspressIdlingResources.increment()
+        val detailResponse =  MutableLiveData<ApiResponse<DetailResponse>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getMovieDetail(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null)
+                    detailResponse.postValue(ApiResponse.success(request.body()!!))
+                } else {
+                    detailResponse.postValue(ApiResponse.empty(request.message(), request.body()!!))
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                detailResponse.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
+        }
         return detailResponse
     }
 
-    fun getDetailCreditsMovie(
-        creditResponse: MutableLiveData<Resource<CreditResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<CreditResponse>> {
-        object : DataFetchCall<CreditResponse>(creditResponse) {
-            override suspend fun createCallAsync(): Response<CreditResponse> {
-                return apiService.getMovieDetailCredits(BuildConfig.TOKEN, id)
+    fun getDetailCreditsMovie(id: Int): MutableLiveData<ApiResponse<List<CastItem>>> {
+        EspressIdlingResources.increment()
+        val castItem =  MutableLiveData<ApiResponse<List<CastItem>>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getMovieDetailCredits(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null)
+                        castItem.postValue(ApiResponse.success(request.body()!!.cast))
+                } else {
+                    castItem.postValue(ApiResponse.empty(request.message(), request.body()!!.cast))
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                castItem.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
-        return creditResponse
+        }
+        return castItem
     }
 
     fun getDetailRecommendationMovie(

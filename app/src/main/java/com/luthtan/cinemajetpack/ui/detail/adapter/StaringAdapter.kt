@@ -7,21 +7,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.ItemCinemaStaringLayoutBinding
+import com.luthtan.cinemajetpack.model.bean.local.CastItemEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 
 class StaringAdapter : RecyclerView.Adapter<StaringAdapter.StaringViewHolder>() {
 
-    private val listStaring = ArrayList<CastItem>()
+    private val listStaring = ArrayList<CastItemEntity>()
 
-    fun setStaring(staring: List<CastItem>) {
+    fun setStaring(staring: List<CastItemEntity>) {
         this.listStaring.clear()
         this.listStaring.addAll(staring)
     }
 
     inner class StaringViewHolder(private val binding: ItemCinemaStaringLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(staring: CastItem) {
+        fun bind(staring: CastItemEntity) {
             with(binding) {
                 tvItemCinemaStaring.text = staring.name
                 Glide.with(itemView.context)
