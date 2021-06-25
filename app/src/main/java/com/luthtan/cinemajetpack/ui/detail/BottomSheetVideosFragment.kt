@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.BottomSheetVideosLayoutBinding
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
 import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerResponse
 import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.VideosAdapter
@@ -47,15 +48,16 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
         val extraType = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).typeCinema
         title = BottomSheetVideosFragmentArgs.fromBundle(arguments as Bundle).title
 
+        detailViewModel.setExtraId(extraId)
+
         videosAdapter = VideosAdapter()
 
         if (extraType == Constant.TYPE_MOVIE) {
-            detailViewModel.getDetailVideoMovie(extraId)
         } else {
             detailViewModel.getDetailVideoTvShow(extraId)
         }
 
-        detailViewModel.trailerResponse.observe(viewLifecycleOwner, trailerResponse)
+        detailViewModel.detailWithTrailer.observe(viewLifecycleOwner, trailerResponse)
 
         with(binding.rvDetailContentVideo) {
             layoutManager = LinearLayoutManager(context)
@@ -64,15 +66,15 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private val trailerResponse: Observer<Resource<TrailerResponse>> by lazy {
-        Observer<Resource<TrailerResponse>> { trailerResponse ->
+    private val trailerResponse: Observer<Resource<DetailWithTrailer>> by lazy {
+        Observer<Resource<DetailWithTrailer>> { trailerResponse ->
             progressDialog.dismiss()
-            if (trailerResponse != null) {
+            if (trailerResponse.data != null) {
                 when (trailerResponse.status) {
                     Status.SUCCESS -> {
                         videosAdapter.setVideos(
                             requireActivity() as MainActivity,
-                            trailerResponse.data?.results!!
+                            trailerResponse.data.trailerItemsEntity
                         )
                         binding.tvBottomSheetVideoTitle.text =
                             title.plus(" ").plus(getString(R.string.videos))

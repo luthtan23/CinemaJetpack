@@ -1,95 +1,108 @@
 package com.luthtan.cinemajetpack.model.bean.local
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "movie_db")
 data class DetailEntity(
     @field:SerializedName("id")
     @PrimaryKey
-    @ColumnInfo(name = "detailId")
+    @ColumnInfo(defaultValue = "", name = "detailId")
     val detailId: Int,
 
     @field:SerializedName("imdb_id")
-    @ColumnInfo(name = "imdb_id")
+    @ColumnInfo(defaultValue = "", name = "imdb_id")
     val imdbId: String,
 
     @field:SerializedName("revenue")
-    @ColumnInfo(name ="revenue")
+    @ColumnInfo(name = "revenue")
     val revenue: Int,
 
     @field:SerializedName("budget")
-    @ColumnInfo(name = "budget")
+    @ColumnInfo(defaultValue = "", name = "budget")
     val budget: Int,
 
     @field:SerializedName("runtime")
-    @ColumnInfo(name = "runtime")
+    @ColumnInfo(defaultValue = "", name = "runtime")
     val runtime: Int,
 
     @field:SerializedName("tagline")
-    @ColumnInfo(name = "tagline")
+    @ColumnInfo(defaultValue = "", name = "tagline")
     val tagline: String,
 
     @field:SerializedName("homepage")
-    @ColumnInfo(name = "homepage")
+    @ColumnInfo(defaultValue = "", name = "homepage")
     val homepage: String,
 
     @field:SerializedName("status")
-    @ColumnInfo(name = "status")
+    @ColumnInfo(defaultValue = "", name = "status")
     val status: String,
 
     @field:SerializedName("overview")
-    @ColumnInfo(name = "overview")
+    @ColumnInfo(defaultValue = "", name = "overview")
     var overview: String,
 
     @field:SerializedName("original_language")
-    @ColumnInfo(name = "original_language")
+    @ColumnInfo(defaultValue = "", name = "original_language")
     var originalLanguage: String,
 
     @field:SerializedName("original_title")
-    @ColumnInfo(name = "original_title")
+    @ColumnInfo(defaultValue = "", name = "original_title")
     var originalTitle: String,
 
     @field:SerializedName("video")
-    @ColumnInfo(name = "video")
+    @ColumnInfo(defaultValue = "", name = "video")
     var video: Boolean,
 
     @field:SerializedName("title")
-    @ColumnInfo(name = "title")
+    @ColumnInfo(defaultValue = "", name = "title")
     var title: String,
 
     @field:SerializedName("poster_path")
-    @ColumnInfo(name = "poster_path")
+    @ColumnInfo(defaultValue = "", name = "poster_path")
     var posterPath: String,
 
     @field:SerializedName("backdrop_path")
-    @ColumnInfo(name = "backdrop_path")
+    @ColumnInfo(defaultValue = "", name = "backdrop_path")
     var backdropPath: String,
 
     @field:SerializedName("genres")
-    @ColumnInfo(name = "genres")
+    @ColumnInfo(defaultValue = "", name = "genres")
     val genres: List<GenresItemEntity>,
 
     @field:SerializedName("release_date")
-    @ColumnInfo(name = "release_date")
+    @ColumnInfo(defaultValue = "", name = "release_date")
     var releaseDate: String,
 
     @field:SerializedName("popularity")
-    @ColumnInfo(name = "popularity")
+    @ColumnInfo(defaultValue = "", name = "popularity")
     var popularity: Double,
 
     @field:SerializedName("vote_average")
-    @ColumnInfo(name = "vote_average")
+    @ColumnInfo(defaultValue = "", name = "vote_average")
     var voteAverage: Double,
 
     @field:SerializedName("adult")
-    @ColumnInfo(name = "adult")
+    @ColumnInfo(defaultValue = "", name = "adult")
     var adult: Boolean,
 
     @field:SerializedName("vote_count")
-    @ColumnInfo(name = "vote_count")
+    @ColumnInfo(defaultValue = "", name = "vote_count")
     var voteCount: Int,
 
-    @ColumnInfo(name = "isMovieFavorite")
-    var isMovieFavorite: Boolean = false
+    @field:SerializedName("name")
+    @ColumnInfo(defaultValue = "", name = "name")
+    val name: String,
+
+    @field:SerializedName("first_air_date")
+    @ColumnInfo(defaultValue = "", name = "first_air_date")
+    val firstAirDate: String,
+
+    @ColumnInfo(defaultValue = "", name = "isMovieFavorite")
+    var isMovieFavorite: Boolean = false,
+
+    @ColumnInfo(defaultValue = "", name = "isTvShowFavorite")
+    var isTvShowFavorite: Boolean = false
 )

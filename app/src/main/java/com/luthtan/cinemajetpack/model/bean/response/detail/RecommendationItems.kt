@@ -4,6 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class RecommendationItems(
 
+    @field:SerializedName("id")
+    val id: Int? = null,
+
+    var detailId: Int,
+
     @field:SerializedName("first_air_date")
     val firstAirDate: String? = null,
 
@@ -39,9 +44,6 @@ data class RecommendationItems(
 
     @field:SerializedName("name")
     val name: String? = null,
-
-    @field:SerializedName("id")
-    val id: Int? = null,
 
     @field:SerializedName("adult")
     val adult: Boolean? = null,

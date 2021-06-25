@@ -7,16 +7,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.ItemCinemaRecommendationBinding
+import com.luthtan.cinemajetpack.model.bean.local.RecommendationItemsEntity
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationItems
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 
 class RecommendationAdapter :
     RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
 
-    private val listRecommendation = ArrayList<RecommendationItems>()
+    private val listRecommendation = ArrayList<RecommendationItemsEntity>()
     private var typeCinema = ""
 
-    fun setRecommendation(listRecommendation: List<RecommendationItems>, typeCinema: String) {
+    fun setRecommendation(listRecommendation: List<RecommendationItemsEntity>, typeCinema: String) {
         this.listRecommendation.clear()
         this.listRecommendation.addAll(listRecommendation)
         this.typeCinema = typeCinema
@@ -25,7 +26,7 @@ class RecommendationAdapter :
 
     inner class RecommendationViewHolder(private val binding: ItemCinemaRecommendationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(recommendationItems: RecommendationItems) {
+        fun bind(recommendationItems: RecommendationItemsEntity) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(ApiConstant.IMAGE_PATH.plus(recommendationItems.backdropPath))

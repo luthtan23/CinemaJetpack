@@ -3,9 +3,11 @@ package com.luthtan.cinemajetpack.ui.detail
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,13 +18,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.DetailCinemaFragmentLayoutBinding
-import com.luthtan.cinemajetpack.model.bean.local.CastItemEntity
-import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
-import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
+import com.luthtan.cinemajetpack.model.bean.local.*
 import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
 import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
+import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
 import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
@@ -48,7 +49,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private var title = "title"
 
     private var statusNetwork: Boolean = false
-    private var isFavorite: Boolean = false
     private var isCinema: Boolean = false
 
     private lateinit var detailEntity: DetailEntity
@@ -75,6 +75,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
         isCinema = extraType == Constant.TYPE_MOVIE
 
+        detailViewModel.setExtraId(extraId)
+
         progressDialog.show()
 
         staringAdapter = StaringAdapter()
@@ -89,7 +91,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private fun setInit() {
         if (isCinema) {
-            detailViewModel.getDetailMovie(extraId)
 
         } else {
             detailViewModel.getDetailTvShow(extraId)
@@ -103,9 +104,9 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private fun getData() {
         backPressedFragment()
-        detailViewModel.getDetailMovieFavorite(extraId).observe(viewLifecycleOwner, detailResponse)
-        detailViewModel.getMovieFavoriteCastList(extraId).observe(viewLifecycleOwner, creditResponse)
-        detailViewModel.recommendationResponse.observe(viewLifecycleOwner, recommendationResponse)
+        detailViewModel.detailMovieFavorite.observe(viewLifecycleOwner, detailResponse)
+        detailViewModel.detailWithCast.observe(viewLifecycleOwner, creditResponse)
+        detailViewModel.detailWithRecommendation.observe(viewLifecycleOwner, recommendationResponse)
     }
 
     private fun setAdapter() {
@@ -144,12 +145,12 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private val creditResponse: Observer<Resource<List<CastItemEntity>>> by lazy {
-        Observer<Resource<List<CastItemEntity>>> { creditResponse ->
-            if (creditResponse != null) {
+    private val creditResponse: Observer<Resource<DetailWithCast>> by lazy {
+        Observer<Resource<DetailWithCast>> { creditResponse ->
+            if (creditResponse.data != null) {
                 when (creditResponse.status) {
                     Status.SUCCESS -> {
-                        staringAdapter.setStaring(creditResponse.data!!)
+                        staringAdapter.setStaring(creditResponse.data.castItemEntity)
                         staringAdapter.notifyDataSetChanged()
                         statusNetwork = false
                     }
@@ -160,13 +161,13 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private val recommendationResponse: Observer<Resource<RecommendationResponse>> by lazy {
-        Observer<Resource<RecommendationResponse>> { recommendationResponse ->
-            if (recommendationResponse != null) {
+    private val recommendationResponse: Observer<Resource<DetailWithRecommendation>> by lazy {
+        Observer<Resource<DetailWithRecommendation>> { recommendationResponse ->
+            if (recommendationResponse.data != null) {
                 when (recommendationResponse.status) {
                     Status.SUCCESS -> {
                         recommendationAdapter.setRecommendation(
-                            recommendationResponse.data!!.results!!,
+                            recommendationResponse.data.recommendationItemsEntity,
                             Constant.TYPE_MOVIE
                         )
                         staringAdapter.notifyDataSetChanged()
@@ -226,10 +227,10 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setDetailAttrTvShow(detailResponse: DetailEntity) {
-//        title = detailResponse.name
+        title = detailResponse.name
         with(binding) {
-//            tvDetailContentTitle.text = detailResponse.name
-//            tvDetailContentReleasedDate.text = detailResponse.firstAirDate
+            tvDetailContentTitle.text = detailResponse.name
+            tvDetailContentReleasedDate.text = detailResponse.firstAirDate
             tvDetailContentDuration.visibility = View.GONE
             bullets1DetailContent.visibility = View.GONE
         }
@@ -271,10 +272,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private fun setFavoriteStatus(isCinema: Boolean) {
         try {
             if (isCinema) {
-                isFavorite = !isFavorite
-                detailViewModel.updateMovieFavorite(detailEntity, isFavorite)
+                detailViewModel.setMovieFavorite()
                 detailViewModel.insertMovie(detailEntity)
-                setFavoriteButtonStatus(isFavorite)
             } else {
 
             }
@@ -285,7 +284,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun setFavoriteButtonStatus(isFavorite: Boolean) {
+    private fun setFavoriteButtonStatus(isFavorite: Boolean) {
         if (isFavorite) binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite))
         else binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite_border))
     }

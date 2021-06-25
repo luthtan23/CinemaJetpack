@@ -8,7 +8,7 @@ import org.koin.dsl.module
 val remoteModule = module {
 
     single { RemoteDataSource(get()) }
-    single { LocalDataSource(get()) }
+    single { LocalDataSource(get(), get()) }
     single { AppExecutors() }
 
 }

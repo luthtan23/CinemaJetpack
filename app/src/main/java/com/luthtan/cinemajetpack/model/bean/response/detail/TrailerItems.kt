@@ -4,6 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class TrailerItems(
 
+    @field:SerializedName("id")
+    val id: String,
+
+    var detailId: Int,
+
     @field:SerializedName("site")
     val site: String,
 
@@ -15,9 +20,6 @@ data class TrailerItems(
 
     @field:SerializedName("name")
     val name: String,
-
-    @field:SerializedName("id")
-    val id: String,
 
     @field:SerializedName("type")
     val type: String,

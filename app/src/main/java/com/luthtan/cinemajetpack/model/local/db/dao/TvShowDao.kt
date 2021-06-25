@@ -3,28 +3,27 @@ package com.luthtan.cinemajetpack.model.local.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 
 @Dao
-interface MovieDao {
+interface TvShowDao {
 
     @Query("SELECT * from movie_db")
-    fun getAllMovieFavorite(): LiveData<List<DetailEntity>>
+    fun getAllTvShowFavorite(): LiveData<List<DetailEntity>>
 
-    @Query("SELECT * FROM movie_db where isMovieFavorite = 1")
-    fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>>
+    @Query("SELECT * FROM movie_db where isTvShowFavorite = 1")
+    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>>
 
     @Query("SELECT * FROM movie_db WHERE detailId = :id")
-    fun retrieveMovieFavorite(id: Int): LiveData<DetailEntity>
+    fun retrieveTvShowFavorite(id: Int): LiveData<DetailEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(detailEntity: DetailEntity)
+    fun insertTvShow(detailEntity: DetailEntity)
 
     @Query("DELETE FROM movie_db WHERE detailId = :id")
-    fun deleteMovieFavorite(id: Int)
+    fun deleteTvShowFavorite(id: Int)
 
     @Update
-    fun updateMovieFavorite(detailEntity: DetailEntity)
+    fun updateTvShowFavorite(detailEntity: DetailEntity)
 
     @Transaction
     @Query("SELECT * FROM movie_db WHERE detailId = :detailId")
@@ -46,6 +45,5 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertGetDetailWithTrailer(trailerItemsEntity: List<TrailerItemsEntity>)
-
 
 }

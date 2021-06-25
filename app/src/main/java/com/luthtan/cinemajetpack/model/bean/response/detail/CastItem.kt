@@ -6,6 +6,8 @@ data class CastItem(
     @field:SerializedName("id")
     val castId: Int,
 
+    var detailId: Int,
+
     @field:SerializedName("character")
     val character: String,
 
