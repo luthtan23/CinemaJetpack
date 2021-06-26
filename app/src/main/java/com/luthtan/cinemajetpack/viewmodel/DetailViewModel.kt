@@ -1,15 +1,13 @@
 package com.luthtan.cinemajetpack.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
-import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerResponse
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
 import com.luthtan.cinemajetpack.repository.detail.DetailRepository
 import com.luthtan.cinemajetpack.vo.Resource
 import org.koin.core.KoinComponent
@@ -22,23 +20,25 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
         this.extraId.value = id
     }
 
-    val detailMovieFavorite: LiveData<Resource<DetailEntity>> = Transformations.switchMap(extraId) { id ->
-        detailRepository.getDetailMovie(id)
-    }
+    val detailMovieFavorite: LiveData<Resource<DetailEntity>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getDetailMovie(id)
+        }
 
-    val detailWithCast: LiveData<Resource<DetailWithCast>> = Transformations.switchMap(extraId) { id ->
-        detailRepository.getDetailWithCast(id)
-    }
+    val detailWithCast: LiveData<Resource<DetailWithCast>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getDetailWithCast(id)
+        }
 
-    val detailWithRecommendation: LiveData<Resource<DetailWithRecommendation>> = Transformations.switchMap(extraId) { id ->
-        detailRepository.getDetailWithRecommendation(id)
-    }
+    val detailWithRecommendation: LiveData<Resource<DetailWithRecommendation>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getDetailWithRecommendation(id)
+        }
 
-    val detailWithTrailer: LiveData<Resource<DetailWithTrailer>> = Transformations.switchMap(extraId) { id ->
-        detailRepository.getDetailWithTrailer(id)
-    }
-
-    fun insertMovie(detailEntity: DetailEntity) = detailRepository.insertMovie(detailEntity)
+    val detailWithTrailer: LiveData<Resource<DetailWithTrailer>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getDetailWithTrailer(id)
+        }
 
     fun setMovieFavorite() {
         val detailMovieFavorite = detailMovieFavorite.value
@@ -51,19 +51,52 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
         }
     }
 
-    private val _recommendationResponse = MutableLiveData<Resource<RecommendationResponse>>()
-    val recommendationResponse: LiveData<Resource<RecommendationResponse>> get() = _recommendationResponse
-
-    private val _trailerResponse = MutableLiveData<Resource<TrailerResponse>>()
-    val trailerResponse: LiveData<Resource<TrailerResponse>> get() = _trailerResponse
-
-    fun getAllMovieFavorite(): LiveData<List<DetailEntity>> = detailRepository.getAllMovieFavorite()
-
-    fun getDetailTvShow(id: Int) {
-        detailRepository.getDetailRecommendationTvShow(_recommendationResponse, id)
+    fun deleteMovieFavorite(detailEntity: DetailEntity) {
+        val isMovieFavorite = !detailEntity.isMovieFavorite
+        detailRepository.updateMovieFavorite(detailEntity, isMovieFavorite)
     }
 
-    fun getDetailVideoTvShow(id: Int) = detailRepository.getDetailVideosTvShow(_trailerResponse, id)
+    fun getAllMovieFavorite(): LiveData<List<DetailEntity>> =
+        detailRepository.getAllMovieFavoriteList()
+
+    val detailTvShowFavorite: LiveData<Resource<DetailEntity>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getDetailTvShow(id)
+        }
+
+    val detailWithCastTvShow: LiveData<Resource<DetailWithCast>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getTvShowDetailWithCast(id)
+        }
+
+    val detailWithRecommendationTvShow: LiveData<Resource<DetailWithRecommendation>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getTvShowDetailWithRecommendation(id)
+        }
+
+    val detailWithTrailerTvShow: LiveData<Resource<DetailWithTrailer>> =
+        Transformations.switchMap(extraId) { id ->
+            detailRepository.getTvShowDetailWithTrailer(id)
+        }
+
+    fun setTvShowFavorite() {
+        val detailTvShowFavorite = detailTvShowFavorite.value
+        if (detailTvShowFavorite != null) {
+            val detailTvShowFavoriteData = detailTvShowFavorite.data
+            if (detailTvShowFavoriteData != null) {
+                val isTvShowFavorite = !detailTvShowFavoriteData.isTvShowFavorite
+                detailRepository.updateTvShowFavorite(detailTvShowFavoriteData, isTvShowFavorite)
+            }
+        }
+    }
+
+    fun deleteTvShowFavorite(detailEntity: DetailEntity) {
+        val isMovieFavorite = !detailEntity.isMovieFavorite
+        detailRepository.updateTvShowFavorite(detailEntity, isMovieFavorite)
+    }
+
+    fun getAllTvShowFavorite(): LiveData<List<DetailEntity>> =
+        detailRepository.getAllTvShowFavoriteList()
 
 
 }

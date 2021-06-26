@@ -1,4 +1,4 @@
-package com.luthtan.cinemajetpack.ui.favorite.tablayout.movie_favorite
+package com.luthtan.cinemajetpack.ui.favorite.tablayout.tvshow_favorite
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,32 +17,33 @@ import com.luthtan.cinemajetpack.ui.favorite.FavoriteFragmentDirections
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 
-class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavoriteViewHolder>() {
+class TvShowFavoriteAdapter :
+    RecyclerView.Adapter<TvShowFavoriteAdapter.TvShowFavoriteViewHolder>() {
 
-    private val movieItemDB = ArrayList<DetailEntity>()
+    private val tvShowItemDB = ArrayList<DetailEntity>()
 
     private lateinit var deleteFavoriteListener: DeleteFavoriteListener
 
-    fun setMovieItemDB(
+    fun setTvShowItemDB(
         detailEntity: List<DetailEntity>,
         deleteFavoriteListener: DeleteFavoriteListener
     ) {
-        this.movieItemDB.clear()
-        this.movieItemDB.addAll(detailEntity)
+        this.tvShowItemDB.clear()
+        this.tvShowItemDB.addAll(detailEntity)
         this.deleteFavoriteListener = deleteFavoriteListener
     }
 
-    inner class MovieFavoriteViewHolder(private val binding: ItemFavoriteLayoutBinding) :
+    inner class TvShowFavoriteViewHolder(private val binding: ItemFavoriteLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(detailEntity: DetailEntity) {
             with(binding) {
                 val userScore = detailEntity.voteAverage * 10
                 tvItemFavoriteTagline.text = detailEntity.tagline
+                tvItemFavoriteTitle.text = detailEntity.name
+                tvItemFavoriteReleasedDate.text = detailEntity.firstAirDate
                 tvItemFavoriteGenre.text = Utils.insertStringGenre(detailEntity.genres)
                 progressBarItemFavoriteUserScore.progress = userScore.toInt()
                 tvItemFavoriteUserScore.text = userScore.toString()
-                tvItemFavoriteTitle.text = detailEntity.originalTitle
-                tvItemFavoriteReleasedDate.text = detailEntity.releaseDate
                 tvItemFavoriteDuration.text = detailEntity.runtime.toString().plus("m")
                 ibItemFavoriteShare.setOnClickListener {
                     deleteFavoriteListener.selectedDeleteFavorite(detailEntity)
@@ -61,7 +62,7 @@ class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavo
                         itemView.findNavController().navigate(
                             FavoriteFragmentDirections.actionFavoriteFragmentToDetailCinemaFragment2(
                                 detailEntity.detailId,
-                                Constant.TYPE_MOVIE
+                                Constant.TYPE_TV_SHOW
                             )
                         )
                     }
@@ -71,15 +72,15 @@ class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavo
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieFavoriteViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowFavoriteViewHolder {
         val itemFavoriteLayoutBinding =
             ItemFavoriteLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MovieFavoriteViewHolder(itemFavoriteLayoutBinding)
+        return TvShowFavoriteViewHolder(itemFavoriteLayoutBinding)
     }
 
-    override fun onBindViewHolder(holder: MovieFavoriteViewHolder, position: Int) {
-        holder.bind(movieItemDB[position])
+    override fun onBindViewHolder(holder: TvShowFavoriteViewHolder, position: Int) {
+        holder.bind(tvShowItemDB[position])
     }
 
-    override fun getItemCount(): Int = movieItemDB.size
+    override fun getItemCount(): Int = tvShowItemDB.size
 }

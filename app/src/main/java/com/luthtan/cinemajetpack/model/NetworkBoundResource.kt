@@ -6,7 +6,6 @@ import com.luthtan.cinemajetpack.model.remote.ApiResponse
 import com.luthtan.cinemajetpack.model.remote.StatusResponse
 import com.luthtan.cinemajetpack.util.AppExecutors
 import com.luthtan.cinemajetpack.vo.Resource
-import com.luthtan.cinemajetpack.vo.Status
 
 abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecutors: AppExecutors) {
 

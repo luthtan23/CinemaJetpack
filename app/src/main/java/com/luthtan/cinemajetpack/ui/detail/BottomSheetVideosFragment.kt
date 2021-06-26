@@ -11,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.BottomSheetVideosLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
-import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerResponse
 import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.VideosAdapter
 import com.luthtan.cinemajetpack.util.Constant
@@ -52,12 +51,11 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
 
         videosAdapter = VideosAdapter()
 
-        if (extraType == Constant.TYPE_MOVIE) {
-        } else {
-            detailViewModel.getDetailVideoTvShow(extraId)
-        }
-
-        detailViewModel.detailWithTrailer.observe(viewLifecycleOwner, trailerResponse)
+        if (extraType == Constant.TYPE_MOVIE) detailViewModel.detailWithTrailer.observe(
+            viewLifecycleOwner,
+            trailerResponse
+        )
+        else detailViewModel.detailWithTrailerTvShow.observe(viewLifecycleOwner, trailerResponse)
 
         with(binding.rvDetailContentVideo) {
             layoutManager = LinearLayoutManager(context)

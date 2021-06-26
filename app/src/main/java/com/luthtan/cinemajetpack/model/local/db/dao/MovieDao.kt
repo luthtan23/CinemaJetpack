@@ -3,7 +3,6 @@ package com.luthtan.cinemajetpack.model.local.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 
 @Dao
 interface MovieDao {
@@ -38,13 +37,13 @@ interface MovieDao {
     @Query("SELECT * FROM movie_db WHERE detailId = :detailId")
     fun getDetailWithTrailer(detailId: Int): LiveData<DetailWithTrailer>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGetDetailWithCastList(castItem: List<CastItemEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGetDetailWithRecommendationList(recommendationEntity: List<RecommendationItemsEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGetDetailWithTrailer(trailerItemsEntity: List<TrailerItemsEntity>)
 
 

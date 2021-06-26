@@ -9,5 +9,6 @@ class GenresTypeConverter {
     fun loadToJson(value: List<GenresItemEntity>): String = Gson().toJson(value)
 
     @TypeConverter
-    fun jsonToList(value: String): List<GenresItemEntity> = Gson().fromJson(value, Array<GenresItemEntity>::class.java).toList()
+    fun jsonToList(value: String): List<GenresItemEntity> =
+        Gson().fromJson(value, Array<GenresItemEntity>::class.java).toList()
 }

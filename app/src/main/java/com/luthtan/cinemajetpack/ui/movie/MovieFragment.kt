@@ -2,7 +2,6 @@ package com.luthtan.cinemajetpack.ui.movie
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import com.luthtan.cinemajetpack.ui.movie.adapter.MoviePopularAdapter
 import com.luthtan.cinemajetpack.ui.movie.adapter.MovieTopRatedAdapter
 import com.luthtan.cinemajetpack.ui.movie.adapter.MovieUpcomingAdapter
 import com.luthtan.cinemajetpack.util.Constant
-import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.viewmodel.MovieViewModel
 import com.luthtan.cinemajetpack.vo.Resource
 import com.luthtan.cinemajetpack.vo.Status
@@ -66,9 +64,7 @@ class MovieFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInit() {
-        if (!statusNetwork) {
-            movieViewModel.getMovieResponse()
-        }
+        if (!statusNetwork) movieViewModel.getMovieResponse()
         getData()
         setAdapter()
     }
@@ -110,7 +106,6 @@ class MovieFragment : Fragment(), View.OnClickListener {
             registerOnPageChangeCallback(registerViewPagerCallback)
             getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         }
-        setInitNetworkErrorLayout(statusNetwork)
     }
 
     private val moviePopularResponse: Observer<Resource<MovieResponse>> by lazy {
@@ -123,15 +118,14 @@ class MovieFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_MOVIE
                         )
                         moviePopularAdapter.notifyDataSetChanged()
-                        statusNetwork = false
-                    }
-                    Status.ERROR -> {
                         statusNetwork = true
                     }
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
             }
+            setInitNetworkErrorLayout(statusNetwork)
         }
     }
 
@@ -145,9 +139,9 @@ class MovieFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_MOVIE
                         )
                         carouselMovieAdapter.notifyDataSetChanged()
-                        statusNetwork = false
+                        statusNetwork = true
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -165,9 +159,9 @@ class MovieFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_MOVIE
                         )
                         movieTopRatedAdapter.notifyDataSetChanged()
-                        statusNetwork = false
+                        statusNetwork = true
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -185,9 +179,9 @@ class MovieFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_MOVIE
                         )
                         movieUpcomingAdapter.notifyDataSetChanged()
-                        statusNetwork = false
+                        statusNetwork = true
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -198,13 +192,12 @@ class MovieFragment : Fragment(), View.OnClickListener {
     private fun setInitNetworkErrorLayout(status: Boolean) {
         when (status) {
             true -> {
-                Utils.snackBarErrorConnection(requireView(), requireContext())
-                binding.constraintMovieError.constraintNetworkError.visibility = View.VISIBLE
-                binding.constraintMovie.visibility = View.GONE
-            }
-            false -> {
                 binding.constraintMovieError.constraintNetworkError.visibility = View.GONE
                 binding.constraintMovie.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.constraintMovieError.constraintNetworkError.visibility = View.VISIBLE
+                binding.constraintMovie.visibility = View.GONE
             }
         }
 

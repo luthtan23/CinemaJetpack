@@ -48,7 +48,7 @@ class DetailViewModelTest {
         detailViewModel.getDetailMovieFavorite(19913).observeForever(observer)*/
     }
 
-    @Test
+   /* @Test
     fun getCreditResponse() {
         val creditResponse = detailViewModel.creditResponse
         assertNotNull(creditResponse)
@@ -60,7 +60,7 @@ class DetailViewModelTest {
         val recommendationResponse = detailViewModel.recommendationResponse
         assertNotNull(recommendationResponse)
         detailViewModel.recommendationResponse.observeForever(recommendationObserver)
-    }
+    }*/
 
     @Test
     fun getTrailerResponse() {

@@ -9,8 +9,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.model.bean.local.GenresItemEntity
-import com.luthtan.cinemajetpack.model.bean.local.GenresTypeConverter
-import com.luthtan.cinemajetpack.model.bean.response.detail.GenresItem
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 import com.luthtan.cinemajetpack.ui.MainActivity
 import java.util.*

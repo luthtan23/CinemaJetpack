@@ -65,9 +65,7 @@ class TvShowFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInit() {
-        if (!statusNetwork) {
-            tvShowViewModel.getTvShowResponse()
-        }
+        if (!statusNetwork) tvShowViewModel.getTvShowResponse()
         getData()
         setAdapter()
     }
@@ -112,7 +110,6 @@ class TvShowFragment : Fragment(), View.OnClickListener {
             setHasFixedSize(true)
             adapter = tvShowTopRatedAdapter
         }
-        setInitNetworkErrorLayout(statusNetwork)
     }
 
     private val tvShowPopularResponse: Observer<Resource<TvShowResponse>> by lazy {
@@ -125,15 +122,14 @@ class TvShowFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_TV_SHOW
                         )
                         tvShowPopularAdapter.notifyDataSetChanged()
-                        statusNetwork = false
-                    }
-                    Status.ERROR -> {
                         statusNetwork = true
                     }
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
             }
+            setInitNetworkErrorLayout(statusNetwork)
         }
     }
 
@@ -147,11 +143,9 @@ class TvShowFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_TV_SHOW
                         )
                         carouselTvShowAdapter.notifyDataSetChanged()
-                        statusNetwork = false
-                    }
-                    Status.ERROR -> {
                         statusNetwork = true
                     }
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -169,11 +163,9 @@ class TvShowFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_TV_SHOW
                         )
                         tvShowUpcomingAdapter.notifyDataSetChanged()
-                        statusNetwork = false
-                    }
-                    Status.ERROR -> {
                         statusNetwork = true
                     }
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -191,11 +183,9 @@ class TvShowFragment : Fragment(), View.OnClickListener {
                             Constant.TYPE_TV_SHOW
                         )
                         tvShowTopRatedAdapter.notifyDataSetChanged()
-                        statusNetwork = false
-                    }
-                    Status.ERROR -> {
                         statusNetwork = true
                     }
+                    Status.ERROR -> statusNetwork = false
                     Status.LOADING -> {
                     }
                 }
@@ -206,12 +196,12 @@ class TvShowFragment : Fragment(), View.OnClickListener {
     private fun setInitNetworkErrorLayout(status: Boolean) {
         when (status) {
             true -> {
-                binding.constraintTvShowError.constraintNetworkError.visibility = View.VISIBLE
-                binding.constraintTvShow.visibility = View.GONE
-            }
-            false -> {
                 binding.constraintTvShowError.constraintNetworkError.visibility = View.GONE
                 binding.constraintTvShow.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.constraintTvShowError.constraintNetworkError.visibility = View.VISIBLE
+                binding.constraintTvShow.visibility = View.GONE
             }
         }
 

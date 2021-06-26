@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.luthtan.cinemajetpack.BuildConfig
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
-import com.luthtan.cinemajetpack.model.bean.response.detail.*
+import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
+import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
+import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationItems
+import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerItems
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
 import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
@@ -91,13 +94,13 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     fun getDetailMovie(id: Int): MutableLiveData<ApiResponse<DetailResponse>> {
         EspressIdlingResources.increment()
-        val detailResponse =  MutableLiveData<ApiResponse<DetailResponse>>()
+        val detailResponse = MutableLiveData<ApiResponse<DetailResponse>>()
         GlobalScope.launch {
             try {
                 val request = apiService.getMovieDetail(BuildConfig.TOKEN, id)
                 if (request.isSuccessful) {
                     if (request.body() != null)
-                    detailResponse.postValue(ApiResponse.success(request.body()!!))
+                        detailResponse.postValue(ApiResponse.success(request.body()!!))
                 } else {
                     detailResponse.postValue(ApiResponse.empty(request.message(), request.body()!!))
                 }
@@ -112,7 +115,7 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     fun getDetailCreditsMovie(id: Int): MutableLiveData<ApiResponse<List<CastItem>>> {
         EspressIdlingResources.increment()
-        val castItem =  MutableLiveData<ApiResponse<List<CastItem>>>()
+        val castItem = MutableLiveData<ApiResponse<List<CastItem>>>()
         GlobalScope.launch {
             try {
                 val request = apiService.getMovieDetailCredits(BuildConfig.TOKEN, id)
@@ -139,7 +142,7 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     fun getDetailRecommendationMovie(id: Int): MutableLiveData<ApiResponse<List<RecommendationItems>>> {
         EspressIdlingResources.increment()
-        val recommendationItems =  MutableLiveData<ApiResponse<List<RecommendationItems>>>()
+        val recommendationItems = MutableLiveData<ApiResponse<List<RecommendationItems>>>()
         GlobalScope.launch {
             try {
                 val request = apiService.getMovieDetailRecommendation(BuildConfig.TOKEN, id)
@@ -153,7 +156,12 @@ class RemoteDataSource(private val apiService: ApiService) {
                         recommendationItems.postValue(ApiResponse.success(recommendationItemsId))
                     }
                 } else {
-                    recommendationItems.postValue(ApiResponse.empty(request.message(), request.body()!!.results!!))
+                    recommendationItems.postValue(
+                        ApiResponse.empty(
+                            request.message(),
+                            request.body()!!.results!!
+                        )
+                    )
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
@@ -166,7 +174,7 @@ class RemoteDataSource(private val apiService: ApiService) {
 
     fun getDetailVideosMovie(id: Int): MutableLiveData<ApiResponse<List<TrailerItems>>> {
         EspressIdlingResources.increment()
-        val trailerItems =  MutableLiveData<ApiResponse<List<TrailerItems>>>()
+        val trailerItems = MutableLiveData<ApiResponse<List<TrailerItems>>>()
         GlobalScope.launch {
             try {
                 val request = apiService.getMovieDetailVideos(BuildConfig.TOKEN, id)
@@ -180,7 +188,12 @@ class RemoteDataSource(private val apiService: ApiService) {
                         trailerItems.postValue(ApiResponse.success(recommendationItemsId))
                     }
                 } else {
-                    trailerItems.postValue(ApiResponse.empty(request.message(), request.body()!!.results))
+                    trailerItems.postValue(
+                        ApiResponse.empty(
+                            request.message(),
+                            request.body()!!.results
+                        )
+                    )
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
@@ -191,52 +204,116 @@ class RemoteDataSource(private val apiService: ApiService) {
         return trailerItems
     }
 
-    fun getDetailTvShow(
-        detailResponse: MutableLiveData<Resource<DetailResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<DetailResponse>> {
-        object : DataFetchCall<DetailResponse>(detailResponse) {
-            override suspend fun createCallAsync(): Response<DetailResponse> {
-                return apiService.getTvShowDetail(BuildConfig.TOKEN, id)
+    fun getDetailTvShow(id: Int): MutableLiveData<ApiResponse<DetailResponse>> {
+        EspressIdlingResources.increment()
+        val detailResponse = MutableLiveData<ApiResponse<DetailResponse>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getTvShowDetail(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null)
+                        detailResponse.postValue(ApiResponse.success(request.body()!!))
+                } else {
+                    detailResponse.postValue(ApiResponse.empty(request.message(), request.body()!!))
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                detailResponse.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
+        }
         return detailResponse
     }
 
-    fun getDetailCreditsTvShow(
-        creditResponse: MutableLiveData<Resource<CreditResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<CreditResponse>> {
-        object : DataFetchCall<CreditResponse>(creditResponse) {
-            override suspend fun createCallAsync(): Response<CreditResponse> {
-                return apiService.getTvShowDetailCredits(BuildConfig.TOKEN, id)
+    fun getDetailCreditsTvShow(id: Int): MutableLiveData<ApiResponse<List<CastItem>>> {
+        EspressIdlingResources.increment()
+        val castItem = MutableLiveData<ApiResponse<List<CastItem>>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getTvShowDetailCredits(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null) {
+                        val castItemId = ArrayList<CastItem>()
+                        for (response in request.body()!!.cast) {
+                            response.detailId = id
+                            castItemId.add(response)
+                        }
+                        castItem.postValue(ApiResponse.success(castItemId))
+                    }
+                } else {
+                    castItem.postValue(ApiResponse.empty(request.message(), request.body()!!.cast))
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                castItem.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
-        return creditResponse
+        }
+        return castItem
     }
 
-    fun getDetailRecommendationTvShow(
-        recommendationResponse: MutableLiveData<Resource<RecommendationResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<RecommendationResponse>> {
-        object : DataFetchCall<RecommendationResponse>(recommendationResponse) {
-            override suspend fun createCallAsync(): Response<RecommendationResponse> {
-                return apiService.getTvShowDetailRecommendation(BuildConfig.TOKEN, id)
+    fun getDetailRecommendationTvShow(id: Int): MutableLiveData<ApiResponse<List<RecommendationItems>>> {
+        EspressIdlingResources.increment()
+        val recommendationItems = MutableLiveData<ApiResponse<List<RecommendationItems>>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getTvShowDetailRecommendation(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null) {
+                        val recommendationItemsId = ArrayList<RecommendationItems>()
+                        for (response in request.body()!!.results!!) {
+                            response.detailId = id
+                            recommendationItemsId.add(response)
+                        }
+                        recommendationItems.postValue(ApiResponse.success(recommendationItemsId))
+                    }
+                } else {
+                    recommendationItems.postValue(
+                        ApiResponse.empty(
+                            request.message(),
+                            request.body()!!.results!!
+                        )
+                    )
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                recommendationItems.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
-        return recommendationResponse
+        }
+        return recommendationItems
     }
 
-    fun getDetailVideosTvShow(
-        trailerResponse: MutableLiveData<Resource<TrailerResponse>>,
-        id: Int
-    ): MutableLiveData<Resource<TrailerResponse>> {
-        object : DataFetchCall<TrailerResponse>(trailerResponse) {
-            override suspend fun createCallAsync(): Response<TrailerResponse> {
-                return apiService.getTvShowDetailVideos(BuildConfig.TOKEN, id)
+    fun getDetailVideosTvShow(id: Int): MutableLiveData<ApiResponse<List<TrailerItems>>> {
+        EspressIdlingResources.increment()
+        val trailerItems = MutableLiveData<ApiResponse<List<TrailerItems>>>()
+        GlobalScope.launch {
+            try {
+                val request = apiService.getTvShowDetailVideos(BuildConfig.TOKEN, id)
+                if (request.isSuccessful) {
+                    if (request.body() != null) {
+                        val recommendationItemsId = ArrayList<TrailerItems>()
+                        for (response in request.body()!!.results) {
+                            response.detailId = id
+                            recommendationItemsId.add(response)
+                        }
+                        trailerItems.postValue(ApiResponse.success(recommendationItemsId))
+                    }
+                } else {
+                    trailerItems.postValue(
+                        ApiResponse.empty(
+                            request.message(),
+                            request.body()!!.results
+                        )
+                    )
+                }
+                EspressIdlingResources.decrement()
+            } catch (exception: java.lang.Exception) {
+                exception.printStackTrace()
+                trailerItems.postValue(ApiResponse.error(exception.toString()))
             }
-        }.execute()
-        return trailerResponse
+        }
+        return trailerItems
     }
 
     fun getTokenLogin(tokenResponse: MutableLiveData<Resource<TokenResponse>>): MutableLiveData<Resource<TokenResponse>> {

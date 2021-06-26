@@ -9,5 +9,25 @@
         android:id="@+id/favoriteFragment"
         android:name="com.luthtan.cinemajetpack.ui.favorite.FavoriteFragment"
         android:label="Favorite"
-        tools:layout="@layout/favorite_fragment_layout"/>
+        tools:layout="@layout/favorite_fragment_layout">
+        <action
+            android:id="@+id/action_favoriteFragment_to_detailCinemaFragment2"
+            app:destination="@id/detailCinemaFragment2"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
+    <fragment
+        android:id="@+id/detailCinemaFragment2"
+        android:name="com.luthtan.cinemajetpack.ui.detail.DetailCinemaFragment"
+        android:label="DetailCinemaFragment"
+        tools:layout="@layout/detail_cinema_fragment_layout">
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="19913" />
+        <argument
+            android:name="typeCinema"
+            app:argType="string"
+            android:defaultValue="movie" />
+    </fragment>
 </navigation>

@@ -6,13 +6,17 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "trailerEntity",
+@Entity(
+    tableName = "trailerEntity",
     primaryKeys = ["trailerId", "detailId"],
-    foreignKeys = [ForeignKey(entity = DetailEntity::class,
+    foreignKeys = [ForeignKey(
+        entity = DetailEntity::class,
         parentColumns = ["detailId"],
-        childColumns = ["detailId"])],
+        childColumns = ["detailId"]
+    )],
     indices = [Index(value = ["trailerId"]),
-        Index(value = ["detailId"])])
+        Index(value = ["detailId"])]
+)
 data class TrailerItemsEntity(
     @field:SerializedName("id")
     @ColumnInfo(name = "trailerId")

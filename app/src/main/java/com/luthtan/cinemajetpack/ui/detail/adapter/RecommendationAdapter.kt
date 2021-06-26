@@ -8,7 +8,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.ItemCinemaRecommendationBinding
 import com.luthtan.cinemajetpack.model.bean.local.RecommendationItemsEntity
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationItems
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 
 class RecommendationAdapter :

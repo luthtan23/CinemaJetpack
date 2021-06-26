@@ -108,8 +108,12 @@ class SplashScreenFragment : Fragment() {
     }
 
     private fun loginFragment() {
-        view?.findNavController()
-            ?.navigate(SplashScreenFragmentDirections.actionSplashScreenFragmentToLoginFragment())
+        try {
+            view?.findNavController()
+                ?.navigate(SplashScreenFragmentDirections.actionSplashScreenFragmentToLoginFragment())
+        } catch (e: java.lang.Exception) {
+            splashLogin()
+        }
     }
 
 }

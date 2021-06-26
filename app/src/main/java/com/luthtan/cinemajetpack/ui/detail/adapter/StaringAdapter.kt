@@ -8,7 +8,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.ItemCinemaStaringLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.local.CastItemEntity
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 
 class StaringAdapter : RecyclerView.Adapter<StaringAdapter.StaringViewHolder>() {

@@ -2,7 +2,6 @@ package com.luthtan.cinemajetpack.model.remote
 
 import androidx.lifecycle.LiveData
 import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
 import com.luthtan.cinemajetpack.model.local.db.dao.MovieDao
 import com.luthtan.cinemajetpack.model.local.db.dao.TvShowDao
 import com.luthtan.cinemajetpack.util.EspressIdlingResources
@@ -11,15 +10,13 @@ import kotlinx.coroutines.launch
 
 class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvShowDao) {
 
-    fun getAllMovieFavorite() : LiveData<List<DetailEntity>> = movieDao.getAllMovieFavorite()
+    fun getAllMovieFavorite(): LiveData<List<DetailEntity>> = movieDao.getAllMovieFavorite()
 
     fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>> = movieDao.getAllMovieFavoriteList()
 
     fun addMovieFavorite(detailEntity: DetailEntity) = movieDao.insertMovie(detailEntity)
 
-    fun retrieveMovieFavorite(id: Int): LiveData<DetailEntity> {
-        return movieDao.retrieveMovieFavorite(id)
-    }
+    fun retrieveMovieFavorite(id: Int): LiveData<DetailEntity> = movieDao.retrieveMovieFavorite(id)
 
     fun deleteMovieFavorite(id: Int) {
         EspressIdlingResources.increment()
@@ -34,22 +31,29 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         movieDao.updateMovieFavorite(detailEntity)
     }
 
-    fun insertDetailWithCastList(castItem: List<CastItemEntity>) = movieDao.insertGetDetailWithCastList(castItem)
+    fun insertDetailWithCastList(castItem: List<CastItemEntity>) =
+        movieDao.insertGetDetailWithCastList(castItem)
 
-    fun insertDetailWithRecommendationList(recommendationEntity: List<RecommendationItemsEntity>) = movieDao.insertGetDetailWithRecommendationList(recommendationEntity)
+    fun insertDetailWithRecommendationList(recommendationEntity: List<RecommendationItemsEntity>) =
+        movieDao.insertGetDetailWithRecommendationList(recommendationEntity)
 
-    fun insertDetailWithTrailerList(trailerItemsEntity: List<TrailerItemsEntity>) = movieDao.insertGetDetailWithTrailer(trailerItemsEntity)
+    fun insertDetailWithTrailerList(trailerItemsEntity: List<TrailerItemsEntity>) =
+        movieDao.insertGetDetailWithTrailer(trailerItemsEntity)
 
-    fun getDetailWithCast(detailId: Int): LiveData<DetailWithCast> = movieDao.getDetailWithCast(detailId)
+    fun getDetailWithCast(detailId: Int): LiveData<DetailWithCast> =
+        movieDao.getDetailWithCast(detailId)
 
-    fun getDetailWithRecommendation(detailId: Int): LiveData<DetailWithRecommendation> = movieDao.getDetailWithRecommendation(detailId)
+    fun getDetailWithRecommendation(detailId: Int): LiveData<DetailWithRecommendation> =
+        movieDao.getDetailWithRecommendation(detailId)
 
-    fun getDetailWithTrailer(detailId: Int): LiveData<DetailWithTrailer> = movieDao.getDetailWithTrailer(detailId)
+    fun getDetailWithTrailer(detailId: Int): LiveData<DetailWithTrailer> =
+        movieDao.getDetailWithTrailer(detailId)
 
 
-    fun getAllTvShowFavorite() : LiveData<List<DetailEntity>> = tvShowDao.getAllTvShowFavorite()
+    fun getAllTvShowFavorite(): LiveData<List<DetailEntity>> = tvShowDao.getAllTvShowFavorite()
 
-    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>> = tvShowDao.getAllTvShowFavoriteList()
+    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>> =
+        tvShowDao.getAllTvShowFavoriteList()
 
     fun addTvShowFavorite(detailEntity: DetailEntity) = tvShowDao.insertTvShow(detailEntity)
 
@@ -70,16 +74,22 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
         tvShowDao.updateTvShowFavorite(detailEntity)
     }
 
-    fun insertTvShowDetailWithCastList(castItem: List<CastItemEntity>) = tvShowDao.insertGetDetailWithCastList(castItem)
+    fun insertTvShowDetailWithCastList(castItem: List<CastItemEntity>) =
+        tvShowDao.insertGetDetailWithCastList(castItem)
 
-    fun insertTvShowDetailWithRecommendationList(recommendationEntity: List<RecommendationItemsEntity>) = tvShowDao.insertGetDetailWithRecommendationList(recommendationEntity)
+    fun insertTvShowDetailWithRecommendationList(recommendationEntity: List<RecommendationItemsEntity>) =
+        tvShowDao.insertGetDetailWithRecommendationList(recommendationEntity)
 
-    fun insertTvShowDetailWithTrailerList(trailerItemsEntity: List<TrailerItemsEntity>) = tvShowDao.insertGetDetailWithTrailer(trailerItemsEntity)
+    fun insertTvShowDetailWithTrailerList(trailerItemsEntity: List<TrailerItemsEntity>) =
+        tvShowDao.insertGetDetailWithTrailer(trailerItemsEntity)
 
-    fun getTvShowDetailWithCast(detailId: Int): LiveData<DetailWithCast> = tvShowDao.getDetailWithCast(detailId)
+    fun getTvShowDetailWithCast(detailId: Int): LiveData<DetailWithCast> =
+        tvShowDao.getDetailWithCast(detailId)
 
-    fun getTvShowDetailWithRecommendation(detailId: Int): LiveData<DetailWithRecommendation> = tvShowDao.getDetailWithRecommendation(detailId)
+    fun getTvShowDetailWithRecommendation(detailId: Int): LiveData<DetailWithRecommendation> =
+        tvShowDao.getDetailWithRecommendation(detailId)
 
-    fun getTvShowDetailWithTrailer(detailId: Int): LiveData<DetailWithTrailer> = tvShowDao.getDetailWithTrailer(detailId)
+    fun getTvShowDetailWithTrailer(detailId: Int): LiveData<DetailWithTrailer> =
+        tvShowDao.getDetailWithTrailer(detailId)
 
 }

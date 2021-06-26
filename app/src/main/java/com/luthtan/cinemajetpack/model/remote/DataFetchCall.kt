@@ -33,7 +33,7 @@ abstract class DataFetchCall<ResultType>(
                 if (request.isSuccessful) {
                     if (request.body() != null)
                         saveResult(request.body()!!)
-                        responseLiveData.postValue(Resource.success(request.body()!!))
+                    responseLiveData.postValue(Resource.success(request.body()!!))
                 } else {
                     responseLiveData.postValue(Resource.error(request.message(), request.body()!!))
                 }

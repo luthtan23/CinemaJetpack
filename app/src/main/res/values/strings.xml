@@ -44,5 +44,7 @@
     <string name="please_try_again">Please try again</string>
     <string name="warning_feature">Feature under development</string>
     <string name="tagline">tagline</string>
+    <string name="favorite_movie_not_found">Favorite Movie Not Found</string>
+    <string name="favorite_tv_show_not_found">Favorite Tv Show Not Found</string>
 
 </resources>

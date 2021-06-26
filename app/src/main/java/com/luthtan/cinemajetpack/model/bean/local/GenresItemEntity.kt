@@ -14,7 +14,7 @@ data class GenresItemEntity(
     val id: Int,
 
     @field:SerializedName("name")
-    @ColumnInfo(name ="name")
+    @ColumnInfo(name = "name")
     val name: String
 
 

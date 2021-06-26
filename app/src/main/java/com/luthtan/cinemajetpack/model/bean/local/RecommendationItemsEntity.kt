@@ -1,19 +1,22 @@
 package com.luthtan.cinemajetpack.model.bean.local
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "recommendationEntity",
+@Entity(
+    tableName = "recommendationEntity",
     primaryKeys = ["recommendationId", "detailId"],
-    foreignKeys = [ForeignKey(entity = DetailEntity::class,
+    foreignKeys = [ForeignKey(
+        entity = DetailEntity::class,
         parentColumns = ["detailId"],
-        childColumns = ["detailId"])],
+        childColumns = ["detailId"]
+    )],
     indices = [Index(value = ["recommendationId"]),
-        Index(value = ["detailId"])])
+        Index(value = ["detailId"])]
+)
 data class RecommendationItemsEntity(
     @field:SerializedName("id")
     @ColumnInfo(defaultValue = "", name = "recommendationId")

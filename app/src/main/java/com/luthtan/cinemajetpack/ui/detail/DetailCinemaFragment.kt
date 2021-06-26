@@ -3,11 +3,9 @@ package com.luthtan.cinemajetpack.ui.detail
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,12 +16,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.databinding.DetailCinemaFragmentLayoutBinding
-import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.CastItem
-import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
-import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
 import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
@@ -32,7 +28,6 @@ import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
 import com.luthtan.cinemajetpack.vo.Resource
 import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.Exception
 
 class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
@@ -90,23 +85,27 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInit() {
-        if (isCinema) {
-
-        } else {
-            detailViewModel.getDetailTvShow(extraId)
-        }
-        getData()
+        getData(isCinema)
         setAdapter()
     }
 
-    private fun getDataLocal() {
-    }
-
-    private fun getData() {
+    private fun getData(isCinema: Boolean) {
         backPressedFragment()
-        detailViewModel.detailMovieFavorite.observe(viewLifecycleOwner, detailResponse)
-        detailViewModel.detailWithCast.observe(viewLifecycleOwner, creditResponse)
-        detailViewModel.detailWithRecommendation.observe(viewLifecycleOwner, recommendationResponse)
+        if (isCinema) {
+            detailViewModel.detailMovieFavorite.observe(viewLifecycleOwner, detailResponse)
+            detailViewModel.detailWithCast.observe(viewLifecycleOwner, creditResponse)
+            detailViewModel.detailWithRecommendation.observe(
+                viewLifecycleOwner,
+                recommendationResponse
+            )
+        } else {
+            detailViewModel.detailTvShowFavorite.observe(viewLifecycleOwner, detailResponse)
+            detailViewModel.detailWithCastTvShow.observe(viewLifecycleOwner, creditResponse)
+            detailViewModel.detailWithRecommendationTvShow.observe(
+                viewLifecycleOwner,
+                recommendationResponse
+            )
+        }
     }
 
     private fun setAdapter() {
@@ -135,11 +134,13 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                             setFavoriteButtonStatus(detailResponse.data.isMovieFavorite)
                         } else {
                             setDetailAttrTvShow(detailResponse.data)
+                            setFavoriteButtonStatus(detailResponse.data.isTvShowFavorite)
                         }
                         statusNetwork = false
                     }
                     Status.ERROR -> statusNetwork = true
-                    Status.LOADING -> {}
+                    Status.LOADING -> {
+                    }
                 }
             }
         }
@@ -155,7 +156,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                         statusNetwork = false
                     }
                     Status.ERROR -> statusNetwork = true
-                    Status.LOADING -> {}
+                    Status.LOADING -> {
+                    }
                 }
             }
         }
@@ -174,7 +176,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                         statusNetwork = false
                     }
                     Status.ERROR -> statusNetwork = true
-                    Status.LOADING -> {}
+                    Status.LOADING -> {
+                    }
                 }
             }
         }
@@ -271,12 +274,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private fun setFavoriteStatus(isCinema: Boolean) {
         try {
-            if (isCinema) {
-                detailViewModel.setMovieFavorite()
-                detailViewModel.insertMovie(detailEntity)
-            } else {
-
-            }
+            if (isCinema) detailViewModel.setMovieFavorite()
+            else detailViewModel.setTvShowFavorite()
         } catch (e: Exception) {
             e.printStackTrace()
         }

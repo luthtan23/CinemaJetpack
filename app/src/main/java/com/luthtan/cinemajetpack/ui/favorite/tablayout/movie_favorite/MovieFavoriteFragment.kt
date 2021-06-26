@@ -1,20 +1,23 @@
 package com.luthtan.cinemajetpack.ui.favorite.tablayout.movie_favorite
 
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luthtan.cinemajetpack.databinding.FavoriteMovieLayoutBinding
+import com.luthtan.cinemajetpack.listener.DeleteFavoriteListener
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
-import com.luthtan.cinemajetpack.viewmodel.MovieFavoriteViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieFavoriteFragment : Fragment() {
 
     private val detailViewModel: DetailViewModel by viewModel()
+
+    private lateinit var movieFavoriteAdapter: MovieFavoriteAdapter
 
     private var _binding: FavoriteMovieLayoutBinding? = null
     private val binding get() = _binding!!
@@ -31,14 +34,53 @@ class MovieFavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        detailViewModel.getAllMovieFavorite().observe(viewLifecycleOwner, { it ->
-            if (it != null) {
-                Log.e("DB_VALUE", it.toString())
-                Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(context, "NULL", Toast.LENGTH_LONG).show()
+        progressDialog.show()
+
+        movieFavoriteAdapter = MovieFavoriteAdapter()
+
+        detailViewModel.getAllMovieFavorite().observe(viewLifecycleOwner, { movieFavorite ->
+            if (movieFavorite != null) {
+                progressDialog.dismiss()
+                movieFavoriteAdapter.setMovieItemDB(movieFavorite, deleteFavoriteListener)
+                movieFavoriteAdapter.notifyDataSetChanged()
+                if (movieFavorite.isNotEmpty()) {
+                    setMovieFavoriteEmpty(false)
+                } else {
+                    setMovieFavoriteEmpty(true)
+                }
             }
         })
+
+        with(binding.rvFavoriteMovieLayout) {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = movieFavoriteAdapter
+        }
+    }
+
+    private val deleteFavoriteListener = object : DeleteFavoriteListener {
+        override fun selectedDeleteFavorite(detailEntity: DetailEntity) {
+            detailViewModel.deleteMovieFavorite(detailEntity)
+        }
+    }
+
+    private fun setMovieFavoriteEmpty(status: Boolean) {
+        when (status) {
+            true -> {
+                binding.ivMovieFavoriteNotFound.visibility = View.VISIBLE
+                binding.tvMovieFavoriteNotFound.visibility = View.VISIBLE
+            }
+            false -> {
+                binding.ivMovieFavoriteNotFound.visibility = View.GONE
+                binding.tvMovieFavoriteNotFound.visibility = View.GONE
+            }
+        }
+    }
+
+    private val progressDialog: ProgressDialog by lazy {
+        ProgressDialog(context).apply {
+            setMessage("Loading Please wait...")
+        }
     }
 
 }

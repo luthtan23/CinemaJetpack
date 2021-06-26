@@ -1,9 +1,10 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.*
+import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
 import com.luthtan.cinemajetpack.vo.Resource
 
 interface DetailRepositorySource {
@@ -22,27 +23,26 @@ interface DetailRepositorySource {
 
     fun getDetailWithTrailer(id: Int): LiveData<Resource<DetailWithTrailer>>
 
-    fun getDetailTvShow(
-        detailResponse: MutableLiveData<Resource<DetailResponse>>,
-        id: Int
-    ): LiveData<Resource<DetailResponse>>
-
-    fun getDetailCreditsTvShow(
-        creditResponse: MutableLiveData<Resource<CreditResponse>>,
-        id: Int
-    ): LiveData<Resource<CreditResponse>>
-
-    fun getDetailRecommendationTvShow(
-        recommendationResponse: MutableLiveData<Resource<RecommendationResponse>>,
-        id: Int
-    ): LiveData<Resource<RecommendationResponse>>
-
-    fun getDetailVideosTvShow(
-        trailerResponse: MutableLiveData<Resource<TrailerResponse>>,
-        id: Int
-    ): LiveData<Resource<TrailerResponse>>
-
     fun getAllMovieFavorite(): LiveData<List<DetailEntity>>
 
     fun deleteMovieFavorite(id: Int)
+
+    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>>
+
+    fun getTvShowDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>>
+
+    fun getDetailTvShow(id: Int): LiveData<Resource<DetailEntity>>
+
+    fun insertTvShow(detailEntity: DetailEntity)
+
+    fun updateTvShowFavorite(detailEntity: DetailEntity, newState: Boolean)
+
+    fun getTvShowDetailWithRecommendation(id: Int): LiveData<Resource<DetailWithRecommendation>>
+
+    fun getTvShowDetailWithTrailer(id: Int): LiveData<Resource<DetailWithTrailer>>
+
+    fun getAllTvShowFavorite(): LiveData<List<DetailEntity>>
+
+    fun deleteTvShowFavorite(id: Int)
+
 }

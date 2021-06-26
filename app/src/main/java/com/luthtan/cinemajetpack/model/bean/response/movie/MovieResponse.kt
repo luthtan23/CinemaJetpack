@@ -1,6 +1,5 @@
 package com.luthtan.cinemajetpack.model.bean.response.movie
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class MovieResponse(

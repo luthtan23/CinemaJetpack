@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.luthtan.cinemajetpack.databinding.ItemCinemaVideosBinding
 import com.luthtan.cinemajetpack.model.bean.local.TrailerItemsEntity
-import com.luthtan.cinemajetpack.model.bean.response.detail.TrailerItems
 import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.util.Utils
 
