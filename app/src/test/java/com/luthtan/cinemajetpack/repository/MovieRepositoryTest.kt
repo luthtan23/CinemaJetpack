@@ -5,6 +5,7 @@ import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.repository.movie.MovieRepository
 import com.luthtan.cinemajetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
@@ -25,7 +26,7 @@ class MovieRepositoryTest {
 
     @Test
     fun getPopularMovie() {
-        GlobalScope.launch {
+        Thread {
             val moviePopular =
                 fakeRepository.getPopularMovie(_moviePopularResponseDummy).value?.data
             `when`(movieRepository.getPopularMovie(_moviePopularResponse).value?.data).thenReturn(

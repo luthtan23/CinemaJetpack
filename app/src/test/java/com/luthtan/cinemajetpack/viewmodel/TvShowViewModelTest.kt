@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.luthtan.cinemajetpack.MockResponseFileReader
 import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResponse
 import com.luthtan.cinemajetpack.repository.tvshow.TvShowRepository
 import com.luthtan.cinemajetpack.repository.tvshow.TvShowRepositorySource
@@ -22,10 +23,9 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class TvShowViewModelTest : TvShowRepositorySource {
+class TvShowViewModelTest {
 
     private val _tvShowPopularResponse = MutableLiveData<Resource<TvShowResponse>>()
-    private val _tvShowPopularResponseDummy = MutableLiveData<Resource<TvShowResponse>>()
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -45,11 +45,11 @@ class TvShowViewModelTest : TvShowRepositorySource {
 
     @Test
     fun getTvShowPopularResponse() {
-        /*GlobalScope.launch {
-            val dummyData = getPopularTvShow(_tvShowPopularResponseDummy).value
+        Thread {
+            val dummyData = MockResponseFileReader().getDummyTvShowResponse()
 
             `when`(tvShowRepository.getPopularTvShow(_tvShowPopularResponse).value).thenReturn(
-                dummyData
+                dummyData.value
             )
             val tvShowResponseViewModel = tvShowViewModel.tvShowPopularResponse.value?.data
             verify(tvShowRepository).getPopularTvShow(_tvShowPopularResponse)
@@ -57,24 +57,9 @@ class TvShowViewModelTest : TvShowRepositorySource {
             Assert.assertEquals(20, tvShowResponseViewModel?.results?.size)
 
             tvShowViewModel.tvShowPopularResponse.observeForever(observer)
-            verify(observer).onChanged(dummyData)
-        }*/
+            verify(observer).onChanged(dummyData.value)
+        }
     }
 
-    override fun getPopularTvShow(tvShowResponse: MutableLiveData<Resource<TvShowResponse>>): LiveData<Resource<TvShowResponse>> {
-        return tvShowResponse
-    }
-
-    override fun getNowPlayingTvShow(tvShowResponse: MutableLiveData<Resource<TvShowResponse>>): LiveData<Resource<TvShowResponse>> {
-        return tvShowResponse
-    }
-
-    override fun getTopRatedTvShow(tvShowResponse: MutableLiveData<Resource<TvShowResponse>>): LiveData<Resource<TvShowResponse>> {
-        return tvShowResponse
-    }
-
-    override fun getUpcomingTvShow(tvShowResponse: MutableLiveData<Resource<TvShowResponse>>): LiveData<Resource<TvShowResponse>> {
-        return tvShowResponse
-    }
 
 }

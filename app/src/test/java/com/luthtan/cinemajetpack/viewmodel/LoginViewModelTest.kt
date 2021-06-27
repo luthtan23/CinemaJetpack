@@ -48,15 +48,4 @@ class LoginViewModelTest {
         loginViewModel.validateResponse.observeForever(observer)
     }
 
-    @Test
-    fun getErrorResponse() {
-    }
-
-    @Test
-    fun getTokenLogin() {
-    }
-
-    @Test
-    fun getValidateLogin() {
-    }
 }

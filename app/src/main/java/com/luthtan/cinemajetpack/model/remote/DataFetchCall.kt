@@ -12,17 +12,9 @@ abstract class DataFetchCall<ResultType>(
 ) {
 
     abstract suspend fun createCallAsync(): Response<ResultType>
-    open fun saveResult(result: ResultType) {}
-    open fun shouldFetchFromDB(): Boolean = false
-    open fun loadFromDB(): ResultType? = null
 
     fun execute() {
-        responseLiveData.postValue(Resource.loading())
-        if (shouldFetchFromDB()) {
-            callLoadFromDB()
-        } else {
-            callNetworkData()
-        }
+        callNetworkData()
     }
 
     private fun callNetworkData() {
@@ -32,7 +24,6 @@ abstract class DataFetchCall<ResultType>(
                 val request = createCallAsync()
                 if (request.isSuccessful) {
                     if (request.body() != null)
-                        saveResult(request.body()!!)
                     responseLiveData.postValue(Resource.success(request.body()!!))
                 } else {
                     responseLiveData.postValue(Resource.error(request.message(), request.body()!!))
@@ -41,21 +32,7 @@ abstract class DataFetchCall<ResultType>(
             } catch (exception: java.lang.Exception) {
                 exception.printStackTrace()
                 responseLiveData.postValue(Resource.error(exception.toString(), null))
-            }
-        }
-    }
-
-    private fun callLoadFromDB() {
-        GlobalScope.launch {
-            try {
-                val response = loadFromDB()
-                if (response != null) {
-                    saveResult(response)
-                    responseLiveData.postValue(Resource.success(response))
-                } else
-                    responseLiveData.postValue(Resource.error("Not Found", null))
-            } catch (exception: Exception) {
-                responseLiveData.postValue(Resource.error(exception.toString(), null))
+                EspressIdlingResources.decrement()
             }
         }
     }

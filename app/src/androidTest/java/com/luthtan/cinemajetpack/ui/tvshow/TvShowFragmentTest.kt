@@ -29,8 +29,13 @@ class TvShowFragmentTest {
 
     @Before
     fun setUp() {
-        ActivityScenario.launch(MainActivity::class.java)
         IdlingRegistry.getInstance().register(EspressIdlingResources.idlingResource)
+        ActivityScenario.launch(MainActivity::class.java)
+        launchFragmentInContainer<TvShowFragment>(factory = object : FragmentFactory() {
+            override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
+                return TvShowFragment()
+            }
+        }, themeResId = R.style.ThemeCinemaJetpack)
     }
 
     @After
@@ -40,11 +45,6 @@ class TvShowFragmentTest {
 
     @Test
     fun loadTvShowPopular() {
-        launchFragmentInContainer<TvShowFragment>(factory = object : FragmentFactory() {
-            override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-                return TvShowFragment()
-            }
-        }, themeResId = R.style.ThemeCinemaJetpack)
         Espresso.onView(ViewMatchers.withId(R.id.rv_tvshow_popular))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.rv_tvshow_popular))

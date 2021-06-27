@@ -25,7 +25,7 @@ class TvShowRepositoryTest {
 
     @Test
     fun getPopularTvShow() {
-        GlobalScope.launch {
+        Thread {
             val tvShowPopular =
                 fakeRepository.getPopularTvShow(_tvShowPopularResponseDummy).value?.data
             Mockito.`when`(tvShowRepository.getPopularTvShow(_tvShowPopularResponse).value?.data)
