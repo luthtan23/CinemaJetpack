@@ -60,7 +60,7 @@ class TvShowFavoriteAdapter :
                     CustomOnItemClickListener.OnItemClickCallback {
                     override fun onItemClicked(view: View) {
                         itemView.findNavController().navigate(
-                            FavoriteFragmentDirections.actionFavoriteFragmentToDetailCinemaFragment2(
+                            FavoriteFragmentDirections.actionFavoriteFragmentToDetailCinemaFragment(
                                 detailEntity.detailId,
                                 Constant.TYPE_TV_SHOW
                             )

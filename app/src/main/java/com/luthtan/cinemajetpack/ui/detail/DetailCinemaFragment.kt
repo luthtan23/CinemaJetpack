@@ -19,7 +19,9 @@ import com.luthtan.cinemajetpack.databinding.DetailCinemaFragmentLayoutBinding
 import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
+import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
+import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
 import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
@@ -98,6 +100,10 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                 viewLifecycleOwner,
                 recommendationResponse
             )
+            detailViewModel.detailWithTrailer.observe(
+                viewLifecycleOwner,
+                trailerResponse
+            )
         } else {
             detailViewModel.detailTvShowFavorite.observe(viewLifecycleOwner, detailResponse)
             detailViewModel.detailWithCastTvShow.observe(viewLifecycleOwner, creditResponse)
@@ -105,6 +111,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                 viewLifecycleOwner,
                 recommendationResponse
             )
+            detailViewModel.detailWithTrailerTvShow.observe(viewLifecycleOwner, trailerResponse)
         }
     }
 
@@ -178,6 +185,19 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                     Status.ERROR -> statusNetwork = true
                     Status.LOADING -> {
                     }
+                }
+            }
+        }
+    }
+
+    private val trailerResponse: Observer<Resource<DetailWithTrailer>> by lazy {
+        Observer<Resource<DetailWithTrailer>> { trailerResponse ->
+            progressDialog.dismiss()
+            if (trailerResponse.data != null) {
+                when (trailerResponse.status) {
+                    Status.SUCCESS -> { }
+                    Status.ERROR -> { }
+                    Status.LOADING -> { }
                 }
             }
         }

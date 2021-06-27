@@ -11,15 +11,15 @@
         android:label="Favorite"
         tools:layout="@layout/favorite_fragment_layout">
         <action
-            android:id="@+id/action_favoriteFragment_to_detailCinemaFragment2"
-            app:destination="@id/detailCinemaFragment2"
+            android:id="@+id/action_favoriteFragment_to_detailCinemaFragment"
+            app:destination="@id/detailCinemaFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
     </fragment>
     <fragment
-        android:id="@+id/detailCinemaFragment2"
+        android:id="@+id/detailCinemaFragment"
         android:name="com.luthtan.cinemajetpack.ui.detail.DetailCinemaFragment"
-        android:label="DetailCinemaFragment"
+        android:label="Detail Movie"
         tools:layout="@layout/detail_cinema_fragment_layout">
         <argument
             android:name="id"
@@ -29,5 +29,27 @@
             android:name="typeCinema"
             app:argType="string"
             android:defaultValue="movie" />
+        <action
+            android:id="@+id/action_detailCinemaFragment_to_bottomSheetVideosFragment"
+            app:destination="@id/bottomSheetVideosFragment" />
     </fragment>
+
+    <dialog
+        android:id="@+id/bottomSheetVideosFragment"
+        android:name="com.luthtan.cinemajetpack.ui.detail.BottomSheetVideosFragment"
+        android:label="Videos"
+        tools:layout="@layout/bottom_sheet_videos_layout">
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="title" />
+        <argument
+            android:name="typeCinema"
+            app:argType="string"
+            android:defaultValue='"movie"' />
+    </dialog>
 </navigation>

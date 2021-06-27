@@ -59,7 +59,7 @@ class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavo
                     CustomOnItemClickListener.OnItemClickCallback {
                     override fun onItemClicked(view: View) {
                         itemView.findNavController().navigate(
-                            FavoriteFragmentDirections.actionFavoriteFragmentToDetailCinemaFragment2(
+                            FavoriteFragmentDirections.actionFavoriteFragmentToDetailCinemaFragment(
                                 detailEntity.detailId,
                                 Constant.TYPE_MOVIE
                             )
