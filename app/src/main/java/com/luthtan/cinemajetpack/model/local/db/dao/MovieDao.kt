@@ -1,6 +1,7 @@
 package com.luthtan.cinemajetpack.model.local.db.dao
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import com.luthtan.cinemajetpack.model.bean.local.*
 
@@ -11,7 +12,7 @@ interface MovieDao {
     fun getAllMovieFavorite(): LiveData<List<DetailEntity>>
 
     @Query("SELECT * FROM movie_db where isMovieFavorite = 1")
-    fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>>
+    fun getAllMovieFavoriteList(): DataSource.Factory<Int, DetailEntity>
 
     @Query("SELECT * FROM movie_db WHERE detailId = :id")
     fun retrieveMovieFavorite(id: Int): LiveData<DetailEntity>

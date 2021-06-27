@@ -21,7 +21,6 @@ import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
-import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.ui.detail.adapter.RecommendationAdapter
 import com.luthtan.cinemajetpack.ui.detail.adapter.StaringAdapter
 import com.luthtan.cinemajetpack.util.Constant
@@ -72,10 +71,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
         isCinema = extraType == Constant.TYPE_MOVIE
 
-        detailViewModel.setExtraId(extraId)
-
-        progressDialog.show()
-
         staringAdapter = StaringAdapter()
         recommendationAdapter = RecommendationAdapter()
 
@@ -87,6 +82,8 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setInit() {
+        progressDialog.show()
+        detailViewModel.setExtraId(extraId)
         getData(isCinema)
         setAdapter()
     }
@@ -116,7 +113,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setAdapter() {
-        setInitNetworkErrorLayout(statusNetwork)
         with(binding.rvDetailContentStaring) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
@@ -131,10 +127,10 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private val detailResponse: Observer<Resource<DetailEntity>> by lazy {
         Observer<Resource<DetailEntity>> { detailResponse ->
-            if (detailResponse.data != null) {
+            if (detailResponse != null) {
                 when (detailResponse.status) {
                     Status.SUCCESS -> {
-                        detailEntity = detailResponse.data
+                        detailEntity = detailResponse.data!!
                         setDetailAttr(detailResponse.data)
                         if (isCinema) {
                             setDetailAttrMovie(detailResponse.data)
@@ -145,7 +141,9 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                         }
                         statusNetwork = false
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
                     Status.LOADING -> {
                     }
                 }
@@ -155,34 +153,41 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private val creditResponse: Observer<Resource<DetailWithCast>> by lazy {
         Observer<Resource<DetailWithCast>> { creditResponse ->
-            if (creditResponse.data != null) {
+            if (creditResponse != null) {
                 when (creditResponse.status) {
                     Status.SUCCESS -> {
-                        staringAdapter.setStaring(creditResponse.data.castItemEntity)
+                        staringAdapter.setStaring(creditResponse.data!!.castItemEntity)
                         staringAdapter.notifyDataSetChanged()
                         statusNetwork = false
+                        progressDialog.dismiss()
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> {
+                        progressDialog.dismiss()
+                        statusNetwork = true
+                    }
                     Status.LOADING -> {
                     }
                 }
+                setInitNetworkErrorLayout(statusNetwork)
             }
         }
     }
 
     private val recommendationResponse: Observer<Resource<DetailWithRecommendation>> by lazy {
         Observer<Resource<DetailWithRecommendation>> { recommendationResponse ->
-            if (recommendationResponse.data != null) {
+            if (recommendationResponse != null) {
                 when (recommendationResponse.status) {
                     Status.SUCCESS -> {
                         recommendationAdapter.setRecommendation(
-                            recommendationResponse.data.recommendationItemsEntity,
+                            recommendationResponse.data!!.recommendationItemsEntity,
                             Constant.TYPE_MOVIE
                         )
                         staringAdapter.notifyDataSetChanged()
                         statusNetwork = false
                     }
-                    Status.ERROR -> statusNetwork = true
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
                     Status.LOADING -> {
                     }
                 }
@@ -192,12 +197,15 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     private val trailerResponse: Observer<Resource<DetailWithTrailer>> by lazy {
         Observer<Resource<DetailWithTrailer>> { trailerResponse ->
-            progressDialog.dismiss()
-            if (trailerResponse.data != null) {
+            if (trailerResponse != null) {
                 when (trailerResponse.status) {
-                    Status.SUCCESS -> { }
-                    Status.ERROR -> { }
-                    Status.LOADING -> { }
+                    Status.SUCCESS -> {
+                    }
+                    Status.ERROR -> {
+                        statusNetwork = true
+                    }
+                    Status.LOADING -> {
+                    }
                 }
             }
         }
@@ -206,8 +214,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     private fun setInitNetworkErrorLayout(status: Boolean) {
         when (status) {
             true -> {
-                progressDialog.dismiss()
-                Utils.snackBarErrorConnection(requireView(), requireContext())
                 binding.constraintDetailError.constraintNetworkError.visibility = View.VISIBLE
                 binding.constraintDetail.visibility = View.GONE
             }
@@ -220,7 +226,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setDetailAttr(detailResponse: DetailEntity) {
-        progressDialog.dismiss()
         val userScore = detailResponse.voteAverage * 10
         with(binding) {
             progressBarDetailContentUserScore.progress = userScore.toInt()

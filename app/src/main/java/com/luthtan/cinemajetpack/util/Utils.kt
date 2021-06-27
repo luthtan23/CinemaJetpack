@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.paging.PagedList
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.R
@@ -14,6 +15,12 @@ import com.luthtan.cinemajetpack.ui.MainActivity
 import java.util.*
 
 object Utils {
+
+    val configPaging = PagedList.Config.Builder()
+        .setEnablePlaceholders(false)
+        .setInitialLoadSizeHint(4)
+        .setPageSize(4)
+        .build()
 
     fun convertPojoToMap(gson: Gson, model: Any): HashMap<String, String> {
         val json = gson.toJson(model)

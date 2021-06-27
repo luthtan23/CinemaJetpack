@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -17,21 +19,21 @@ import com.luthtan.cinemajetpack.ui.favorite.FavoriteFragmentDirections
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 
-class TvShowFavoriteAdapter :
-    RecyclerView.Adapter<TvShowFavoriteAdapter.TvShowFavoriteViewHolder>() {
+class TvShowFavoriteAdapter(private val deleteFavoriteListener: DeleteFavoriteListener) :
+    PagedListAdapter<DetailEntity, TvShowFavoriteAdapter.TvShowFavoriteViewHolder>(DIFF_CALLBACK) {
 
-    private val tvShowItemDB = ArrayList<DetailEntity>()
-
-    private lateinit var deleteFavoriteListener: DeleteFavoriteListener
-
-    fun setTvShowItemDB(
-        detailEntity: List<DetailEntity>,
-        deleteFavoriteListener: DeleteFavoriteListener
-    ) {
-        this.tvShowItemDB.clear()
-        this.tvShowItemDB.addAll(detailEntity)
-        this.deleteFavoriteListener = deleteFavoriteListener
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DetailEntity>() {
+            override fun areItemsTheSame(oldItem: DetailEntity, newItem: DetailEntity): Boolean {
+                return oldItem.detailId == newItem.detailId
+            }
+            override fun areContentsTheSame(oldItem: DetailEntity, newItem: DetailEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
+
+    fun getSwipePosition(swipePosition: Int): DetailEntity? = getItem(swipePosition)
 
     inner class TvShowFavoriteViewHolder(private val binding: ItemFavoriteLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -79,8 +81,10 @@ class TvShowFavoriteAdapter :
     }
 
     override fun onBindViewHolder(holder: TvShowFavoriteViewHolder, position: Int) {
-        holder.bind(tvShowItemDB[position])
+        val detailEntity = getItem(position)
+        if (detailEntity != null) {
+            holder.bind(detailEntity)
+        }
     }
 
-    override fun getItemCount(): Int = tvShowItemDB.size
 }

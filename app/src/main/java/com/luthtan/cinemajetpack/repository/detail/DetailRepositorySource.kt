@@ -1,6 +1,7 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
@@ -9,7 +10,7 @@ import com.luthtan.cinemajetpack.vo.Resource
 
 interface DetailRepositorySource {
 
-    fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>>
+    fun getAllMovieFavoriteList(): LiveData<PagedList<DetailEntity>>
 
     fun getDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>>
 
@@ -27,7 +28,7 @@ interface DetailRepositorySource {
 
     fun deleteMovieFavorite(id: Int)
 
-    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>>
+    fun getAllTvShowFavoriteList(): LiveData<PagedList<DetailEntity>>
 
     fun getTvShowDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>>
 

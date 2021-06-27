@@ -46,5 +46,8 @@
     <string name="tagline">tagline</string>
     <string name="favorite_movie_not_found">Favorite Movie Not Found</string>
     <string name="favorite_tv_show_not_found">Favorite Tv Show Not Found</string>
+    <string name="favorite_movie_deleted_message">Favorite movie has been deleted</string>
+    <string name="favorite_tv_show_deleted_message">Favorite tv show has been deleted</string>
+    <string name="undo">Undo</string>
 
 </resources>

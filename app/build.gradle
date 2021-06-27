@@ -89,8 +89,10 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 
-    // Testing Dependencies
+    //paging
+    implementation 'androidx.paging:paging-runtime-ktx:3.0.0'
 
+    // Testing Dependencies
     androidTestImplementation "androidx.navigation:navigation-testing:2.3.5"
     implementation "androidx.test.espresso:espresso-idling-resource:$idleResourceVersion"
     androidTestImplementation "androidx.arch.core:core-testing:$coreTestingVersion"

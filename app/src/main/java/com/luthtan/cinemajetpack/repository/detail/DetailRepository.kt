@@ -1,6 +1,8 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.model.NetworkBoundResource
 import com.luthtan.cinemajetpack.model.bean.local.*
@@ -9,7 +11,11 @@ import com.luthtan.cinemajetpack.model.remote.ApiResponse
 import com.luthtan.cinemajetpack.model.remote.LocalDataSource
 import com.luthtan.cinemajetpack.model.remote.RemoteDataSource
 import com.luthtan.cinemajetpack.util.AppExecutors
+import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.vo.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 
 class DetailRepository(
@@ -37,8 +43,9 @@ class DetailRepository(
         }.asLiveData()
     }
 
-    override fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>> =
-        localDataSource.getAllMovieFavoriteList()
+    override fun getAllMovieFavoriteList(): LiveData<PagedList<DetailEntity>> {
+        return LivePagedListBuilder(localDataSource.getAllMovieFavoriteList(), Utils.configPaging).build()
+    }
 
     override fun getDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>> {
         return object : NetworkBoundResource<DetailWithCast, List<CastItem>>(appExecutors) {
@@ -52,12 +59,14 @@ class DetailRepository(
                 remoteDataSource.getDetailCreditsMovie(id)
 
             override fun saveCallResult(data: List<CastItem>) {
+                val json = Gson().toJson(data)
+                val arrayCast = Gson().fromJson(json, Array<CastItemEntity>::class.java)
+                val castList = ArrayList<CastItemEntity>()
+                castList.addAll(arrayCast)
                 try {
-                    val json = Gson().toJson(data)
-                    val arrayCast = Gson().fromJson(json, Array<CastItemEntity>::class.java)
-                    val castList = ArrayList<CastItemEntity>()
-                    castList.addAll(arrayCast)
-                    localDataSource.insertDetailWithCastList(castList)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertDetailWithCastList(castList)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -87,13 +96,15 @@ class DetailRepository(
                 remoteDataSource.getDetailRecommendationMovie(id)
 
             override fun saveCallResult(data: List<RecommendationItems>) {
+                val json = Gson().toJson(data)
+                val arrayRecommendation =
+                    Gson().fromJson(json, Array<RecommendationItemsEntity>::class.java)
+                val recommendationList = ArrayList<RecommendationItemsEntity>()
+                recommendationList.addAll(arrayRecommendation)
                 try {
-                    val json = Gson().toJson(data)
-                    val arrayRecommendation =
-                        Gson().fromJson(json, Array<RecommendationItemsEntity>::class.java)
-                    val recommendationList = ArrayList<RecommendationItemsEntity>()
-                    recommendationList.addAll(arrayRecommendation)
-                    localDataSource.insertDetailWithRecommendationList(recommendationList)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertDetailWithRecommendationList(recommendationList)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -117,7 +128,13 @@ class DetailRepository(
                 val arrayTrailer = Gson().fromJson(json, Array<TrailerItemsEntity>::class.java)
                 val trailerList = ArrayList<TrailerItemsEntity>()
                 trailerList.addAll(arrayTrailer)
-                localDataSource.insertDetailWithTrailerList(trailerList)
+                try {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertDetailWithTrailerList(trailerList)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }.asLiveData()
     }
@@ -145,8 +162,9 @@ class DetailRepository(
         }.asLiveData()
     }
 
-    override fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>> =
-        localDataSource.getAllTvShowFavoriteList()
+    override fun getAllTvShowFavoriteList(): LiveData<PagedList<DetailEntity>> {
+        return LivePagedListBuilder(localDataSource.getAllTvShowFavoriteList(), Utils.configPaging).build()
+    }
 
     override fun getTvShowDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>> {
         return object : NetworkBoundResource<DetailWithCast, List<CastItem>>(appExecutors) {
@@ -160,12 +178,14 @@ class DetailRepository(
                 remoteDataSource.getDetailCreditsTvShow(id)
 
             override fun saveCallResult(data: List<CastItem>) {
+                val json = Gson().toJson(data)
+                val arrayCast = Gson().fromJson(json, Array<CastItemEntity>::class.java)
+                val castList = ArrayList<CastItemEntity>()
+                castList.addAll(arrayCast)
                 try {
-                    val json = Gson().toJson(data)
-                    val arrayCast = Gson().fromJson(json, Array<CastItemEntity>::class.java)
-                    val castList = ArrayList<CastItemEntity>()
-                    castList.addAll(arrayCast)
-                    localDataSource.insertTvShowDetailWithCastList(castList)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertTvShowDetailWithCastList(castList)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -195,13 +215,15 @@ class DetailRepository(
                 remoteDataSource.getDetailRecommendationTvShow(id)
 
             override fun saveCallResult(data: List<RecommendationItems>) {
+                val json = Gson().toJson(data)
+                val arrayRecommendation =
+                    Gson().fromJson(json, Array<RecommendationItemsEntity>::class.java)
+                val recommendationList = ArrayList<RecommendationItemsEntity>()
+                recommendationList.addAll(arrayRecommendation)
                 try {
-                    val json = Gson().toJson(data)
-                    val arrayRecommendation =
-                        Gson().fromJson(json, Array<RecommendationItemsEntity>::class.java)
-                    val recommendationList = ArrayList<RecommendationItemsEntity>()
-                    recommendationList.addAll(arrayRecommendation)
-                    localDataSource.insertTvShowDetailWithRecommendationList(recommendationList)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertTvShowDetailWithRecommendationList(recommendationList)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -225,7 +247,13 @@ class DetailRepository(
                 val arrayTrailer = Gson().fromJson(json, Array<TrailerItemsEntity>::class.java)
                 val trailerList = ArrayList<TrailerItemsEntity>()
                 trailerList.addAll(arrayTrailer)
-                localDataSource.insertTvShowDetailWithTrailerList(trailerList)
+                try {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        localDataSource.insertTvShowDetailWithTrailerList(trailerList)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }.asLiveData()
     }

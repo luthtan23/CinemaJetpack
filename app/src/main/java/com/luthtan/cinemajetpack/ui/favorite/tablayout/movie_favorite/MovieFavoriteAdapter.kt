@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -17,20 +19,21 @@ import com.luthtan.cinemajetpack.ui.favorite.FavoriteFragmentDirections
 import com.luthtan.cinemajetpack.util.Constant
 import com.luthtan.cinemajetpack.util.Utils
 
-class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavoriteViewHolder>() {
+class MovieFavoriteAdapter(private val deleteFavoriteListener: DeleteFavoriteListener) :
+    PagedListAdapter<DetailEntity, MovieFavoriteAdapter.MovieFavoriteViewHolder>(DIFF_CALLBACK) {
 
-    private val movieItemDB = ArrayList<DetailEntity>()
-
-    private lateinit var deleteFavoriteListener: DeleteFavoriteListener
-
-    fun setMovieItemDB(
-        detailEntity: List<DetailEntity>,
-        deleteFavoriteListener: DeleteFavoriteListener
-    ) {
-        this.movieItemDB.clear()
-        this.movieItemDB.addAll(detailEntity)
-        this.deleteFavoriteListener = deleteFavoriteListener
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DetailEntity>() {
+            override fun areItemsTheSame(oldItem: DetailEntity, newItem: DetailEntity): Boolean {
+                return oldItem.detailId == newItem.detailId
+            }
+            override fun areContentsTheSame(oldItem: DetailEntity, newItem: DetailEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
+
+    fun getSwipePosition(swipePosition: Int): DetailEntity? = getItem(swipePosition)
 
     inner class MovieFavoriteViewHolder(private val binding: ItemFavoriteLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -78,8 +81,10 @@ class MovieFavoriteAdapter : RecyclerView.Adapter<MovieFavoriteAdapter.MovieFavo
     }
 
     override fun onBindViewHolder(holder: MovieFavoriteViewHolder, position: Int) {
-        holder.bind(movieItemDB[position])
+        val detailEntity = getItem(position)
+        if (detailEntity != null) {
+            holder.bind(detailEntity)
+        }
     }
 
-    override fun getItemCount(): Int = movieItemDB.size
 }

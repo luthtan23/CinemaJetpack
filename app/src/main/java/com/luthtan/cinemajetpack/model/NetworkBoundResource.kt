@@ -40,6 +40,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
     protected abstract fun saveCallResult(data: RequestType)
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
+        Thread.sleep(100)
 
         val apiResponse = createCall()
 

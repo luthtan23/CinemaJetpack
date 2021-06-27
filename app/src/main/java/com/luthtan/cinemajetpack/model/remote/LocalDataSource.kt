@@ -1,6 +1,7 @@
 package com.luthtan.cinemajetpack.model.remote
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import com.luthtan.cinemajetpack.model.bean.local.*
 import com.luthtan.cinemajetpack.model.local.db.dao.MovieDao
 import com.luthtan.cinemajetpack.model.local.db.dao.TvShowDao
@@ -12,7 +13,7 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
 
     fun getAllMovieFavorite(): LiveData<List<DetailEntity>> = movieDao.getAllMovieFavorite()
 
-    fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>> = movieDao.getAllMovieFavoriteList()
+    fun getAllMovieFavoriteList(): DataSource.Factory<Int, DetailEntity> = movieDao.getAllMovieFavoriteList()
 
     fun addMovieFavorite(detailEntity: DetailEntity) = movieDao.insertMovie(detailEntity)
 
@@ -52,7 +53,7 @@ class LocalDataSource(private val movieDao: MovieDao, private val tvShowDao: TvS
 
     fun getAllTvShowFavorite(): LiveData<List<DetailEntity>> = tvShowDao.getAllTvShowFavorite()
 
-    fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>> =
+    fun getAllTvShowFavoriteList(): DataSource.Factory<Int, DetailEntity> =
         tvShowDao.getAllTvShowFavoriteList()
 
     fun addTvShowFavorite(detailEntity: DetailEntity) = tvShowDao.insertTvShow(detailEntity)

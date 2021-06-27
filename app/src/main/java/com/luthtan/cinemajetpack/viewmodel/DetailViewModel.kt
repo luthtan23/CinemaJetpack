@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
@@ -56,7 +57,7 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
         detailRepository.updateMovieFavorite(detailEntity, isMovieFavorite)
     }
 
-    fun getAllMovieFavorite(): LiveData<List<DetailEntity>> =
+    fun getAllMovieFavorite(): LiveData<PagedList<DetailEntity>> =
         detailRepository.getAllMovieFavoriteList()
 
     val detailTvShowFavorite: LiveData<Resource<DetailEntity>> =
@@ -91,11 +92,11 @@ class DetailViewModel(private val detailRepository: DetailRepository) : ViewMode
     }
 
     fun deleteTvShowFavorite(detailEntity: DetailEntity) {
-        val isMovieFavorite = !detailEntity.isMovieFavorite
-        detailRepository.updateTvShowFavorite(detailEntity, isMovieFavorite)
+        val isTvShowFavorite = !detailEntity.isTvShowFavorite
+        detailRepository.updateTvShowFavorite(detailEntity, isTvShowFavorite)
     }
 
-    fun getAllTvShowFavorite(): LiveData<List<DetailEntity>> =
+    fun getAllTvShowFavorite(): LiveData<PagedList<DetailEntity>> =
         detailRepository.getAllTvShowFavoriteList()
 
 
