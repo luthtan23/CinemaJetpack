@@ -156,9 +156,11 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
             if (creditResponse != null) {
                 when (creditResponse.status) {
                     Status.SUCCESS -> {
-                        staringAdapter.setStaring(creditResponse.data!!.castItemEntity)
-                        staringAdapter.notifyDataSetChanged()
-                        statusNetwork = false
+                        if (creditResponse.data != null) {
+                            staringAdapter.setStaring(creditResponse.data!!.castItemEntity)
+                            staringAdapter.notifyDataSetChanged()
+                            statusNetwork = false
+                        }
                         progressDialog.dismiss()
                     }
                     Status.ERROR -> {

@@ -63,9 +63,8 @@ class DetailRepository(
                 val castList = ArrayList<CastItemEntity>()
                 castList.addAll(arrayCast)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertDetailWithCastList(castList)
-                    }
+                    Thread.sleep(150)
+                    localDataSource.insertDetailWithCastList(castList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -101,9 +100,7 @@ class DetailRepository(
                 val recommendationList = ArrayList<RecommendationItemsEntity>()
                 recommendationList.addAll(arrayRecommendation)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertDetailWithRecommendationList(recommendationList)
-                    }
+                    localDataSource.insertDetailWithRecommendationList(recommendationList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -128,9 +125,7 @@ class DetailRepository(
                 val trailerList = ArrayList<TrailerItemsEntity>()
                 trailerList.addAll(arrayTrailer)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertDetailWithTrailerList(trailerList)
-                    }
+                    localDataSource.insertDetailWithTrailerList(trailerList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -182,9 +177,8 @@ class DetailRepository(
                 val castList = ArrayList<CastItemEntity>()
                 castList.addAll(arrayCast)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertTvShowDetailWithCastList(castList)
-                    }
+                    Thread.sleep(150)
+                    localDataSource.insertTvShowDetailWithCastList(castList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -220,9 +214,7 @@ class DetailRepository(
                 val recommendationList = ArrayList<RecommendationItemsEntity>()
                 recommendationList.addAll(arrayRecommendation)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertTvShowDetailWithRecommendationList(recommendationList)
-                    }
+                    localDataSource.insertTvShowDetailWithRecommendationList(recommendationList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -247,9 +239,7 @@ class DetailRepository(
                 val trailerList = ArrayList<TrailerItemsEntity>()
                 trailerList.addAll(arrayTrailer)
                 try {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        localDataSource.insertTvShowDetailWithTrailerList(trailerList)
-                    }
+                    localDataSource.insertTvShowDetailWithTrailerList(trailerList)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
