@@ -1,6 +1,5 @@
 package com.luthtan.cinemajetpack.ui.setting
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.luthtan.cinemajetpack.R
@@ -62,7 +62,6 @@ class SettingFragment : Fragment() {
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setStatusTheme(status: String) {
         when (status) {
             Constant.DARK_THEME -> {
@@ -70,7 +69,7 @@ class SettingFragment : Fragment() {
                 with(binding) {
                     switchSetting.isChecked = true
                     tvSwitchSetting.text = getString(R.string.dark_mode_on)
-                    imageSetting.setImageDrawable(resources.getDrawable(R.drawable.ic_undraw_into_the_night_vumi))
+                    imageSetting.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_undraw_into_the_night_vumi))
                 }
             }
             Constant.LIGHT_THEME -> {
@@ -78,7 +77,7 @@ class SettingFragment : Fragment() {
                 with(binding) {
                     switchSetting.isChecked = false
                     tvSwitchSetting.text = getString(R.string.dark_mode_off)
-                    imageSetting.setImageDrawable(resources.getDrawable(R.drawable.ic_undraw_sunny_day_bk3m))
+                    imageSetting.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_undraw_sunny_day_bk3m))
                 }
             }
         }

@@ -12,9 +12,6 @@ import com.luthtan.cinemajetpack.model.remote.RemoteDataSource
 import com.luthtan.cinemajetpack.util.AppExecutors
 import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.vo.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 
 class DetailRepository(

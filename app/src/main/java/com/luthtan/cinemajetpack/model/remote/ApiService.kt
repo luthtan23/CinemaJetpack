@@ -26,12 +26,6 @@ interface ApiService {
     @GET(ApiConstant.GET_MOVIE_UPCOMING)
     suspend fun getMovieUpComing(@Header("Authorization") token: String): Response<MovieResponse>
 
-    @GET(ApiConstant.GET_MOVIE_SIMILAR)
-    suspend fun getMovieSimilar(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ): Response<MovieResponse>
-
     @GET(ApiConstant.GET_MOVIE_DETAIL)
     suspend fun getMovieDetail(
         @Header("Authorization") token: String,
@@ -68,12 +62,6 @@ interface ApiService {
 
     @GET(ApiConstant.GET_TVSHOW_ONTHEAIR)
     suspend fun getTvShowUpComing(@Header("Authorization") token: String): Response<TvShowResponse>
-
-    @GET(ApiConstant.GET_TVSHOW_SIMILAR)
-    suspend fun getTvShowSimilar(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ): Response<TvShowResponse>
 
     @GET(ApiConstant.GET_TVSHOW_DETAIL)
     suspend fun getTvShowDetail(

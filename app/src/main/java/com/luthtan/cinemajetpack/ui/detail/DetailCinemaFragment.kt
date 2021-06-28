@@ -1,12 +1,12 @@
 package com.luthtan.cinemajetpack.ui.detail
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -157,7 +157,7 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
                 when (creditResponse.status) {
                     Status.SUCCESS -> {
                         if (creditResponse.data != null) {
-                            staringAdapter.setStaring(creditResponse.data!!.castItemEntity)
+                            staringAdapter.setStaring(creditResponse.data.castItemEntity)
                             staringAdapter.notifyDataSetChanged()
                             statusNetwork = false
                         }
@@ -273,17 +273,6 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    //for instrument testing please comment the onAttach and onDetach
-    /*override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity as MainActivity).hideBottomNav()
-    }*/
-
-    /*override fun onDetach() {
-        super.onDetach()
-        (activity as MainActivity).showBottomNav()
-    }*/
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_detail_content_trailer ->
@@ -309,10 +298,9 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
 
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setFavoriteButtonStatus(isFavorite: Boolean) {
-        if (isFavorite) binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite))
-        else binding.ibDetailContentFavorite.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_favorite_border))
+        if (isFavorite) binding.ibDetailContentFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_favorite))
+        else binding.ibDetailContentFavorite.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_border))
     }
 
     private fun backPressedFragment() {

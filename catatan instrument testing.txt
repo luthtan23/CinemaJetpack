@@ -41,6 +41,10 @@ Memuat Tv Show Popular:
 3. Memastikan data di repository ter verify
 4. memastikan LiveData pada tv show popular berjalan secara observer dengan baik
 
-
-Note:
-untuk memulai testing pada DetailCinemaFragment mohon untuk memastikan method onAttach dan onDetach di comment terlebih dahulu
+memuat DetailCinema:
+1. memastikan detail cinema (movie & tv show) tidak null
+2. memastikan detail cinema (movie & tv show) dapat menjalankan online-offline
+3. memastikan LiveData detail cinema (movie & tv show) berjalan secara observer dengan baik
+4. Memastikan data di repository ter verify
+5. memastikan paging berjalan dengan baik
+6. memastikan dao dapat menghapus dan menambahkan ke list favorite

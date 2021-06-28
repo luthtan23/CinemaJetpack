@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.paging.PagedList
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.model.bean.local.GenresItemEntity
 import com.luthtan.cinemajetpack.model.remote.ApiConstant
 import com.luthtan.cinemajetpack.ui.MainActivity
-import java.util.*
 
 object Utils {
 
@@ -21,11 +20,6 @@ object Utils {
         .setInitialLoadSizeHint(4)
         .setPageSize(4)
         .build()
-
-    fun convertPojoToMap(gson: Gson, model: Any): HashMap<String, String> {
-        val json = gson.toJson(model)
-        return gson.fromJson<HashMap<String, String>>(json, HashMap::class.java)
-    }
 
     fun insertStringGenre(genres: List<GenresItemEntity>): StringBuilder {
         val genre = StringBuilder()
@@ -43,9 +37,9 @@ object Utils {
             view, context.getString(R.string.no_network_error),
             Snackbar.LENGTH_INDEFINITE
         )
-            .setBackgroundTint(context.resources.getColor(R.color.red))
+            .setBackgroundTint(ContextCompat.getColor(context, R.color.red))
             .setAction("DISMISS") {}
-            .setActionTextColor(context.resources.getColor(R.color.blue_dark))
+            .setActionTextColor(ContextCompat.getColor(context, R.color.blue_dark))
             .show()
     }
 
@@ -64,7 +58,7 @@ object Utils {
 
         alertDialog.setTitle(title)
             .setMessage(message)
-            .setPositiveButton(context.getString(R.string.try_again)) { dialog, which -> dialog.dismiss() }
+            .setPositiveButton(context.getString(R.string.try_again)) { dialog, _ -> dialog.dismiss() }
 
         val alert = alertDialog.create()
         alert.show()
