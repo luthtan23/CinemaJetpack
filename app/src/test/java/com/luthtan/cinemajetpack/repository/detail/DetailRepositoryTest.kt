@@ -1,25 +1,20 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
-import com.luthtan.cinemajetpack.LiveDataTestUtil
+import androidx.paging.DataSource
 import com.luthtan.cinemajetpack.MockResponseFileReader
-import com.luthtan.cinemajetpack.model.NetworkBoundResource
 import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
-import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
-import com.luthtan.cinemajetpack.model.remote.ApiResponse
 import com.luthtan.cinemajetpack.model.remote.LocalDataSource
 import com.luthtan.cinemajetpack.model.remote.RemoteDataSource
 import com.luthtan.cinemajetpack.util.AppExecutors
-import com.luthtan.cinemajetpack.vo.Resource
+import com.luthtan.cinemajetpack.utils.LiveDataTestUtil
+import com.luthtan.cinemajetpack.utils.PagedListUtil
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
@@ -48,6 +43,21 @@ class DetailRepositoryTest {
         verify(local).retrieveMovieFavorite(dummyMovieId)
         assertNotNull(detailEntity.data)
         assertEquals(dummyMovieRepository.value?.title, detailEntity.data?.title)
+    }
+
+    @Test
+    fun getAllMovieFavoriteList() {
+        Thread {
+            val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, DetailEntity>
+            `when`(local.getAllMovieFavoriteList()).thenReturn(dataSourceFactory)
+            detailRepository.getAllMovieFavoriteList()
+
+            val response = MockResponseFileReader().getDummyDetailList().value?.data!!
+            val detailEntity = PagedListUtil.mockPagedList(MockResponseFileReader().getDummyDetailList().value?.data!!)
+            verify(local).getAllMovieFavoriteList()
+            assertNotNull(response)
+            assertEquals(response.size.toLong(), detailEntity.size.toLong())
+        }
     }
 
     @Test
@@ -102,6 +112,21 @@ class DetailRepositoryTest {
         verify(local).retrieveTvShowFavorite(dummyTvShowId)
         assertNotNull(detailEntity.data)
         assertEquals(dummyMovieRepository.value?.title, detailEntity.data?.title)
+    }
+
+    @Test
+    fun getAllTvShowFavoriteList() {
+        Thread {
+            val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, DetailEntity>
+            `when`(local.getAllTvShowFavoriteList()).thenReturn(dataSourceFactory)
+            detailRepository.getAllTvShowFavoriteList()
+
+            val response = MockResponseFileReader().getDummyTvShowDetailList().value?.data!!
+            val detailEntity = PagedListUtil.mockPagedList(MockResponseFileReader().getDummyTvShowDetailList().value?.data!!)
+            verify(local).getAllTvShowFavoriteList()
+            assertNotNull(response)
+            assertEquals(response.size.toLong(), detailEntity.size.toLong())
+        }
     }
 
     @Test

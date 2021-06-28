@@ -30,6 +30,26 @@ class MockResponseFileReader {
         return tvShowResponse
     }
 
+    fun getDummyDetailList() : MutableLiveData<Resource<List<DetailEntity>>>{
+        val reader = InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("movie_list_response.json"))
+        val json = reader.readText()
+        reader.close()
+        val detailEntity = Gson().fromJson(json, Array<DetailEntity>::class.java).toList()
+        val mutableEntity = MutableLiveData<Resource<List<DetailEntity>>>()
+        mutableEntity.value = Resource.success(detailEntity)
+        return mutableEntity
+    }
+
+    fun getDummyTvShowDetailList() : MutableLiveData<Resource<List<DetailEntity>>>{
+        val reader = InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("tv_show_list_response.json"))
+        val json = reader.readText()
+        reader.close()
+        val detailEntity = Gson().fromJson(json, Array<DetailEntity>::class.java).toList()
+        val mutableEntity = MutableLiveData<Resource<List<DetailEntity>>>()
+        mutableEntity.value = Resource.success(detailEntity)
+        return mutableEntity
+    }
+
     fun getDummyDetail() : MutableLiveData<Resource<DetailEntity>>{
         val reader = InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("detail_response.json"))
         val json = reader.readText()

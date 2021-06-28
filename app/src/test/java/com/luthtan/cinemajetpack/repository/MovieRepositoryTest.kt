@@ -5,9 +5,6 @@ import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
 import com.luthtan.cinemajetpack.repository.movie.MovieRepository
 import com.luthtan.cinemajetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test

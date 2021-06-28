@@ -1,8 +1,7 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.paging.*
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.model.NetworkBoundResource
 import com.luthtan.cinemajetpack.model.bean.local.*

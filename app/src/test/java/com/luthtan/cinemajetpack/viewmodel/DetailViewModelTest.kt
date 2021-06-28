@@ -1,27 +1,18 @@
 package com.luthtan.cinemajetpack.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.test.InstrumentationRegistry
+import androidx.paging.PagedList
+import androidx.paging.PositionalDataSource
 import com.luthtan.cinemajetpack.MockResponseFileReader
 import com.luthtan.cinemajetpack.model.bean.local.DetailEntity
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithCast
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithRecommendation
 import com.luthtan.cinemajetpack.model.bean.local.DetailWithTrailer
-import com.luthtan.cinemajetpack.model.bean.response.detail.CreditResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.DetailResponse
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
 import com.luthtan.cinemajetpack.repository.detail.DetailRepository
-import com.luthtan.cinemajetpack.util.DummyDataJson
 import com.luthtan.cinemajetpack.vo.Resource
-import junit.framework.Assert
-import kotlinx.coroutines.*
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -31,8 +22,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
+import java.util.concurrent.Executors
 
 @RunWith(MockitoJUnitRunner::class)
 class DetailViewModelTest {
@@ -57,20 +48,16 @@ class DetailViewModelTest {
     @Mock
     private lateinit var trailerObserver: Observer<Resource<DetailWithTrailer>>
 
-    private lateinit var mockWebServer: MockWebServer
+    @Mock
+    private lateinit var movieFavoriteListObserver: Observer<PagedList<DetailEntity>>
 
-
+    @Mock
+    private lateinit var tvShowFavoriteListObserver: Observer<PagedList<DetailEntity>>
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-
         detailViewModel = DetailViewModel(detailRepository)
-        mockWebServer = MockWebServer()
-        mockWebServer.start()
     }
-
-
 
     @Test
     fun getDetailResponse() {
@@ -87,6 +74,67 @@ class DetailViewModelTest {
             verify(observer).onChanged(detailResponse.value)
             assertNotNull(detailResponse)
             detailViewModel.detailMovieFavorite.observeForever(observer)
+        }
+    }
+
+    class PagedTestDataSources private constructor(private val items: List<DetailEntity>) : PositionalDataSource<DetailEntity>() {
+        companion object {
+            fun snapshot(items: List<DetailEntity> = listOf()): PagedList<DetailEntity> {
+                return PagedList.Builder(PagedTestDataSources(items), 10)
+                    .setNotifyExecutor(Executors.newSingleThreadExecutor())
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build()
+            }
+        }
+
+        override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<DetailEntity>) {
+            callback.onResult(items, 0, items.size)
+        }
+
+        override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<DetailEntity>) {
+            val start = params.startPosition
+            val end = params.startPosition + params.loadSize
+            callback.onResult(items.subList(start, end))
+        }
+    }
+
+    @Test
+    fun getAllMovieFavoriteList() {
+        Thread {
+            val dummyData = PagedTestDataSources.snapshot(MockResponseFileReader().getDummyDetailList().value?.data!!)
+            val expected = MutableLiveData<Resource<PagedList<DetailEntity>>>()
+            expected.value = Resource.success(dummyData)
+
+            `when`(detailRepository.getAllMovieFavoriteList().value).thenReturn(expected.value!!.data)
+
+            detailViewModel.getAllMovieFavorite().observeForever(movieFavoriteListObserver)
+            verify(movieFavoriteListObserver).onChanged(expected.value!!.data)
+
+            val expectedValue = expected.value
+            val actualValue = detailViewModel.getAllMovieFavorite().value
+            assertEquals(expectedValue, actualValue)
+            assertEquals(expectedValue?.data, actualValue)
+            assertEquals(expectedValue?.data?.size, actualValue?.size)
+        }
+    }
+
+    @Test
+    fun getAllTvShowFavoriteList() {
+        Thread {
+            val dummyData = PagedTestDataSources.snapshot(MockResponseFileReader().getDummyTvShowDetailList().value?.data!!)
+            val expected = MutableLiveData<Resource<PagedList<DetailEntity>>>()
+            expected.value = Resource.success(dummyData)
+
+            `when`(detailRepository.getAllTvShowFavoriteList().value).thenReturn(expected.value!!.data)
+
+            detailViewModel.getAllTvShowFavorite().observeForever(tvShowFavoriteListObserver)
+            verify(tvShowFavoriteListObserver).onChanged(expected.value!!.data)
+
+            val expectedValue = expected.value
+            val actualValue = detailViewModel.getAllTvShowFavorite().value
+            assertEquals(expectedValue, actualValue)
+            assertEquals(expectedValue?.data, actualValue)
+            assertEquals(expectedValue?.data?.size, actualValue?.size)
         }
     }
 

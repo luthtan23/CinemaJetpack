@@ -1,17 +1,13 @@
 package com.luthtan.cinemajetpack.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.MockResponseFileReader
 import com.luthtan.cinemajetpack.model.bean.response.tvshow.TvShowResponse
 import com.luthtan.cinemajetpack.repository.tvshow.TvShowRepository
-import com.luthtan.cinemajetpack.repository.tvshow.TvShowRepositorySource
 import com.luthtan.cinemajetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.junit.Assert
 import org.junit.Assert.assertNotNull
 import org.junit.Before

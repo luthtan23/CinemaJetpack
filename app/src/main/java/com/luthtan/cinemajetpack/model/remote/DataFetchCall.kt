@@ -24,7 +24,7 @@ abstract class DataFetchCall<ResultType>(
                 val request = createCallAsync()
                 if (request.isSuccessful) {
                     if (request.body() != null)
-                    responseLiveData.postValue(Resource.success(request.body()!!))
+                        responseLiveData.postValue(Resource.success(request.body()!!))
                 } else {
                     responseLiveData.postValue(Resource.error(request.message(), request.body()!!))
                 }

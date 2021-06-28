@@ -1,15 +1,10 @@
 package com.luthtan.cinemajetpack.util
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.model.bean.local.*
-import com.luthtan.cinemajetpack.model.bean.response.detail.RecommendationResponse
-import com.luthtan.cinemajetpack.model.bean.response.movie.MovieResponse
-import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.vo.Resource
-import org.json.JSONException
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
@@ -32,7 +27,7 @@ object DummyDataJson {
         return json
     }
 
-    fun getDummyDetail() : MutableLiveData<Resource<DetailEntity>>{
+    fun getDummyDetail(): MutableLiveData<Resource<DetailEntity>> {
         val genresItemEntity = ArrayList<GenresItemEntity>()
         genresItemEntity.add(GenresItemEntity(35, "Comedy"))
         genresItemEntity.add(GenresItemEntity(18, "Drama"))
@@ -86,7 +81,8 @@ object DummyDataJson {
         val arrayRecommendation =
             Gson().fromJson(json, Array<RecommendationItemsEntity>::class.java).toList()
         val detailWithRecommendation = MutableLiveData<Resource<DetailWithRecommendation>>()
-        detailWithRecommendation.value = Resource.success(DetailWithRecommendation(detailEntity!!, arrayRecommendation))
+        detailWithRecommendation.value =
+            Resource.success(DetailWithRecommendation(detailEntity!!, arrayRecommendation))
         return detailWithRecommendation
     }
 

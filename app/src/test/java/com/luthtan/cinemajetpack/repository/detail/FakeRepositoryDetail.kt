@@ -1,6 +1,8 @@
 package com.luthtan.cinemajetpack.repository.detail
 
 import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.google.gson.Gson
 import com.luthtan.cinemajetpack.model.NetworkBoundResource
 import com.luthtan.cinemajetpack.model.bean.local.*
@@ -12,6 +14,7 @@ import com.luthtan.cinemajetpack.model.remote.ApiResponse
 import com.luthtan.cinemajetpack.model.remote.LocalDataSource
 import com.luthtan.cinemajetpack.model.remote.RemoteDataSource
 import com.luthtan.cinemajetpack.util.AppExecutors
+import com.luthtan.cinemajetpack.util.Utils
 import com.luthtan.cinemajetpack.vo.Resource
 
 class FakeRepositoryDetail(
@@ -38,8 +41,9 @@ class FakeRepositoryDetail(
         }.asLiveData()
     }
 
-    override fun getAllMovieFavoriteList(): LiveData<List<DetailEntity>> =
-        localDataSource.getAllMovieFavoriteList()
+    override fun getAllMovieFavoriteList(): LiveData<PagedList<DetailEntity>> {
+        return LivePagedListBuilder(localDataSource.getAllMovieFavoriteList(), Utils.configPaging).build()
+    }
 
     override fun getDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>> {
         return object : NetworkBoundResource<DetailWithCast, List<CastItem>>(appExecutors) {
@@ -146,8 +150,9 @@ class FakeRepositoryDetail(
         }.asLiveData()
     }
 
-    override fun getAllTvShowFavoriteList(): LiveData<List<DetailEntity>> =
-        localDataSource.getAllTvShowFavoriteList()
+    override fun getAllTvShowFavoriteList(): LiveData<PagedList<DetailEntity>> {
+        return LivePagedListBuilder(localDataSource.getAllTvShowFavoriteList(), Utils.configPaging).build()
+    }
 
     override fun getTvShowDetailWithCast(id: Int): LiveData<Resource<DetailWithCast>> {
         return object : NetworkBoundResource<DetailWithCast, List<CastItem>>(appExecutors) {

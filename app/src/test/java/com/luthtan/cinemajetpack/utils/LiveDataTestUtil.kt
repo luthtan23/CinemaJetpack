@@ -1,4 +1,4 @@
-package com.luthtan.cinemajetpack
+package com.luthtan.cinemajetpack.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

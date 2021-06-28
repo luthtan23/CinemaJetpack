@@ -15,8 +15,6 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.luthtan.cinemajetpack.R
 import com.luthtan.cinemajetpack.ui.MainActivity
 import com.luthtan.cinemajetpack.util.EspressIdlingResources
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
