@@ -26,8 +26,20 @@ menampilkan data detail movie popular & tv show
 5. memastikan TextView untuk date tampil sesuai dengan yang diharapkan
 6. memastikan TextView untuk genre tampil sesuai dengan yang diharapkan
 7. memastikan progressbar untuk user score tampil sesuai dengan yang diharapkan
-8. memastikan rv_detail_content_staring
-9. memastikan rv_detail_content_recommendation
+8. memastikan rv_detail_content_staring tampil
+9. memastikan rv_detail_content_recommendation tampil
+10. memastikan button trailer tampil
+11. memastikan scrollto sampai dasar layout
+
+menampilkan moviefavorite
+1. memberi tindakan ib_detail_content_favorite untuk menambahkan item ke dalam menu movie favorite
+2. memastikan rv_favorite_movie_layout menampilkan list movie favorite
+3. memberi tindakan ib_item_favorite_favorite_button untuk menghapus favorite item pada list movie favorite
+
+menampilkan tvshowfavorite
+1. memberi tindakan ib_detail_content_favorite untuk menambahkan item ke dalam menu tv show favorite
+2. memastikan rv_favorite_tv_show_layout menampilkan list tv show favorite
+3. memberi tindakan ib_item_favorite_favorite_button untuk menghapus favorite item pada list tv show favorite
 
 Memuat Movie Popular:
 1. Memastikan data movie popular tidak null.

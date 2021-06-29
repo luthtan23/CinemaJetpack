@@ -47,7 +47,7 @@ class TvShowFavoriteAdapter(private val deleteFavoriteListener: DeleteFavoriteLi
                 progressBarItemFavoriteUserScore.progress = userScore.toInt()
                 tvItemFavoriteUserScore.text = userScore.toString()
                 tvItemFavoriteDuration.text = detailEntity.runtime.toString().plus("m")
-                ibItemFavoriteShare.setOnClickListener {
+                ibItemFavoriteFavoriteButton.setOnClickListener {
                     deleteFavoriteListener.selectedDeleteFavorite(detailEntity)
                 }
                 Glide.with(itemView.context)

@@ -6,8 +6,9 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -47,25 +48,33 @@ class DetailCinemaFragmentTest {
     @Test
     fun loadDetail() {
 
-        onView(withId(R.id.tv_detail_content_title)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_title)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tv_detail_content_tagline)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_tagline)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tv_detail_content_released_date)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_released_date)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tv_detail_content_duration)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_duration)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tv_detail_content_genre)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_genre)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.detail_content_image)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.detail_content_image)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.progress_bar_detail_content_user_score)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.progress_bar_detail_content_user_score)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tv_detail_content_overview)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.tv_detail_content_overview)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.rv_detail_content_staring)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.rv_detail_content_staring)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.rv_detail_content_recommendation)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.rv_detail_content_recommendation)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.rv_detail_content_recommendation)).perform(ViewActions.scrollTo())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.btn_detail_content_trailer)).perform(ViewActions.scrollTo())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.btn_detail_content_trailer)).check(matches(isDisplayed()))
 
     }
 }

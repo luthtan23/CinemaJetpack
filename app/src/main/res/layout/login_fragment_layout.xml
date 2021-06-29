@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/guideline_login_4"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/setting" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_login_4"
@@ -106,7 +106,7 @@
                 android:inputType="text"
                 android:padding="10dp"
                 android:maxLength="15"
-                android:text="mangbrad23"
+                android:text="@string/username_id"
                 android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -134,7 +134,7 @@
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:maxLength="15"
-                android:text="admin001"
+                android:text="@string/password_id"
                 android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>

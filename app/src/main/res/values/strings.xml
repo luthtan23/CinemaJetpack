@@ -49,5 +49,9 @@
     <string name="favorite_movie_deleted_message">Favorite movie has been deleted</string>
     <string name="favorite_tv_show_deleted_message">Favorite tv show has been deleted</string>
     <string name="undo">Undo</string>
+    <string name="detail">detail</string>
+    <string name="splashscreen">splashscreen</string>
+    <string name="username_id">mangbrad23</string>
+    <string name="password_id">admin001</string>
 
 </resources>

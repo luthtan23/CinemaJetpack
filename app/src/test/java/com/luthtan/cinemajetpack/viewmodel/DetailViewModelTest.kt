@@ -59,21 +59,42 @@ class DetailViewModelTest {
         detailViewModel = DetailViewModel(detailRepository)
     }
 
+    private val dummyMovieId = 19931
+    private val dummyTvShowId = 1399
+
     @Test
     fun getDetailResponse() {
         Thread {
             val detailResponse = MockResponseFileReader().getDummyDetail()
             val detailEntity: LiveData<Resource<DetailEntity>> = detailResponse
 
-            `when`(detailRepository.getDetailMovie(19931)).thenReturn(detailEntity)
+            `when`(detailRepository.getDetailMovie(dummyMovieId)).thenReturn(detailEntity)
             val detailEntities = detailViewModel.detailMovieFavorite.value?.data
-            verify(detailRepository).getDetailMovie(19931)
+            verify(detailRepository).getDetailMovie(dummyMovieId)
             assertNotNull(detailEntities)
 
             detailViewModel.detailMovieFavorite.observeForever(observer)
             verify(observer).onChanged(detailResponse.value)
             assertNotNull(detailResponse)
             detailViewModel.detailMovieFavorite.observeForever(observer)
+        }
+    }
+
+    @Test
+    fun getTvShowDetailResponse() {
+        Thread {
+            val detailResponse = MockResponseFileReader().getDummyTvShowDetail()
+            val detailEntity: LiveData<Resource<DetailEntity>> = detailResponse
+
+            `when`(detailRepository.getDetailTvShow(dummyTvShowId)).thenReturn(detailEntity)
+            val detailEntities = detailViewModel.detailTvShowFavorite.value?.data
+            verify(detailRepository).getDetailTvShow(dummyTvShowId)
+            assertNotNull(detailEntities)
+
+            detailViewModel.detailTvShowFavorite.observeForever(observer)
+            verify(observer).onChanged(detailResponse.value)
+            assertNotNull(detailResponse)
+            detailViewModel.detailTvShowFavorite.observeForever(observer)
         }
     }
 
@@ -144,9 +165,9 @@ class DetailViewModelTest {
            val castResponse = MockResponseFileReader().getDummyCast()
            val castEntity: LiveData<Resource<DetailWithCast>> = castResponse
 
-           `when`(detailRepository.getDetailWithCast(19931)).thenReturn(castEntity)
+           `when`(detailRepository.getDetailWithCast(dummyMovieId)).thenReturn(castEntity)
            val castEntities = detailViewModel.detailWithCast.value?.data
-           verify(detailRepository).getDetailWithCast(19931)
+           verify(detailRepository).getDetailWithCast(dummyMovieId)
            assertNotNull(castEntities)
 
            detailViewModel.detailWithCast.observeForever(creditObserver)
@@ -157,14 +178,32 @@ class DetailViewModelTest {
    }
 
     @Test
+    fun getTvShowDetailWithCast() {
+        Thread {
+            val castResponse = MockResponseFileReader().getDummyTvShowCast()
+            val castEntity: LiveData<Resource<DetailWithCast>> = castResponse
+
+            `when`(detailRepository.getTvShowDetailWithCast(dummyTvShowId)).thenReturn(castEntity)
+            val castEntities = detailViewModel.detailWithCastTvShow.value?.data
+            verify(detailRepository).getTvShowDetailWithCast(dummyTvShowId)
+            assertNotNull(castEntities)
+
+            detailViewModel.detailWithCastTvShow.observeForever(creditObserver)
+            verify(creditObserver).onChanged(castResponse.value)
+            assertNotNull(castResponse)
+            detailViewModel.detailWithCastTvShow.observeForever(creditObserver)
+        }
+    }
+
+    @Test
     fun getDetailWithRecommendation() {
         Thread {
             val recommendationResponse = MockResponseFileReader().getDummyRecommendation()
             val recommendationItemsEntity: LiveData<Resource<DetailWithRecommendation>> = recommendationResponse
 
-            `when`(detailRepository.getDetailWithRecommendation(19931)).thenReturn(recommendationItemsEntity)
+            `when`(detailRepository.getDetailWithRecommendation(dummyMovieId)).thenReturn(recommendationItemsEntity)
             val recommendationEntities = detailViewModel.detailWithRecommendation.value?.data
-            verify(detailRepository).getDetailWithRecommendation(19931)
+            verify(detailRepository).getDetailWithRecommendation(dummyMovieId)
             assertNotNull(recommendationEntities)
 
             detailViewModel.detailWithRecommendation.observeForever(recommendationObserver)
@@ -175,20 +214,104 @@ class DetailViewModelTest {
     }
 
     @Test
+    fun getTvShowDetailWithRecommendation() {
+        Thread {
+            val recommendationResponse = MockResponseFileReader().getDummyTvShowRecommendation()
+            val recommendationItemsEntity: LiveData<Resource<DetailWithRecommendation>> = recommendationResponse
+
+            `when`(detailRepository.getTvShowDetailWithRecommendation(dummyTvShowId)).thenReturn(recommendationItemsEntity)
+            val recommendationEntities = detailViewModel.detailWithRecommendation.value?.data
+            verify(detailRepository).getTvShowDetailWithRecommendation(dummyTvShowId)
+            assertNotNull(recommendationEntities)
+
+            detailViewModel.detailWithRecommendationTvShow.observeForever(recommendationObserver)
+            verify(recommendationObserver).onChanged(recommendationResponse.value)
+            assertNotNull(recommendationResponse)
+            detailViewModel.detailWithRecommendationTvShow.observeForever(recommendationObserver)
+        }
+    }
+
+    @Test
     fun getDetailWithTrailer() {
         Thread {
             val videosResponse = MockResponseFileReader().getDummyVideos()
             val trailerItemsEntity: LiveData<Resource<DetailWithTrailer>> = videosResponse
 
-            `when`(detailRepository.getDetailWithTrailer(19931)).thenReturn(trailerItemsEntity)
+            `when`(detailRepository.getDetailWithTrailer(dummyMovieId)).thenReturn(trailerItemsEntity)
             val trailerEntities = detailViewModel.detailWithTrailer.value?.data
-            verify(detailRepository).getDetailWithTrailer(19931)
+            verify(detailRepository).getDetailWithTrailer(dummyMovieId)
             assertNotNull(trailerEntities)
 
             detailViewModel.detailWithTrailer.observeForever(trailerObserver)
             verify(trailerObserver).onChanged(videosResponse.value)
             assertNotNull(videosResponse)
             detailViewModel.detailWithTrailer.observeForever(trailerObserver)
+        }
+    }
+
+    @Test
+    fun getTvShowDetailWithTrailer() {
+        Thread {
+            val videosResponse = MockResponseFileReader().getDummyTvShowVideos()
+            val trailerItemsEntity: LiveData<Resource<DetailWithTrailer>> = videosResponse
+
+            `when`(detailRepository.getTvShowDetailWithTrailer(dummyTvShowId)).thenReturn(trailerItemsEntity)
+            val trailerEntities = detailViewModel.detailWithTrailerTvShow.value?.data
+            verify(detailRepository).getTvShowDetailWithTrailer(dummyTvShowId)
+            assertNotNull(trailerEntities)
+
+            detailViewModel.detailWithTrailerTvShow.observeForever(trailerObserver)
+            verify(trailerObserver).onChanged(videosResponse.value)
+            assertNotNull(videosResponse)
+            detailViewModel.detailWithTrailerTvShow.observeForever(trailerObserver)
+        }
+    }
+
+    @Test
+    fun setMovieFavorite() {
+        Thread {
+            val movieFavorite = detailRepository.getDetailMovie(dummyMovieId).value?.data
+
+            //add or delete movie favorite
+            detailRepository.updateMovieFavorite(movieFavorite!!, !movieFavorite.isMovieFavorite)
+            val dummyData = PagedTestDataSources.snapshot(MockResponseFileReader().getDummyDetailList().value?.data!!)
+            val expected = MutableLiveData<Resource<PagedList<DetailEntity>>>()
+            expected.value = Resource.success(dummyData)
+
+            `when`(detailRepository.getAllMovieFavoriteList().value).thenReturn(expected.value!!.data)
+
+            detailViewModel.getAllMovieFavorite().observeForever(movieFavoriteListObserver)
+            verify(movieFavoriteListObserver).onChanged(expected.value!!.data)
+
+            val expectedValue = expected.value
+            val actualValue = detailViewModel.getAllMovieFavorite().value
+            assertEquals(expectedValue, actualValue)
+            assertEquals(expectedValue?.data, actualValue)
+            assertEquals(expectedValue?.data?.size, actualValue?.size)
+        }
+    }
+
+    @Test
+    fun setTvShowFavorite() {
+        Thread {
+            val tvShowFavorite = detailRepository.getDetailTvShow(dummyTvShowId).value?.data
+
+            //add or delete tv show favorite
+            detailRepository.updateTvShowFavorite(tvShowFavorite!!, !tvShowFavorite.isTvShowFavorite)
+            val dummyData = PagedTestDataSources.snapshot(MockResponseFileReader().getDummyTvShowDetailList().value?.data!!)
+            val expected = MutableLiveData<Resource<PagedList<DetailEntity>>>()
+            expected.value = Resource.success(dummyData)
+
+            `when`(detailRepository.getAllTvShowFavoriteList().value).thenReturn(expected.value!!.data)
+
+            detailViewModel.getAllTvShowFavorite().observeForever(tvShowFavoriteListObserver)
+            verify(tvShowFavoriteListObserver).onChanged(expected.value!!.data)
+
+            val expectedValue = expected.value
+            val actualValue = detailViewModel.getAllTvShowFavorite().value
+            assertEquals(expectedValue, actualValue)
+            assertEquals(expectedValue?.data, actualValue)
+            assertEquals(expectedValue?.data?.size, actualValue?.size)
         }
     }
 

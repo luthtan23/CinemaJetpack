@@ -9,6 +9,6 @@
         android:layout_height="200dp"
         android:src="@drawable/logo_sub_2"
         android:layout_gravity="center"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/splashscreen" />
 
 </FrameLayout>

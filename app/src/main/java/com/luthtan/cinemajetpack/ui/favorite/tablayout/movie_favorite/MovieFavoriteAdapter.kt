@@ -47,7 +47,7 @@ class MovieFavoriteAdapter(private val deleteFavoriteListener: DeleteFavoriteLis
                 tvItemFavoriteTitle.text = detailEntity.originalTitle
                 tvItemFavoriteReleasedDate.text = detailEntity.releaseDate
                 tvItemFavoriteDuration.text = detailEntity.runtime.toString().plus("m")
-                ibItemFavoriteShare.setOnClickListener {
+                ibItemFavoriteFavoriteButton.setOnClickListener {
                     deleteFavoriteListener.selectedDeleteFavorite(detailEntity)
                 }
                 Glide.with(itemView.context)

@@ -129,7 +129,7 @@
             app:layout_constraintTop_toTopOf="@+id/progress_bar_item_favorite_user_score" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/ib_item_favorite_share"
+            android:id="@+id/ib_item_favorite_favorite_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

@@ -106,6 +106,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 detailResponse.postValue(ApiResponse.error(exception.toString()))
             }
@@ -133,6 +134,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 castItem.postValue(ApiResponse.error(exception.toString()))
             }
@@ -165,6 +167,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 recommendationItems.postValue(ApiResponse.error(exception.toString()))
             }
@@ -197,6 +200,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 trailerItems.postValue(ApiResponse.error(exception.toString()))
             }
@@ -218,6 +222,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 detailResponse.postValue(ApiResponse.error(exception.toString()))
             }
@@ -245,6 +250,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 castItem.postValue(ApiResponse.error(exception.toString()))
             }
@@ -277,6 +283,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 recommendationItems.postValue(ApiResponse.error(exception.toString()))
             }
@@ -309,6 +316,7 @@ class RemoteDataSource(private val apiService: ApiService) {
                 }
                 EspressIdlingResources.decrement()
             } catch (exception: java.lang.Exception) {
+                EspressIdlingResources.decrement()
                 exception.printStackTrace()
                 trailerItems.postValue(ApiResponse.error(exception.toString()))
             }
