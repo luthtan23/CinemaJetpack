@@ -1,6 +1,7 @@
 package com.luthtan.cinemajetpack.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
@@ -13,6 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -39,17 +42,23 @@ class LoginViewModelTest {
 
     @Test
     fun getTokenResponse() {
-        val tokenResponse = loginViewModel.getTokenLogin()
-        assertNotNull(tokenResponse)
-        loginViewModel.tokenResponse.observeForever(tokenObserver)
+        Thread {
+            val mutableTokenResponse = MutableLiveData<Resource<TokenResponse>>()
+            val tokenResponse = loginViewModel.getTokenLogin()
+            verify(loginRepository).getTokenLogin(mutableTokenResponse)
+            assertNotNull(tokenResponse)
+            loginViewModel.tokenResponse.observeForever(tokenObserver)
+        }
     }
 
     @Test
     fun getValidateResponse() {
         Thread {
+            val mutableValidateResponse = MutableLiveData<Resource<ValidateResponse>>()
             val tokenResponse = loginViewModel.tokenResponse.value!!.data!!.requestToken!!
             val validateRequest = ValidateRequest("admin001", tokenResponse, "mangbrad23")
             val validateResponse = loginViewModel.getValidateLogin(validateRequest)
+            verify(loginRepository).getValidateLogin(mutableValidateResponse, validateRequest)
             assertNotNull(validateResponse)
             loginViewModel.validateResponse.observeForever(observer)
         }
