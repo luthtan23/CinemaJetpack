@@ -2,6 +2,7 @@ package com.luthtan.cinemajetpack.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.luthtan.cinemajetpack.model.bean.request.login.ValidateRequest
 import com.luthtan.cinemajetpack.model.bean.response.login.TokenResponse
 import com.luthtan.cinemajetpack.model.bean.response.login.ValidateResponse
 import com.luthtan.cinemajetpack.repository.login.LoginRepository
@@ -45,7 +46,14 @@ class LoginViewModelTest {
 
     @Test
     fun getValidateResponse() {
-        loginViewModel.validateResponse.observeForever(observer)
+        Thread {
+            val tokenResponse = loginViewModel.tokenResponse.value!!.data!!.requestToken!!
+            val validateRequest = ValidateRequest("admin001", tokenResponse, "mangbrad23")
+            val validateResponse = loginViewModel.getValidateLogin(validateRequest)
+            assertNotNull(validateResponse)
+            loginViewModel.validateResponse.observeForever(observer)
+        }
+
     }
 
 }
