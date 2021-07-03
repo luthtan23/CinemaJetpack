@@ -81,6 +81,11 @@ class DetailCinemaFragment : Fragment(), View.OnClickListener {
         binding.constraintDetailError.btnNetworkErrorTryAgain.setOnClickListener(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun setInit() {
         progressDialog.show()
         detailViewModel.setExtraId(extraId)

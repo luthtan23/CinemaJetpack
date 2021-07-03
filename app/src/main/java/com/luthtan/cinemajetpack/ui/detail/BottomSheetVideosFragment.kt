@@ -1,11 +1,14 @@
 package com.luthtan.cinemajetpack.ui.detail
 
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luthtan.cinemajetpack.R
@@ -19,6 +22,7 @@ import com.luthtan.cinemajetpack.viewmodel.DetailViewModel
 import com.luthtan.cinemajetpack.vo.Resource
 import com.luthtan.cinemajetpack.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class BottomSheetVideosFragment : BottomSheetDialogFragment() {
 
@@ -59,9 +63,18 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
 
         with(binding.rvDetailContentVideo) {
             layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             setHasFixedSize(true)
             adapter = videosAdapter
         }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val dialog = dialog
+        setBottomSheetHeight(dialog!!)
     }
 
     private val trailerResponse: Observer<Resource<DetailWithTrailer>> by lazy {
@@ -70,9 +83,14 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
             if (trailerResponse.data != null) {
                 when (trailerResponse.status) {
                     Status.SUCCESS -> {
+                        val expandableArray = ArrayList<Boolean>()
+                        for (i in trailerResponse.data.trailerItemsEntity.indices) {
+                            expandableArray.add(false)
+                        }
                         videosAdapter.setVideos(
                             requireActivity() as MainActivity,
-                            trailerResponse.data.trailerItemsEntity
+                            trailerResponse.data.trailerItemsEntity,
+                            expandableArray
                         )
                         binding.tvBottomSheetVideoTitle.text =
                             title.plus(" ").plus(getString(R.string.videos))
@@ -97,4 +115,16 @@ class BottomSheetVideosFragment : BottomSheetDialogFragment() {
             setMessage("Loading Please wait...")
         }
     }
+
+    private fun setBottomSheetHeight(dialog: Dialog) {
+        val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
+
+        binding.bottomSheetVideoLayout.post {
+            val newHeight = ViewGroup.LayoutParams.WRAP_CONTENT
+            val viewGroupLayoutParams = bottomSheet!!.layoutParams
+            viewGroupLayoutParams.height = newHeight
+            bottomSheet.layoutParams = viewGroupLayoutParams
+        }
+    }
+
 }
